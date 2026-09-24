@@ -1,0 +1,17 @@
+{
+  "useCloud": true,
+  "cloud": {
+    "host": "petcare-csdl-petcare-csdl.c.aivencloud.com",
+    "port": 12368,
+    "user": "avnadmin",
+    "password": "YOUR_AIVEN_PASSWORD_HERE",
+    "database": "defaultdb"
+  },
+  "local": {
+    "host": "localhost",
+    "port": 3307,
+    "user": "root",
+    "password": "",
+    "database": "petcare_db"
+  }
+}
