@@ -32,12 +32,16 @@ try {
   };
 }
 
-// Helper pool
 let pool;
+let parsedConfig = null;
 
 const initDb = async () => {
   try {
-    // Enable SSL for Aiven Cloud MySQL if connecting to cloud
+    const configFile = fs.readFileSync(path.resolve('./db_config.json'), 'utf8');
+    parsedConfig = JSON.parse(configFile);
+  } catch (e) {}
+
+  try {
     const connectionOptions = { ...dbConfig };
     if (dbConfig.host && !dbConfig.host.includes('localhost') && !dbConfig.host.includes('127.0.0.1')) {
       connectionOptions.ssl = { rejectUnauthorized: false };
@@ -48,8 +52,24 @@ const initDb = async () => {
     console.log(`✅ Đã kết nối thành công tới CSDL MySQL tại ${dbConfig.host}:${dbConfig.port} (Database: ${dbConfig.database})`);
     connection.release();
   } catch (error) {
-    console.error('❌ Chưa kết nối được MySQL:', error.message);
-    console.log('👉 Vui lòng kiểm tra lại cấu hình thông tin trong file db_config.json!');
+    console.warn('⚠️ Chưa kết nối được Cloud MySQL:', error.message);
+    
+    // Try auto-fallback to local XAMPP MySQL if cloud failed
+    if (parsedConfig && parsedConfig.local) {
+      console.log('🔄 Đang tự động chuyển sang CSDL Local XAMPP MySQL...');
+      try {
+        const localOpts = { ...parsedConfig.local };
+        pool = mysql.createPool(localOpts);
+        const connection = await pool.getConnection();
+        console.log(`✅ Đã kết nối thành công tới Local XAMPP MySQL tại ${localOpts.host}:${localOpts.port}`);
+        connection.release();
+        return;
+      } catch (err2) {
+        console.warn('⚠️ CSDL Local XAMPP chưa bật hoặc chưa cài đặt.');
+      }
+    }
+
+    console.log('💡 Ghi chú: Hệ thống Backend vẫn đang chạy API tại http://localhost:5000. Frontend Web chạy bình thường ở chế độ LocalStorage!');
   }
 };
 
