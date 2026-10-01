@@ -17,7 +17,9 @@ import {
   FileText,
   Bell,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Menu,
+  X
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -37,6 +39,7 @@ export const Navbar = () => {
   } = useApp();
 
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const unreadCount = (notifications || []).filter(n => n.unread).length;
 
   const publicNavLinks = [
@@ -164,6 +167,7 @@ export const Navbar = () => {
           <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
             <button
               onClick={() => setActiveTab('home')}
+              className="desktop-only-btn"
               style={{
                 padding: '7px 12px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.2)',
                 background: 'rgba(255, 255, 255, 0.08)', color: '#cbd5e1', fontSize: '0.8rem', fontWeight: 600,
@@ -174,9 +178,20 @@ export const Navbar = () => {
               <span>Xem Web Khách</span>
             </button>
 
-            <button onClick={logoutRole} className="btn-danger" style={{ padding: '7px 14px', borderRadius: '10px', fontSize: '0.84rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+            <button onClick={logoutRole} className="btn-danger desktop-only-btn" style={{ padding: '7px 14px', borderRadius: '10px', fontSize: '0.84rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
               <LogOut size={15} />
               <span>Đăng Xuất</span>
+            </button>
+
+            <button
+              className="mobile-hamburger-btn"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              style={{
+                padding: '7px 10px', borderRadius: '10px', border: '1px solid #38bdf8',
+                background: '#0284c7', color: 'white', cursor: 'pointer'
+              }}
+            >
+              <Menu size={20} />
             </button>
           </div>
         </div>
@@ -288,6 +303,7 @@ export const Navbar = () => {
           <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
             <button
               onClick={() => setActiveTab('home')}
+              className="desktop-only-btn"
               style={{
                 padding: '7px 12px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.2)',
                 background: 'rgba(255, 255, 255, 0.08)', color: '#e0f2fe', fontSize: '0.8rem', fontWeight: 600,
@@ -298,9 +314,20 @@ export const Navbar = () => {
               <span>Xem Web Khách</span>
             </button>
 
-            <button onClick={logoutRole} className="btn-danger" style={{ padding: '7px 14px', borderRadius: '10px', fontSize: '0.84rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+            <button onClick={logoutRole} className="btn-danger desktop-only-btn" style={{ padding: '7px 14px', borderRadius: '10px', fontSize: '0.84rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
               <LogOut size={15} />
               <span>Đăng Xuất</span>
+            </button>
+
+            <button
+              className="mobile-hamburger-btn"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              style={{
+                padding: '7px 10px', borderRadius: '10px', border: '1px solid #38bdf8',
+                background: '#0284c7', color: 'white', cursor: 'pointer'
+              }}
+            >
+              <Menu size={20} />
             </button>
           </div>
         </div>
@@ -475,7 +502,7 @@ export const Navbar = () => {
                 }}
               >
                 <Bell size={16} color="#0284c7" />
-                <span>Thông Báo</span>
+                <span className="desktop-only-btn">Thông Báo</span>
                 {unreadCount > 0 && (
                   <span style={{
                     position: 'absolute',
@@ -564,7 +591,7 @@ export const Navbar = () => {
             }}
           >
             <ShoppingBag size={16} color="#0284c7" />
-            <span>Giỏ Hàng</span>
+            <span className="desktop-only-btn">Giỏ Hàng</span>
             {cart.reduce((sum, i) => sum + i.quantity, 0) > 0 && (
               <span style={{
                 position: 'absolute',
@@ -580,16 +607,16 @@ export const Navbar = () => {
             )}
           </button>
 
-          {/* User Role Badge & Prominent LOGOUT Button */}
+          {/* User Role Badge & LOGOUT Button */}
           {isLoggedIn ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span className="badge-blue" style={{ padding: '6px 10px', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
+              <span className="badge-blue desktop-only-btn" style={{ padding: '6px 10px', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                 👤 Khách Hàng
               </span>
 
               <button
                 onClick={logoutRole}
-                className="btn-danger"
+                className="btn-danger desktop-only-btn"
                 style={{
                   padding: '6px 12px',
                   borderRadius: '10px',
@@ -610,15 +637,196 @@ export const Navbar = () => {
           ) : (
             <button
               onClick={() => setActiveTab('login')}
-              className="btn-primary"
+              className="btn-primary desktop-only-btn"
               style={{ padding: '8px 14px', fontSize: '0.84rem', whiteSpace: 'nowrap', cursor: 'pointer' }}
             >
               <LogIn size={15} />
               <span>Đăng Nhập</span>
             </button>
           )}
+
+          {/* HAMBURGER BUTTON FOR MOBILE NAVBAR */}
+          <button
+            className="mobile-hamburger-btn"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            style={{
+              padding: '8px 12px',
+              borderRadius: '10px',
+              border: '1px solid #0284c7',
+              background: '#0284c7',
+              color: 'white',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+          >
+            <Menu size={20} />
+          </button>
         </div>
       </div>
+
+      {/* MOBILE HAMBURGER MENU SLIDE-OVER DRAWER OVERLAY */}
+      {isMobileMenuOpen && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 2500,
+          background: 'rgba(15, 23, 42, 0.75)',
+          backdropFilter: 'blur(6px)',
+          display: 'flex',
+          justify: 'flex-end'
+        }}>
+          <div className="animate-fade-in" style={{
+            width: '85vw',
+            maxWidth: '340px',
+            height: '100%',
+            background: '#0f172a',
+            color: 'white',
+            padding: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            justify: 'space-between',
+            boxShadow: '-10px 0 30px rgba(0,0,0,0.5)',
+            overflowY: 'auto'
+          }}>
+            <div>
+              {/* Drawer Header */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Dog size={22} color="white" />
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'white' }}>PetCare Menu 🍔</div>
+                    <span className="badge-blue" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
+                      {isAdmin ? '👑 ADMIN PORTAL' : isStaff ? '👨‍⚕️ BÁC SĨ PORTAL' : '👤 KHÁCH HÀNG'}
+                    </span>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '8px', borderRadius: '10px', cursor: 'pointer' }}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Navigation Links */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {(isAdmin ? adminNavLinks : isStaff ? staffNavLinks : publicNavLinks).map(link => {
+                  const Icon = link.icon || Dog;
+                  const isActive = activeTab === link.id;
+                  return (
+                    <button
+                      key={link.id}
+                      onClick={() => {
+                        setActiveTab(link.id);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      style={{
+                        padding: '12px 16px',
+                        borderRadius: '12px',
+                        fontSize: '0.9rem',
+                        fontWeight: isActive ? 800 : 600,
+                        color: isActive ? 'white' : '#cbd5e1',
+                        background: isActive ? 'linear-gradient(135deg, #0284c7 0%, #1e40af 100%)' : 'rgba(255,255,255,0.06)',
+                        border: isActive ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.08)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        cursor: 'pointer',
+                        textAlign: 'left'
+                      }}
+                    >
+                      <Icon size={18} color={isActive ? '#ffffff' : '#38bdf8'} />
+                      <span>{link.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Drawer Footer Actions */}
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {(isAdmin || isStaff) && (
+                <button
+                  onClick={() => {
+                    setActiveTab('home');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  style={{
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    color: '#38bdf8',
+                    fontSize: '0.88rem',
+                    fontWeight: 700,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    cursor: 'pointer',
+                    justify: 'center'
+                  }}
+                >
+                  <Eye size={18} />
+                  <span>👁️ Xem Web Khách Hàng</span>
+                </button>
+              )}
+
+              {isLoggedIn ? (
+                <button
+                  onClick={() => {
+                    logoutRole();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="btn-danger"
+                  style={{
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    fontSize: '0.9rem',
+                    fontWeight: 800,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    justify: 'center',
+                    width: '100%',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <LogOut size={18} />
+                  <span>🚪 Đăng Xuất Tài Khoản</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    setActiveTab('login');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="btn-primary"
+                  style={{
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    fontSize: '0.9rem',
+                    fontWeight: 800,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    justify: 'center',
+                    width: '100%',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <LogIn size={18} />
+                  <span>🔑 Đăng Nhập / Đăng Ký</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

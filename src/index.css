@@ -224,6 +224,27 @@ button {
   animation: pulseGlow 2.5s infinite ease-in-out;
 }
 
+/* Mobile Navigation & Grid Utilities */
+.desktop-only-btn {
+  display: inline-flex !important;
+}
+
+.mobile-hamburger-btn {
+  display: none !important;
+}
+
+.billing-grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.billing-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
 /* ==========================================
    ADVANCED MOBILE & TABLET RESPONSIVE SYSTEM
    ========================================== */
@@ -247,6 +268,33 @@ html, body {
   h3 { font-size: 1.05rem !important; }
   p { font-size: 0.86rem !important; }
 
+  /* Desktop vs Mobile display toggles */
+  .desktop-only-btn {
+    display: none !important;
+  }
+
+  .mobile-hamburger-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Hide header navbar links bar on mobile (handled by Hamburger Drawer) */
+  .navbar-nav-links {
+    display: none !important;
+  }
+
+  /* Responsive Billing Grid Layout */
+  .billing-grid-container {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .billing-form-row {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
   /* 1. TOP BAR & NAVBAR MOBILE SPECIFIC FIXES */
   .top-thin-bar {
     display: none !important; /* Hide cluttered thin contact header on mobile */
@@ -254,7 +302,7 @@ html, body {
 
   .navbar-main-container {
     padding: 8px 12px !important;
-    flex-wrap: wrap !important;
+    flex-wrap: nowrap !important;
     gap: 8px !important;
     justify-content: space-between !important;
   }
@@ -271,34 +319,6 @@ html, body {
   .navbar-actions button {
     padding: 6px 10px !important;
     font-size: 0.78rem !important;
-  }
-
-  /* Scrollable horizontal navigation bar for mobile */
-  .navbar-nav-links {
-    order: 3 !important;
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    justify-content: flex-start !important;
-    padding: 6px 0 !important;
-    gap: 6px !important;
-    margin-top: 4px !important;
-    border-top: 1px solid #f1f5f9;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .navbar-nav-links::-webkit-scrollbar {
-    display: none !important;
-  }
-
-  .navbar-nav-links button {
-    flex-shrink: 0 !important;
-    white-space: nowrap !important;
-    font-size: 0.82rem !important;
-    padding: 6px 12px !important;
   }
 
   /* 2. AUTH CARD (LOGIN / REGISTER) MOBILE SPECIFIC FIXES */

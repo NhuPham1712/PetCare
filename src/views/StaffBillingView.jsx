@@ -141,7 +141,7 @@ export const StaffBillingView = () => {
 
       {/* Tab 1: Form Lập Hóa Đơn Mới */}
       {activeTab === 'create_invoice' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        <div className="billing-grid-container">
           
           {/* Left Box: Form selection */}
           <div style={{ background: 'white', borderRadius: '24px', border: '1px solid #e2e8f0', padding: '28px', boxShadow: '0 4px 14px rgba(0,0,0,0.03)' }}>
@@ -156,7 +156,7 @@ export const StaffBillingView = () => {
                 <input type="text" required className="input-field" value={invoiceForm.customerName} onChange={e => setInvoiceForm({ ...invoiceForm, customerName: e.target.value })} />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="billing-form-row">
                 <div>
                   <label style={{ fontSize: '0.82rem', fontWeight: 700 }}>Số Điện Thoại</label>
                   <input type="text" required className="input-field" value={invoiceForm.phone} onChange={e => setInvoiceForm({ ...invoiceForm, phone: e.target.value })} />
