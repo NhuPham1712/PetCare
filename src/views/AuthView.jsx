@@ -72,27 +72,10 @@ export const AuthView = () => {
       justify: 'center',
       padding: '40px 24px'
     }}>
-      <div className="animate-fade-in" style={{
-        maxWidth: '1040px',
-        width: '100%',
-        background: 'white',
-        borderRadius: '28px',
-        boxShadow: '0 25px 50px -12px rgba(2, 132, 199, 0.2)',
-        border: '1px solid #cbd5e1',
-        display: 'grid',
-        gridTemplateColumns: '1fr 1.15fr',
-        overflow: 'hidden'
-      }}>
+      <div className="auth-card-container animate-fade-in">
         
         {/* Left Side: Branding & Role Intro */}
-        <div style={{
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #0284c7 100%)',
-          color: 'white',
-          padding: '48px 40px',
-          display: 'flex',
-          flexDirection: 'column',
-          justify: 'space-between'
-        }}>
+        <div className="auth-left-panel">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
               <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'white', color: '#0284c7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -133,7 +116,7 @@ export const AuthView = () => {
         </div>
 
         {/* Right Side: Tab Forms */}
-        <div style={{ padding: '40px 36px', display: 'flex', flexDirection: 'column' }}>
+        <div className="auth-right-panel">
           
           {/* Tab Switcher Header */}
           <div style={{ display: 'flex', background: '#f1f5f9', padding: '4px', borderRadius: '14px', marginBottom: '28px', flexWrap: 'wrap', gap: '2px' }}>

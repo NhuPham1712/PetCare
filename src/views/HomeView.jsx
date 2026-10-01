@@ -40,7 +40,7 @@ export const HomeView = () => {
           borderRadius: '50%', background: 'rgba(59, 130, 246, 0.2)', filter: 'blur(60px)'
         }} />
 
-        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', alignItems: 'center' }}>
+        <div className="hero-grid-container" style={{ maxWidth: '1280px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', alignItems: 'center' }}>
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(10px)', padding: '6px 14px', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: 600, color: '#38bdf8', marginBottom: '20px' }}>
               <Sparkles size={16} /> HỆ THỐNG PHÒNG KHÁM & SPA THÚ CƯNG SỐ 1
@@ -104,7 +104,7 @@ export const HomeView = () => {
             </div>
 
             {/* Floating Card Badge */}
-            <div style={{
+            <div className="hero-floating-card" style={{
               position: 'absolute',
               bottom: '-20px',
               left: '-20px',

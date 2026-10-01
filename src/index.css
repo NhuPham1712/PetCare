@@ -228,7 +228,7 @@ button {
    ADVANCED MOBILE & TABLET RESPONSIVE SYSTEM
    ========================================== */
 
-/* Universal mobile-ready reset & smooth touch scrolling */
+/* Universal mobile reset */
 html, body {
   width: 100%;
   max-width: 100vw;
@@ -242,68 +242,110 @@ html, body {
   }
 
   /* Responsive Headings */
-  h1 { font-size: 1.45rem !important; line-height: 1.3 !important; }
-  h2 { font-size: 1.25rem !important; line-height: 1.3 !important; }
-  h3 { font-size: 1.1rem !important; }
-  p { font-size: 0.88rem !important; }
+  h1 { font-size: 1.4rem !important; line-height: 1.25 !important; }
+  h2 { font-size: 1.2rem !important; line-height: 1.3 !important; }
+  h3 { font-size: 1.05rem !important; }
+  p { font-size: 0.86rem !important; }
 
-  /* Navbar Responsive Layout */
-  header {
-    width: 100% !important;
+  /* 1. TOP BAR & NAVBAR MOBILE SPECIFIC FIXES */
+  .top-thin-bar {
+    display: none !important; /* Hide cluttered thin contact header on mobile */
   }
 
-  header > div {
-    flex-wrap: wrap !important;
+  .navbar-main-container {
     padding: 8px 12px !important;
+    flex-wrap: wrap !important;
     gap: 8px !important;
+    justify-content: space-between !important;
   }
 
-  /* Top thin notification bar on mobile */
-  header > div:first-child {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 4px !important;
-    font-size: 0.7rem !important;
-    padding: 6px 12px !important;
+  .navbar-logo {
+    order: 1 !important;
   }
 
-  /* Navigation Bar links - Horizontal Touch Swipe */
-  nav, .category-tabs, .filter-bar {
-    display: flex !important;
-    overflow-x: auto !important;
-    flex-wrap: nowrap !important;
-    justify-content: flex-start !important;
-    padding: 4px 2px !important;
+  .navbar-actions {
+    order: 2 !important;
+    gap: 6px !important;
+  }
+
+  .navbar-actions button {
+    padding: 6px 10px !important;
+    font-size: 0.78rem !important;
+  }
+
+  /* Scrollable horizontal navigation bar for mobile */
+  .navbar-nav-links {
+    order: 3 !important;
     width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+    padding: 6px 0 !important;
+    gap: 6px !important;
+    margin-top: 4px !important;
+    border-top: 1px solid #f1f5f9;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
 
-  nav::-webkit-scrollbar, .category-tabs::-webkit-scrollbar, .filter-bar::-webkit-scrollbar {
+  .navbar-nav-links::-webkit-scrollbar {
     display: none !important;
   }
 
-  nav button, .category-tabs button, .filter-bar button {
+  .navbar-nav-links button {
     flex-shrink: 0 !important;
     white-space: nowrap !important;
-    font-size: 0.8rem !important;
+    font-size: 0.82rem !important;
     padding: 6px 12px !important;
   }
 
-  /* Grid Layouts: Force 1 column on phones */
+  /* 2. AUTH CARD (LOGIN / REGISTER) MOBILE SPECIFIC FIXES */
+  .auth-card-container {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 25px rgba(2, 132, 199, 0.12) !important;
+    overflow: hidden !important;
+  }
+
+  .auth-left-panel {
+    width: 100% !important;
+    padding: 24px 18px !important;
+  }
+
+  .auth-right-panel {
+    width: 100% !important;
+    padding: 24px 18px !important;
+  }
+
+  /* 3. HERO BANNER MOBILE SPECIFIC FIXES */
+  .hero-grid-container {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    text-align: center !alignment;
+  }
+
+  .hero-floating-card {
+    position: relative !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    margin-top: 16px !important;
+    width: 100% !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  /* General Grid Layouts: Force 1 column on phones */
   div[style*="gridTemplateColumns"],
   .grid,
   .products-grid,
   .pets-grid {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
-  }
-
-  /* Flex containers stack vertically on phone screens */
-  div[style*="display: flex"][style*="justify-content: space-between"],
-  div[style*="display: flex"][style*="align-items: center"] {
-    flex-wrap: wrap !important;
-    gap: 10px !important;
   }
 
   /* Full-width responsive buttons on mobile */
@@ -362,13 +404,14 @@ html, body {
     font-size: 0.84rem;
   }
 
-  h1 { font-size: 1.35rem !important; }
-  h2 { font-size: 1.18rem !important; }
+  h1 { font-size: 1.3rem !important; }
+  h2 { font-size: 1.15rem !important; }
 
   .btn-primary, .btn-secondary {
     width: 100% !important;
     justify-content: center !important;
   }
 }
+
 
 

@@ -320,7 +320,7 @@ export const Navbar = () => {
       boxShadow: '0 4px 20px rgba(2, 132, 199, 0.08)'
     }}>
       {/* Top Thin Bar */}
-      <div style={{
+      <div className="top-thin-bar" style={{
         background: 'linear-gradient(90deg, #0284c7 0%, #1e40af 100%)',
         color: 'white',
         fontSize: '0.78rem',
@@ -349,7 +349,7 @@ export const Navbar = () => {
       </div>
 
       {/* Main Navbar */}
-      <div style={{
+      <div className="navbar-main-container" style={{
         maxWidth: '1360px',
         margin: '0 auto',
         padding: '10px 24px',
@@ -360,6 +360,7 @@ export const Navbar = () => {
       }}>
         {/* Logo */}
         <div 
+          className="navbar-logo"
           onClick={() => setActiveTab('home')}
           style={{
             display: 'flex',
@@ -395,7 +396,7 @@ export const Navbar = () => {
 
         {/* Navigation Links */}
         <nav 
-          className="no-scrollbar"
+          className="navbar-nav-links no-scrollbar"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -450,7 +451,7 @@ export const Navbar = () => {
         </nav>
 
         {/* Actions Bar */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+        <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
           {/* Notification Bell Button (Customer) */}
           {isLoggedIn && (
             <div style={{ position: 'relative' }}>
