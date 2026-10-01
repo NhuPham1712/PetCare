@@ -21,14 +21,14 @@ export const StaffMedicalView = () => {
 
   // Form State for Creating Medical Ticket (Phiếu khám)
   const [form, setForm] = useState({
-    customerName: 'Đặng Ngọc Nhuy',
-    phone: '0988 777 888',
-    petName: 'Mochi (Chó Poodle)',
-    doctorName: 'BS. Nguyễn Văn Hoàng',
-    symptoms: 'Sốt nhẹ, uể uải, bỏ ăn 1 ngày',
-    diagnosis: 'Viêm đường hô hấp trên do thay đổi thời tiết',
-    result: 'Phản xạ tốt, nhịp tim đều 110 nhịp/phút. Cần tiêm kháng sinh & dùng thuốc bổ.',
-    notes: 'Tái khám sau 3 ngày nếu còn triệu chứng sốt.'
+    customerName: '',
+    phone: '',
+    petName: '',
+    doctorName: '',
+    symptoms: '',
+    diagnosis: '',
+    result: '',
+    notes: ''
   });
 
   // Prescription medicines list inside the ticket
