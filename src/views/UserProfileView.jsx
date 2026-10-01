@@ -85,7 +85,7 @@ export const UserProfileView = () => {
             {isAdmin ? '👑 TÀI KHOẢN QUẢN TRỊ VIÊN' : isStaff ? '👨‍⚕️ TÀI KHOẢN NHÂN VIÊN / BÁC SĨ' : '👤 TÀI KHOẢN KHÁCH HÀNG'}
           </span>
           <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: '#0f172a', marginTop: '4px' }}>
-            Hồ Sơ Cá Nhân & Nhiệm Vụ
+            👋 Xin chào, {currentProfile?.name || user?.name || 'Đặng Ngọc Nhuy'}
           </h1>
           <p style={{ color: '#64748b' }}>
             {isAdmin ? 'Quản trị hệ thống CSDL XAMPP & Nhật ký phụ trợ Admin' : isStaff ? 'Xem lịch làm việc ca trực & Danh sách chó mèo đang theo dõi y tế' : 'Lưu trữ thông tin địa chỉ, SĐT, chó mèo cá nhân & Lịch sử dịch vụ đã đặt'}

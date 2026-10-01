@@ -32,12 +32,20 @@ export const Navbar = () => {
     cart, 
     setIsCartOpen,
     notifications,
-    markAllNotificationsAsRead
+    markAllNotificationsAsRead,
+    user,
+    currentProfile
   } = useApp();
 
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const unreadCount = (notifications || []).filter(n => n.unread).length;
+
+  const getUserDisplayName = () => {
+    if (isAdmin) return currentProfile?.name || 'Quản Trị Viên';
+    if (isStaff) return currentProfile?.name || 'BS. Nguyễn Văn Hoàng';
+    return user?.name || currentProfile?.name || 'Đặng Ngọc Nhuy';
+  };
 
   const publicNavLinks = [
     { id: 'home', label: 'Trang Chủ' },
@@ -100,9 +108,9 @@ export const Navbar = () => {
                 </div>
                 <div>
                   <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'white' }}>PetCare Center</div>
-                  <span className="badge-blue" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
-                    {isAdmin ? '👑 ADMIN PORTAL' : isStaff ? '👨‍⚕️ BÁC SĨ PORTAL' : '👤 KHÁCH HÀNG'}
-                  </span>
+                  <div style={{ fontSize: '0.8rem', color: '#38bdf8', fontWeight: 700, marginTop: '2px' }}>
+                    👋 Xin chào, {isLoggedIn ? getUserDisplayName() : 'Khách Hàng'}
+                  </div>
                 </div>
               </div>
 
@@ -265,7 +273,7 @@ export const Navbar = () => {
               <span style={{ color: dbConnected ? '#4ade80' : '#fbbf24', fontWeight: 700 }}>
                 {dbConnected ? '🟢 CSDL Cloud Aiven: Đã Đồng Bộ' : '🟡 CSDL: Chế độ Local'}
               </span>
-              <span style={{ opacity: 0.8 }}>Xin chào, <strong>Quản Trị Viên</strong></span>
+              <span style={{ opacity: 0.9 }}>👋 Xin chào, <strong>{getUserDisplayName()}</strong></span>
             </div>
           </div>
 
@@ -400,7 +408,7 @@ export const Navbar = () => {
               <span style={{ color: dbConnected ? '#4ade80' : '#fbbf24', fontWeight: 700 }}>
                 {dbConnected ? '🟢 CSDL Cloud Aiven: Đã Đồng Bộ' : '🟡 CSDL: LocalStorage'}
               </span>
-              <span style={{ opacity: 0.9 }}>Bác sĩ: <strong>BS. Nguyễn Văn Hoàng</strong></span>
+              <span style={{ opacity: 0.9 }}>👋 Xin chào, <strong>{getUserDisplayName()}</strong></span>
             </div>
           </div>
 
@@ -535,6 +543,11 @@ export const Navbar = () => {
             <span style={{ opacity: 0.85 }}>| Xe ô tô đưa đón tận nhà</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {isLoggedIn && (
+              <span style={{ background: 'rgba(255, 255, 255, 0.18)', color: '#ffffff', padding: '2px 10px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700 }}>
+                👋 Xin chào, {getUserDisplayName()}
+              </span>
+            )}
             <span style={{ 
               background: dbConnected ? 'rgba(16, 185, 129, 0.25)' : 'rgba(245, 158, 11, 0.25)', 
               color: dbConnected ? '#6ee7b7' : '#fde047',
@@ -780,7 +793,7 @@ export const Navbar = () => {
             {isLoggedIn ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span className="badge-blue desktop-only-btn" style={{ padding: '6px 10px', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
-                  👤 Khách Hàng
+                  👋 Xin chào, {getUserDisplayName()}
                 </span>
 
                 <button
