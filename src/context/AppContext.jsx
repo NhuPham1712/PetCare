@@ -18,7 +18,7 @@ const STAFF_PROFILE = {
   department: 'Khoa Y Tế & Phẫu Thuật Thú Y',
   workShift: 'Ca Sáng (07:30 - 15:30) & Trực Cấp Cứu 24/7',
   assignedPets: [
-    { id: 'ca-1', petName: 'Mochi (Poodle)', owner: 'Đặng Ngọc Nhuy', service: 'Phẫu thuật triệt sản', status: 'Đang theo dõi hậu phẫu', room: 'Phòng Cấp Cứu 01' },
+    { id: 'ca-1', petName: 'Mochi (Poodle)', owner: 'Nguyễn Văn A', service: 'Phẫu thuật triệt sản', status: 'Đang theo dõi hậu phẫu', room: 'Phòng Cấp Cứu 01' },
     { id: 'ca-2', petName: 'Bơ (Corgi)', owner: 'Trần Văn Hải', service: 'Khám định kỳ & Tiêm vắc-xin 7 bệnh', status: 'Chờ tái khám', room: 'Phòng Khám 03' }
   ],
   schedule: [
@@ -141,7 +141,7 @@ const ADMIN_PROFILE = {
   permissions: 'Full Control (CSDL MySQL, Quản Lý Đơn Hàng, Phân Quyền Nhân Viên)',
   systemLogs: [
     { time: '10:30', action: 'Kết nối CSDL MySQL XAMPP Port 3307 thành công' },
-    { time: '09:15', action: 'Duyệt đơn đặt lịch Spa BK-1001 cho khách hàng Đặng Ngọc Nhuy' },
+    { time: '09:15', action: 'Duyệt đơn đặt lịch Spa BK-1001 cho khách hàng Nguyễn Văn A' },
     { time: '08:00', action: 'Thêm chó Corgi VKA vào CSDL sản phẩm bán' }
   ]
 };
@@ -198,7 +198,7 @@ export const AppProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : [
       {
         id: 'BK-1001',
-        customerName: 'Đặng Ngọc Nhuy',
+        customerName: 'Nguyễn Văn A',
         phone: '0988 777 888',
         petName: 'Mochi (Chó Poodle)',
         serviceCategory: 'Spa & Grooming',
@@ -252,7 +252,7 @@ export const AppProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : [
       {
         id: 'ORD-88291',
-        customerName: 'Đặng Ngọc Nhuy',
+        customerName: 'Nguyễn Văn A',
         phone: '0988 777 888',
         address: '123 Đường Nguyễn Thị Minh Khai, P.6, Q.3, TP.HCM',
         items: [{ name: 'Thức Ăn Hạt Royal Canin Mini Adult (2kg)', quantity: 1, price: 340000 }],
@@ -271,7 +271,7 @@ export const AppProvider = ({ children }) => {
       {
         id: 'MR-2026-001',
         date: '2026-09-24',
-        customerName: 'Đặng Ngọc Nhuy',
+        customerName: 'Nguyễn Văn A',
         phone: '0988 777 888',
         petName: 'Mochi (Chó Poodle)',
         doctorName: 'BS. Nguyễn Văn Hoàng',
@@ -294,7 +294,7 @@ export const AppProvider = ({ children }) => {
       {
         id: 'INV-2026-001',
         date: '2026-09-24',
-        customerName: 'Đặng Ngọc Nhuy',
+        customerName: 'Nguyễn Văn A',
         phone: '0988 777 888',
         petName: 'Mochi (Chó Poodle)',
         paymentMethod: 'Chuyển Khoản VietQR / MBBank',

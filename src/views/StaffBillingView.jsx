@@ -36,7 +36,7 @@ export const StaffBillingView = () => {
 
   // Invoice Form State
   const [invoiceForm, setInvoiceForm] = useState({
-    customerName: 'Đặng Ngọc Nhuy',
+    customerName: 'Nguyễn Văn A',
     phone: '0988 777 888',
     petName: 'Mochi (Chó Poodle)',
     paymentMethod: 'Chuyển Khoản VietQR / MBBank'

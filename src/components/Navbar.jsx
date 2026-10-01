@@ -44,7 +44,7 @@ export const Navbar = () => {
   const getUserDisplayName = () => {
     if (isAdmin) return currentProfile?.name || 'Quản Trị Viên';
     if (isStaff) return currentProfile?.name || 'BS. Nguyễn Văn Hoàng';
-    return user?.name || currentProfile?.name || 'Đặng Ngọc Nhuy';
+    return user?.name || currentProfile?.name || 'Nguyễn Văn A';
   };
 
   const publicNavLinks = [

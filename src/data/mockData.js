@@ -297,8 +297,8 @@ export const STORE_HISTORY = [
 ];
 
 export const INITIAL_USER = {
-  name: 'Đặng Ngọc Nhuy',
-  email: 'nhuy.petcare@gmail.com',
+  name: 'Nguyễn Văn A',
+  email: 'khachhang@gmail.com',
   phone: '0988 777 888',
   address: '123 Đường Nguyễn Thị Minh Khai, Phường 6, Quận 3, TP. Hồ Chí Minh',
   myPets: [

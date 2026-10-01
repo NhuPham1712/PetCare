@@ -44,7 +44,7 @@ export const AuthView = () => {
   const handleCustomerLoginSubmit = (e) => {
     e.preventDefault();
     loginAsCustomer({
-      name: user.name || 'Đặng Ngọc Nhuy',
+      name: user.name || 'Nguyễn Văn A',
       phone: loginForm.phoneOrEmail,
       address: user.address || ''
     });
@@ -220,7 +220,7 @@ export const AuthView = () => {
 
               <div>
                 <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#334155' }}>Họ và Tên Khách Hàng</label>
-                <input type="text" required className="input-field" placeholder="Đặng Ngọc Nhuy" value={registerForm.name} onChange={e => setRegisterForm({ ...registerForm, name: e.target.value })} />
+                <input type="text" required className="input-field" placeholder="Nguyễn Văn A" value={registerForm.name} onChange={e => setRegisterForm({ ...registerForm, name: e.target.value })} />
               </div>
 
               <div>
@@ -235,7 +235,7 @@ export const AuthView = () => {
 
               <div>
                 <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#334155' }}>Email</label>
-                <input type="email" required className="input-field" placeholder="nhuy.petcare@gmail.com" value={registerForm.email} onChange={e => setRegisterForm({ ...registerForm, email: e.target.value })} />
+                <input type="email" required className="input-field" placeholder="khachhang@gmail.com" value={registerForm.email} onChange={e => setRegisterForm({ ...registerForm, email: e.target.value })} />
               </div>
 
               <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1rem', marginTop: '6px' }}>

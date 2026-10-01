@@ -158,7 +158,7 @@ export const AuthModal = () => {
                   type="text" required className="input-field" style={{ paddingLeft: '40px' }}
                   value={customerData.name}
                   onChange={e => setCustomerData({ ...customerData, name: e.target.value })}
-                  placeholder="Đặng Ngọc Nhuy"
+                  placeholder="Nguyễn Văn A"
                 />
               </div>
             </div>
