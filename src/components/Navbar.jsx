@@ -68,134 +68,301 @@ export const Navbar = () => {
     { id: 'user', label: 'Hồ Sơ Của Tôi', icon: User }
   ];
 
+  const renderMobileDrawer = () => {
+    if (!isMobileMenuOpen) return null;
+    return (
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 2500,
+        background: 'rgba(15, 23, 42, 0.75)',
+        backdropFilter: 'blur(6px)',
+        display: 'flex',
+        justify: 'flex-end'
+      }}>
+        <div className="animate-fade-in" style={{
+          width: '85vw',
+          maxWidth: '340px',
+          height: '100%',
+          background: '#0f172a',
+          color: 'white',
+          padding: '24px',
+          display: 'flex',
+          flexDirection: 'column',
+          justify: 'space-between',
+          boxShadow: '-10px 0 30px rgba(0,0,0,0.5)',
+          overflowY: 'auto'
+        }}>
+          <div>
+            {/* Drawer Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Dog size={22} color="white" />
+                </div>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'white' }}>PetCare Menu 🍔</div>
+                  <span className="badge-blue" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
+                    {isAdmin ? '👑 ADMIN PORTAL' : isStaff ? '👨‍⚕️ BÁC SĨ PORTAL' : '👤 KHÁCH HÀNG'}
+                  </span>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '8px', borderRadius: '10px', cursor: 'pointer' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Navigation Links */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {(isAdmin ? adminNavLinks : isStaff ? staffNavLinks : publicNavLinks).map(link => {
+                const Icon = link.icon || Dog;
+                const isActive = activeTab === link.id;
+                return (
+                  <button
+                    key={link.id}
+                    onClick={() => {
+                      setActiveTab(link.id);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    style={{
+                      padding: '12px 16px',
+                      borderRadius: '12px',
+                      fontSize: '0.9rem',
+                      fontWeight: isActive ? 800 : 600,
+                      color: isActive ? 'white' : '#cbd5e1',
+                      background: isActive ? 'linear-gradient(135deg, #0284c7 0%, #1e40af 100%)' : 'rgba(255,255,255,0.06)',
+                      border: isActive ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.08)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      cursor: 'pointer',
+                      textAlign: 'left'
+                    }}
+                  >
+                    <Icon size={18} color={isActive ? '#ffffff' : '#38bdf8'} />
+                    <span>{link.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Drawer Footer Actions */}
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {(isAdmin || isStaff) && (
+              <button
+                onClick={() => {
+                  setActiveTab('home');
+                  setIsMobileMenuOpen(false);
+                }}
+                style={{
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  color: '#38bdf8',
+                  fontSize: '0.88rem',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  cursor: 'pointer',
+                  justify: 'center'
+                }}
+              >
+                <Eye size={18} />
+                <span>👁️ Xem Web Khách Hàng</span>
+              </button>
+            )}
+
+            {isLoggedIn ? (
+              <button
+                onClick={() => {
+                  logoutRole();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="btn-danger"
+                style={{
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  fontSize: '0.9rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  justify: 'center',
+                  width: '100%',
+                  cursor: 'pointer'
+                }}
+              >
+                <LogOut size={18} />
+                <span>🚪 Đăng Xuất Tài Khoản</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setActiveTab('login');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="btn-primary"
+                style={{
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  fontSize: '0.9rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  justify: 'center',
+                  width: '100%',
+                  cursor: 'pointer'
+                }}
+              >
+                <LogIn size={18} />
+                <span>🔑 Đăng Nhập / Đăng Ký</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // ==========================================
   // 1. DEDICATED ADMIN NAVBAR (When Admin Logged In)
   // ==========================================
   if (isAdmin) {
     return (
-      <header style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 1000,
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-        color: 'white',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.25)'
-      }}>
-        <div className="top-thin-bar" style={{
-          background: 'rgba(2, 132, 199, 0.2)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-          color: '#38bdf8',
-          fontSize: '0.76rem',
-          padding: '4px 24px',
-          display: 'flex',
-          justify: 'space-between',
-          alignItems: 'center',
-          fontWeight: 600
+      <>
+        <header style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000,
+          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+          color: 'white',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.25)'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ background: '#0284c7', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 800 }}>ADMIN PORTAL</span>
-            <span>Cổng Điều Hành Quản Trị Hệ Thống PetCare Center</span>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <span style={{ color: dbConnected ? '#4ade80' : '#fbbf24', fontWeight: 700 }}>
-              {dbConnected ? '🟢 CSDL Cloud Aiven: Đã Đồng Bộ' : '🟡 CSDL: Chế độ Local'}
-            </span>
-            <span style={{ opacity: 0.8 }}>Xin chào, <strong>Quản Trị Viên</strong></span>
-          </div>
-        </div>
-
-        <div className="navbar-main-container" style={{
-          maxWidth: '1360px',
-          margin: '0 auto',
-          padding: '8px 24px',
-          display: 'flex',
-          alignItems: 'center',
-          justify: 'space-between',
-          gap: '16px'
-        }}>
-          <div 
-            className="navbar-logo"
-            onClick={() => setActiveTab('dashboard')}
-            style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', userSelect: 'none', flexShrink: 0 }}
-          >
-            <div style={{
-              width: '38px', height: '38px', borderRadius: '10px',
-              background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
-              boxShadow: '0 4px 14px rgba(56, 189, 248, 0.35)'
-            }}>
-              <Crown size={20} />
+          <div className="top-thin-bar" style={{
+            background: 'rgba(2, 132, 199, 0.2)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+            color: '#38bdf8',
+            fontSize: '0.76rem',
+            padding: '4px 24px',
+            display: 'flex',
+            justify: 'space-between',
+            alignItems: 'center',
+            fontWeight: 600
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ background: '#0284c7', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 800 }}>ADMIN PORTAL</span>
+              <span>Cổng Điều Hành Quản Trị Hệ Thống PetCare Center</span>
             </div>
-            <div>
-              <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', lineHeight: 1 }}>
-                PetCare <span style={{ color: '#38bdf8' }}>ADMIN</span>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <span style={{ color: dbConnected ? '#4ade80' : '#fbbf24', fontWeight: 700 }}>
+                {dbConnected ? '🟢 CSDL Cloud Aiven: Đã Đồng Bộ' : '🟡 CSDL: Chế độ Local'}
+              </span>
+              <span style={{ opacity: 0.8 }}>Xin chào, <strong>Quản Trị Viên</strong></span>
+            </div>
+          </div>
+
+          <div className="navbar-main-container" style={{
+            maxWidth: '1360px',
+            margin: '0 auto',
+            padding: '8px 24px',
+            display: 'flex',
+            alignItems: 'center',
+            justify: 'space-between',
+            gap: '16px'
+          }}>
+            <div 
+              className="navbar-logo"
+              onClick={() => setActiveTab('dashboard')}
+              style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', userSelect: 'none', flexShrink: 0 }}
+            >
+              <div style={{
+                width: '38px', height: '38px', borderRadius: '10px',
+                background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
+                boxShadow: '0 4px 14px rgba(56, 189, 248, 0.35)'
+              }}>
+                <Crown size={20} />
               </div>
-              <div style={{ fontSize: '0.6rem', color: '#94a3b8', fontWeight: 600 }}>TRUNG TÂM QUẢN TRỊ</div>
+              <div>
+                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', lineHeight: 1 }}>
+                  PetCare <span style={{ color: '#38bdf8' }}>ADMIN</span>
+                </div>
+                <div style={{ fontSize: '0.6rem', color: '#94a3b8', fontWeight: 600 }}>TRUNG TÂM QUẢN TRỊ</div>
+              </div>
+            </div>
+
+            <nav 
+              className="navbar-nav-links no-scrollbar"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center', flex: 1 }}
+            >
+              {adminNavLinks.map(link => {
+                const Icon = link.icon;
+                const isActive = activeTab === link.id;
+                return (
+                  <button
+                    key={link.id}
+                    onClick={() => setActiveTab(link.id)}
+                    style={{
+                      padding: '7px 12px', borderRadius: '10px', fontSize: '0.84rem',
+                      fontWeight: isActive ? 800 : 600,
+                      color: isActive ? 'white' : '#cbd5e1',
+                      background: isActive ? 'linear-gradient(135deg, #0284c7 0%, #1e40af 100%)' : 'rgba(255, 255, 255, 0.06)',
+                      border: isActive ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.08)',
+                      transition: 'all 0.2s ease', whiteSpace: 'nowrap',
+                      display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer'
+                    }}
+                  >
+                    <Icon size={15} color={isActive ? '#ffffff' : '#38bdf8'} />
+                    <span>{link.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+
+            <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+              <button
+                onClick={() => setActiveTab('home')}
+                className="desktop-only-btn"
+                style={{
+                  padding: '7px 12px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: 'rgba(255, 255, 255, 0.08)', color: '#cbd5e1', fontSize: '0.8rem', fontWeight: 600,
+                  display: 'inline-flex', alignItems: 'center', gap: '5px', cursor: 'pointer'
+                }}
+              >
+                <Eye size={14} color="#38bdf8" />
+                <span>Xem Web Khách</span>
+              </button>
+
+              <button onClick={logoutRole} className="btn-danger desktop-only-btn" style={{ padding: '7px 14px', borderRadius: '10px', fontSize: '0.84rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                <LogOut size={15} />
+                <span>Đăng Xuất</span>
+              </button>
+
+              <button
+                className="mobile-hamburger-btn"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                style={{
+                  padding: '7px 10px', borderRadius: '10px', border: '1px solid #38bdf8',
+                  background: '#0284c7', color: 'white', cursor: 'pointer'
+                }}
+              >
+                <Menu size={20} />
+              </button>
             </div>
           </div>
-
-          <nav 
-            className="navbar-nav-links no-scrollbar"
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center', flex: 1 }}
-          >
-            {adminNavLinks.map(link => {
-              const Icon = link.icon;
-              const isActive = activeTab === link.id;
-              return (
-                <button
-                  key={link.id}
-                  onClick={() => setActiveTab(link.id)}
-                  style={{
-                    padding: '7px 12px', borderRadius: '10px', fontSize: '0.84rem',
-                    fontWeight: isActive ? 800 : 600,
-                    color: isActive ? 'white' : '#cbd5e1',
-                    background: isActive ? 'linear-gradient(135deg, #0284c7 0%, #1e40af 100%)' : 'rgba(255, 255, 255, 0.06)',
-                    border: isActive ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.08)',
-                    transition: 'all 0.2s ease', whiteSpace: 'nowrap',
-                    display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer'
-                  }}
-                >
-                  <Icon size={15} color={isActive ? '#ffffff' : '#38bdf8'} />
-                  <span>{link.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-
-          <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-            <button
-              onClick={() => setActiveTab('home')}
-              className="desktop-only-btn"
-              style={{
-                padding: '7px 12px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.2)',
-                background: 'rgba(255, 255, 255, 0.08)', color: '#cbd5e1', fontSize: '0.8rem', fontWeight: 600,
-                display: 'inline-flex', alignItems: 'center', gap: '5px', cursor: 'pointer'
-              }}
-            >
-              <Eye size={14} color="#38bdf8" />
-              <span>Xem Web Khách</span>
-            </button>
-
-            <button onClick={logoutRole} className="btn-danger desktop-only-btn" style={{ padding: '7px 14px', borderRadius: '10px', fontSize: '0.84rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
-              <LogOut size={15} />
-              <span>Đăng Xuất</span>
-            </button>
-
-            <button
-              className="mobile-hamburger-btn"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              style={{
-                padding: '7px 10px', borderRadius: '10px', border: '1px solid #38bdf8',
-                background: '#0284c7', color: 'white', cursor: 'pointer'
-              }}
-            >
-              <Menu size={20} />
-            </button>
-          </div>
-        </div>
-      </header>
+        </header>
+        {renderMobileDrawer()}
+      </>
     );
   }
 
@@ -204,15 +371,16 @@ export const Navbar = () => {
   // ==========================================
   if (isStaff) {
     return (
-      <header style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 1000,
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e40af 100%)',
-        color: 'white',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        boxShadow: '0 8px 30px rgba(2, 132, 199, 0.25)'
-      }}>
+      <>
+        <header style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000,
+          background: 'linear-gradient(135deg, #0f172a 0%, #1e40af 100%)',
+          color: 'white',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 8px 30px rgba(2, 132, 199, 0.25)'
+        }}>
         {/* Top Staff Thin Bar */}
         <div className="top-thin-bar" style={{
           background: 'rgba(2, 132, 199, 0.25)',
@@ -332,6 +500,8 @@ export const Navbar = () => {
           </div>
         </div>
       </header>
+        {renderMobileDrawer()}
+      </>
     );
   }
 
@@ -339,7 +509,8 @@ export const Navbar = () => {
   // 3. PUBLIC / CUSTOMER NAVBAR
   // ==========================================
   return (
-    <header style={{
+    <>
+      <header style={{
       position: 'sticky',
       top: 0,
       zIndex: 1000,
@@ -665,168 +836,8 @@ export const Navbar = () => {
           </button>
         </div>
       </div>
-
-      {/* MOBILE HAMBURGER MENU SLIDE-OVER DRAWER OVERLAY */}
-      {isMobileMenuOpen && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 2500,
-          background: 'rgba(15, 23, 42, 0.75)',
-          backdropFilter: 'blur(6px)',
-          display: 'flex',
-          justify: 'flex-end'
-        }}>
-          <div className="animate-fade-in" style={{
-            width: '85vw',
-            maxWidth: '340px',
-            height: '100%',
-            background: '#0f172a',
-            color: 'white',
-            padding: '24px',
-            display: 'flex',
-            flexDirection: 'column',
-            justify: 'space-between',
-            boxShadow: '-10px 0 30px rgba(0,0,0,0.5)',
-            overflowY: 'auto'
-          }}>
-            <div>
-              {/* Drawer Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '16px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Dog size={22} color="white" />
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'white' }}>PetCare Menu 🍔</div>
-                    <span className="badge-blue" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
-                      {isAdmin ? '👑 ADMIN PORTAL' : isStaff ? '👨‍⚕️ BÁC SĨ PORTAL' : '👤 KHÁCH HÀNG'}
-                    </span>
-                  </div>
-                </div>
-
-                <button 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '8px', borderRadius: '10px', cursor: 'pointer' }}
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              {/* Navigation Links */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {(isAdmin ? adminNavLinks : isStaff ? staffNavLinks : publicNavLinks).map(link => {
-                  const Icon = link.icon || Dog;
-                  const isActive = activeTab === link.id;
-                  return (
-                    <button
-                      key={link.id}
-                      onClick={() => {
-                        setActiveTab(link.id);
-                        setIsMobileMenuOpen(false);
-                      }}
-                      style={{
-                        padding: '12px 16px',
-                        borderRadius: '12px',
-                        fontSize: '0.9rem',
-                        fontWeight: isActive ? 800 : 600,
-                        color: isActive ? 'white' : '#cbd5e1',
-                        background: isActive ? 'linear-gradient(135deg, #0284c7 0%, #1e40af 100%)' : 'rgba(255,255,255,0.06)',
-                        border: isActive ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.08)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px',
-                        cursor: 'pointer',
-                        textAlign: 'left'
-                      }}
-                    >
-                      <Icon size={18} color={isActive ? '#ffffff' : '#38bdf8'} />
-                      <span>{link.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Drawer Footer Actions */}
-            <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {(isAdmin || isStaff) && (
-                <button
-                  onClick={() => {
-                    setActiveTab('home');
-                    setIsMobileMenuOpen(false);
-                  }}
-                  style={{
-                    padding: '12px 16px',
-                    borderRadius: '12px',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    color: '#38bdf8',
-                    fontSize: '0.88rem',
-                    fontWeight: 700,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    cursor: 'pointer',
-                    justify: 'center'
-                  }}
-                >
-                  <Eye size={18} />
-                  <span>👁️ Xem Web Khách Hàng</span>
-                </button>
-              )}
-
-              {isLoggedIn ? (
-                <button
-                  onClick={() => {
-                    logoutRole();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="btn-danger"
-                  style={{
-                    padding: '12px 16px',
-                    borderRadius: '12px',
-                    fontSize: '0.9rem',
-                    fontWeight: 800,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    justify: 'center',
-                    width: '100%',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <LogOut size={18} />
-                  <span>🚪 Đăng Xuất Tài Khoản</span>
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    setActiveTab('login');
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="btn-primary"
-                  style={{
-                    padding: '12px 16px',
-                    borderRadius: '12px',
-                    fontSize: '0.9rem',
-                    fontWeight: 800,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    justify: 'center',
-                    width: '100%',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <LogIn size={18} />
-                  <span>🔑 Đăng Nhập / Đăng Ký</span>
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </header>
+      {renderMobileDrawer()}
+    </>
   );
 };
