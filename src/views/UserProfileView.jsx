@@ -265,7 +265,7 @@ export const UserProfileView = () => {
           {userRole === 'customer' && (
             <div>
               {/* Customer Tabs */}
-              <div style={{ display: 'flex', gap: '10px', marginBottom: '24px', borderBottom: '2px solid #e2e8f0', paddingBottom: '10px', flexWrap: 'wrap' }}>
+              <div className="category-tabs no-scrollbar" style={{ display: 'flex', gap: '10px', marginBottom: '24px', borderBottom: '2px solid #e2e8f0', paddingBottom: '10px' }}>
                 <button
                   onClick={() => setActiveTabTab('pets')}
                   style={{

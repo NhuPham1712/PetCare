@@ -83,7 +83,7 @@ export const AdminView = () => {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '24px', borderBottom: '2px solid #e2e8f0', paddingBottom: '10px' }}>
+      <div className="category-tabs no-scrollbar" style={{ display: 'flex', gap: '10px', marginBottom: '24px', borderBottom: '2px solid #e2e8f0', paddingBottom: '10px' }}>
         <button
           onClick={() => setActiveSubTab('pets_db')}
           style={{

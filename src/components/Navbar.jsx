@@ -79,7 +79,7 @@ export const Navbar = () => {
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
         boxShadow: '0 8px 30px rgba(0, 0, 0, 0.25)'
       }}>
-        <div style={{
+        <div className="top-thin-bar" style={{
           background: 'rgba(2, 132, 199, 0.2)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
           color: '#38bdf8',
@@ -103,7 +103,7 @@ export const Navbar = () => {
           </div>
         </div>
 
-        <div style={{
+        <div className="navbar-main-container" style={{
           maxWidth: '1360px',
           margin: '0 auto',
           padding: '8px 24px',
@@ -113,6 +113,7 @@ export const Navbar = () => {
           gap: '16px'
         }}>
           <div 
+            className="navbar-logo"
             onClick={() => setActiveTab('dashboard')}
             style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', userSelect: 'none', flexShrink: 0 }}
           >
@@ -133,7 +134,7 @@ export const Navbar = () => {
           </div>
 
           <nav 
-            className="no-scrollbar"
+            className="navbar-nav-links no-scrollbar"
             style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center', flex: 1 }}
           >
             {adminNavLinks.map(link => {
@@ -160,7 +161,7 @@ export const Navbar = () => {
             })}
           </nav>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+          <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
             <button
               onClick={() => setActiveTab('home')}
               style={{
@@ -198,7 +199,7 @@ export const Navbar = () => {
         boxShadow: '0 8px 30px rgba(2, 132, 199, 0.25)'
       }}>
         {/* Top Staff Thin Bar */}
-        <div style={{
+        <div className="top-thin-bar" style={{
           background: 'rgba(2, 132, 199, 0.25)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           color: '#38bdf8',
@@ -223,7 +224,7 @@ export const Navbar = () => {
         </div>
 
         {/* Main Staff Navbar Container */}
-        <div style={{
+        <div className="navbar-main-container" style={{
           maxWidth: '1360px',
           margin: '0 auto',
           padding: '8px 24px',
@@ -234,6 +235,7 @@ export const Navbar = () => {
         }}>
           {/* Staff Logo */}
           <div 
+            className="navbar-logo"
             onClick={() => setActiveTab('staff_dashboard')}
             style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', userSelect: 'none', flexShrink: 0 }}
           >
@@ -255,7 +257,7 @@ export const Navbar = () => {
 
           {/* Dedicated Staff Menu Links matching requirements 1-6 */}
           <nav 
-            className="no-scrollbar"
+            className="navbar-nav-links no-scrollbar"
             style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center', flex: 1 }}
           >
             {staffNavLinks.map(link => {
@@ -283,7 +285,7 @@ export const Navbar = () => {
           </nav>
 
           {/* Staff Actions Bar */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+          <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
             <button
               onClick={() => setActiveTab('home')}
               style={{
