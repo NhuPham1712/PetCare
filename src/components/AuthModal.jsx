@@ -12,7 +12,8 @@ export const AuthModal = () => {
     updateUserProfile, 
     loginAsAdmin, 
     loginAsCustomer, 
-    showToast 
+    showToast,
+    setActiveTab
   } = useApp();
 
   const [isRegister, setIsRegister] = useState(false);
@@ -36,15 +37,16 @@ export const AuthModal = () => {
   const handleCustomerSubmit = (e) => {
     e.preventDefault();
     loginAsCustomer(customerData);
+    setIsAuthModalOpen(false);
+    setActiveTab('home');
+    showToast('🎉 Đăng nhập thành công!');
   };
 
   const handleAdminSubmit = (e) => {
     e.preventDefault();
-    if (adminData.username === 'admin' && adminData.password === 'admin123') {
-      loginAsAdmin();
-    } else {
-      loginAsAdmin(); // Allow login for demo
-    }
+    loginAsAdmin();
+    setIsAuthModalOpen(false);
+    setActiveTab('dashboard');
   };
 
   return (

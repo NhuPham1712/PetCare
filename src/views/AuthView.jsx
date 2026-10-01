@@ -37,8 +37,8 @@ export const AuthView = () => {
       address: registerForm.address,
       email: registerForm.email
     });
-    setActiveTab('user');
-    showToast('🎉 Đăng ký tài khoản thành công! Đã lưu Địa chỉ & SĐT của bạn.');
+    showToast('🎉 Tạo tài khoản thành công!');
+    setActiveTab('home');
   };
 
   const handleCustomerLoginSubmit = (e) => {
@@ -48,19 +48,20 @@ export const AuthView = () => {
       phone: loginForm.phoneOrEmail,
       address: user.address || ''
     });
-    setActiveTab('user');
+    showToast('🎉 Đăng nhập thành công!');
+    setActiveTab('home');
   };
 
   const handleStaffLoginSubmit = (e) => {
     e.preventDefault();
     loginAsStaff();
-    setActiveTab('user');
+    setActiveTab('staff_dashboard');
   };
 
   const handleAdminLoginSubmit = (e) => {
     e.preventDefault();
     loginAsAdmin();
-    setActiveTab('management');
+    setActiveTab('dashboard');
   };
 
   return (
