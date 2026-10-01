@@ -223,3 +223,64 @@ button {
 .pulse-glow {
   animation: pulseGlow 2.5s infinite ease-in-out;
 }
+
+/* ==========================================
+   MOBILE & TABLET RESPONSIVE DESIGN SYSTEM
+   ========================================== */
+@media (max-width: 768px) {
+  body {
+    font-size: 0.88rem;
+  }
+
+  h1 { font-size: 1.6rem !important; }
+  h2 { font-size: 1.35rem !important; }
+  h3 { font-size: 1.15rem !important; }
+
+  /* Smooth Touch Navigation Scrolling */
+  nav {
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    padding-bottom: 4px !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Grid Layouts collapse to 1 column */
+  .grid, [style*="gridTemplateColumns"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Flex containers stack vertically */
+  .flex-responsive {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  /* Responsive Tables */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Padding adjustments */
+  div[style*="padding: 36px 24px"],
+  div[style*="padding: 40px 24px"],
+  div[style*="padding: 32px"] {
+    padding: 18px 12px !important;
+  }
+
+  /* Modal responsive sizing */
+  div[style*="maxWidth: 540px"],
+  div[style*="maxWidth: 480px"],
+  div[style*="maxWidth: 600px"],
+  div[style*="maxWidth: 1040px"] {
+    width: 95vw !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    padding: 20px 16px !important;
+    border-radius: 20px !important;
+  }
+}
+
