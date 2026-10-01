@@ -1,9 +1,39 @@
 import React from 'react';
-import { Filter, Search, RotateCcw, ShoppingCart, Info, Award, ShieldCheck } from 'lucide-react';
+import { Filter, Search, RotateCcw, ShoppingCart, Info, Award, ShieldCheck, Sparkles, UserPlus, LogIn, HeartHandshake } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export const PetShopView = () => {
-  const { pets, petFilters, setPetFilters, setSelectedPetForDetail, addToCart } = useApp();
+  const { 
+    pets, 
+    petFilters, 
+    setPetFilters, 
+    setSelectedPetForDetail, 
+    addToCart,
+    isLoggedIn,
+    isAdmin,
+    isStaff,
+    user,
+    currentProfile,
+    setActiveTab,
+    cart,
+    setIsCartOpen,
+    showToast
+  } = useApp();
+
+  const getUserDisplayName = () => {
+    if (isAdmin) return currentProfile?.name || 'Quản Trị Viên';
+    if (isStaff) return currentProfile?.name || 'BS. Nguyễn Văn Hoàng';
+    return user?.name || currentProfile?.name || 'Nguyễn Văn A';
+  };
+
+  const handleAddToCart = (pet) => {
+    addToCart(pet, 'pet');
+    if (!isLoggedIn) {
+      showToast(`🔒 Đã thêm bé ${pet.name} vào giỏ! Đăng nhập ngay để nhận Hợp đồng bảo hành 365 ngày & giao hàng tận nhà.`, 'info');
+    } else {
+      showToast(`🎉 ${getUserDisplayName()}, đã thêm bé ${pet.name} vào giỏ hàng thành công!`);
+    }
+  };
 
   // Extract unique colors & origins for dynamic dropdown options
   const allColors = Array.from(new Set(pets.map(p => p.color)));
@@ -54,9 +84,112 @@ export const PetShopView = () => {
     });
   };
 
+  const totalCartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
+
   return (
     <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '40px 24px' }}>
       
+      {/* 1. STATE-DEPENDENT DYNAMIC HERO BANNER */}
+      {!isLoggedIn ? (
+        /* Unregistered / Guest Customer Banner */
+        <div className="animate-fade-in" style={{
+          background: 'linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #0284c7 100%)',
+          color: 'white',
+          borderRadius: '24px',
+          padding: '24px 28px',
+          marginBottom: '32px',
+          display: 'flex',
+          justify: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '16px',
+          boxShadow: '0 8px 25px rgba(2, 132, 199, 0.25)',
+          border: '1px solid rgba(255, 255, 255, 0.15)'
+        }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span style={{ background: '#f59e0b', color: '#0f172a', fontWeight: 800, fontSize: '0.75rem', padding: '3px 10px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                <Sparkles size={13} />
+                ƯU ĐÃI THÀNH VIÊN MỚI
+              </span>
+              <span style={{ fontSize: '0.85rem', color: '#93c5fd' }}>Khách hàng chưa đăng ký / chưa đăng nhập</span>
+            </div>
+            <h2 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'white' }}>
+              Đăng Ký Tài Khoản Để Nhận Ưu Đãi 10% & Hợp Đồng Bảo Hành 365 Ngày!
+            </h2>
+            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', marginTop: '4px' }}>
+              ✓ Đã kiểm định thuần chủng • ✓ Tặng Microchip định vị • ✓ Vận chuyển bằng xe ô tô điều hòa tận nhà
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button 
+              onClick={() => setActiveTab('login')}
+              className="btn-primary"
+              style={{ background: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)', color: 'white', fontWeight: 800, padding: '12px 20px', fontSize: '0.9rem', cursor: 'pointer' }}
+            >
+              <LogIn size={18} />
+              <span>Đăng Nhập / Đăng Ký Ngay</span>
+            </button>
+          </div>
+        </div>
+      ) : (
+        /* Logged-In Customer Banner */
+        <div className="animate-fade-in" style={{
+          background: 'linear-gradient(135deg, #0284c7 0%, #1e40af 100%)',
+          color: 'white',
+          borderRadius: '24px',
+          padding: '24px 28px',
+          marginBottom: '32px',
+          display: 'flex',
+          justify: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '16px',
+          boxShadow: '0 8px 25px rgba(2, 132, 199, 0.2)',
+          border: '1px solid rgba(255, 255, 255, 0.2)'
+        }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span style={{ background: '#22c55e', color: 'white', fontWeight: 800, fontSize: '0.75rem', padding: '3px 10px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                <HeartHandshake size={14} />
+                TÀI KHOẢN THÀNH VIÊN
+              </span>
+              <span style={{ fontSize: '0.85rem', color: '#e0f2fe' }}>Đã đăng nhập hệ thống PetCare</span>
+            </div>
+            <h2 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'white' }}>
+              👋 Xin chào, {getUserDisplayName()}!
+            </h2>
+            <p style={{ fontSize: '0.88rem', color: '#e0f2fe', marginTop: '4px' }}>
+              Chúc bạn chọn được bé cưng thuần chủng ưng ý nhất. Đơn hàng đặt mua sẽ được tự động lưu vào Hồ Sơ Cá Nhân của bạn!
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              style={{
+                background: 'white',
+                color: '#0284c7',
+                border: 'none',
+                fontWeight: 800,
+                padding: '12px 20px',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                boxShadow: '0 4px 14px rgba(0,0,0,0.15)'
+              }}
+            >
+              <ShoppingCart size={18} color="#0284c7" />
+              <span>Xem Giỏ Hàng ({totalCartCount})</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Page Title */}
       <div style={{ marginBottom: '32px' }}>
         <span className="badge-blue">PETCARE SHOP THÚ CƯNG</span>
@@ -70,7 +203,7 @@ export const PetShopView = () => {
 
       <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '30px' }}>
         
-        {/* Sidebar Filters (Requirement 5) */}
+        {/* Sidebar Filters */}
         <div style={{
           background: 'white',
           borderRadius: '20px',
@@ -85,7 +218,7 @@ export const PetShopView = () => {
             </h3>
             <button 
               onClick={resetFilters} 
-              style={{ fontSize: '0.8rem', color: '#0284c7', background: 'transparent', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
+              style={{ fontSize: '0.8rem', color: '#0284c7', background: 'transparent', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
             >
               <RotateCcw size={14} /> Xóa lọc
             </button>
@@ -271,7 +404,7 @@ export const PetShopView = () => {
                           Xem Chi Tiết
                         </button>
                         <button 
-                          onClick={() => addToCart(pet, 'pet')}
+                          onClick={() => handleAddToCart(pet)}
                           className="btn-primary"
                           style={{ padding: '10px 14px', fontSize: '0.88rem' }}
                         >
