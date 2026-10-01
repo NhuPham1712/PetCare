@@ -418,6 +418,64 @@ html, body {
   }
 }
 
+/* ==========================================
+   PET SHOP VIEW MOBILE OPTIMIZATIONS
+   ========================================== */
+.mobile-filter-toggle-btn {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-filter-toggle-btn {
+    display: flex !important;
+  }
+
+  .pet-shop-filter-sidebar.mobile-filter-closed {
+    display: none !important;
+  }
+
+  .pet-shop-filter-sidebar.mobile-filter-open {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 16px !important;
+    animation: fadeIn 0.25s ease-out;
+  }
+
+  .pet-shop-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  .pet-shop-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .pet-shop-banner {
+    padding: 16px 18px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .pet-shop-banner-btn {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .pet-shop-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  
+  .pet-card-actions {
+    flex-direction: row !important;
+  }
+}
+
+
 /* Extra Small Mobile Devices (< 480px) */
 @media (max-width: 480px) {
   body {
