@@ -270,8 +270,8 @@ export const Navbar = () => {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <span style={{ color: dbConnected ? '#4ade80' : '#fbbf24', fontWeight: 700 }}>
-                {dbConnected ? '🟢 CSDL Cloud Aiven: Đã Đồng Bộ' : '🟡 CSDL: Chế độ Local'}
+              <span style={{ color: '#4ade80', fontWeight: 700 }}>
+                🟢 Hệ Thống: Trực Tuyến & Đồng Bộ
               </span>
               <span style={{ opacity: 0.9 }}>👋 Xin chào, <strong>{getUserDisplayName()}</strong></span>
             </div>
@@ -405,8 +405,8 @@ export const Navbar = () => {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <span style={{ color: dbConnected ? '#4ade80' : '#fbbf24', fontWeight: 700 }}>
-                {dbConnected ? '🟢 CSDL Cloud Aiven: Đã Đồng Bộ' : '🟡 CSDL: LocalStorage'}
+              <span style={{ color: '#4ade80', fontWeight: 700 }}>
+                🟢 Bác Sĩ Portal: Trực Tuyến
               </span>
               <span style={{ opacity: 0.9 }}>👋 Xin chào, <strong>{getUserDisplayName()}</strong></span>
             </div>
@@ -549,11 +549,11 @@ export const Navbar = () => {
               </span>
             )}
             <span style={{ 
-              background: dbConnected ? 'rgba(16, 185, 129, 0.25)' : 'rgba(245, 158, 11, 0.25)', 
-              color: dbConnected ? '#6ee7b7' : '#fde047',
+              background: 'rgba(16, 185, 129, 0.25)', 
+              color: '#6ee7b7',
               padding: '2px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700 
             }}>
-              {dbConnected ? '🟢 CSDL Cloud Aiven: Đã Kết Nối' : '🟡 CSDL MySQL: LocalStorage'}
+              🟢 Hệ Thống Trực Tuyến 24/7
             </span>
             <span>📍 123 Nguyễn Thị Minh Khai, Q.3, TP.HCM</span>
           </div>

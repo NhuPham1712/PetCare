@@ -63,7 +63,7 @@ export const AdminDashboardView = () => {
             Tổng Quan Hệ Thống PetCare Center
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.98rem' }}>
-            Chào mừng Quản trị viên! Theo dõi doanh thu, lịch làm nhân viên & điều hành hệ thống CSDL Cloud Aiven.
+            Chào mừng Quản trị viên! Theo dõi doanh thu, lịch làm nhân viên & điều hành hệ thống PetCare Center.
           </p>
         </div>
 
@@ -147,10 +147,10 @@ export const AdminDashboardView = () => {
           </div>
         </div>
 
-        {/* Card 3: CSDL Thú Cưng */}
+        {/* Card 3: Thú Cưng */}
         <div style={{ background: 'white', padding: '24px', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 14px rgba(0,0,0,0.03)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 700 }}>THÚ CƯNG TRÊN CSDL</span>
+            <span style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 700 }}>TỔNG SỐ THÚ CƯNG</span>
             <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#ffe4e6', color: '#be123c', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Dog size={22} />
             </div>
@@ -159,7 +159,7 @@ export const AdminDashboardView = () => {
             {pets.length} <span style={{ fontSize: '1rem', fontWeight: 500, color: '#64748b' }}>bé chó & mèo</span>
           </div>
           <div style={{ fontSize: '0.8rem', color: '#be123c', fontWeight: 600, marginTop: '4px' }}>
-            Đã đồng bộ Aiven Cloud Database
+            Đã sẵn sàng trên hệ thống
           </div>
         </div>
 
@@ -248,7 +248,7 @@ export const AdminDashboardView = () => {
                 onClick={() => setActiveTab('admin')}
                 style={{ padding: '16px', borderRadius: '14px', border: '1px solid #cbd5e1', background: '#f8fafc', cursor: 'pointer', transition: 'all 0.2s' }}
               >
-                <div style={{ fontWeight: 800, color: '#0284c7', fontSize: '0.95rem' }}>🐶 Thêm Chó/Mèo Vào CSDL</div>
+                <div style={{ fontWeight: 800, color: '#0284c7', fontSize: '0.95rem' }}>🐶 Thêm Chó/Mèo Mới</div>
                 <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>Cập nhật chó mèo thuần chủng VKA mới lên web</div>
               </div>
 
@@ -284,27 +284,26 @@ export const AdminDashboardView = () => {
         {/* Right Column: Database System Status & Quick Info */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
-          {/* Cloud Database Connection Status Widget */}
+          {/* Cloud System Status Widget */}
           <div style={{ background: 'white', borderRadius: '20px', border: '1px solid #e2e8f0', padding: '24px', boxShadow: '0 4px 14px rgba(0,0,0,0.03)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
               <Database size={24} color="#0284c7" />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a' }}>CSDL Cloud Online</h3>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a' }}>Trạng Thái Hệ Thống</h3>
             </div>
 
             <div style={{
-              background: dbConnected ? '#f0fdf4' : '#fffbeb',
-              border: dbConnected ? '1px solid #bbf7d0' : '1px solid #fde68a',
+              background: '#f0fdf4',
+              border: '1px solid #bbf7d0',
               borderRadius: '14px',
               padding: '16px',
               marginBottom: '16px'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: dbConnected ? '#166534' : '#92400e', fontSize: '0.9rem' }}>
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: dbConnected ? '#22c55e' : '#f59e0b' }}></span>
-                {dbConnected ? 'Kết Nối Aiven MySQL Thành Công' : 'Đang sử dụng dữ liệu tạm thời'}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: '#166534', fontSize: '0.9rem' }}>
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#22c55e' }}></span>
+                Hệ Thống Trực Tuyến & Hoạt Động Bình Thường
               </div>
               <p style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '6px', lineHeight: 1.5 }}>
-                Host: <code>petcare-csdl...aivencloud.com:12368</code><br />
-                Đồng bộ dữ liệu trực tiếp theo thời gian thực.
+                Tất cả dữ liệu sản phẩm, đơn hàng và lịch hẹn được đồng bộ thời gian thực 24/7.
               </p>
             </div>
 

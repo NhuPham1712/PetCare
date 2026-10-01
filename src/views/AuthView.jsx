@@ -106,7 +106,7 @@ export const AuthView = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <CheckCircle2 size={18} color="#f43f5e" />
-                <span><strong>Quản Lý / Admin:</strong> Toàn quyền quản lý CSDL MySQL XAMPP & đơn hàng</span>
+                <span><strong>Quản Lý / Admin:</strong> Toàn quyền điều hành hệ thống, đơn hàng & nhân sự</span>
               </div>
             </div>
           </div>
@@ -285,7 +285,7 @@ export const AuthView = () => {
 
               <div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>Đăng Nhập Quản Trị Viên</h3>
-                <p style={{ fontSize: '0.85rem', color: '#64748b' }}>Truy cập Quản Lý Đơn Hàng & CSDL MySQL XAMPP</p>
+                <p style={{ fontSize: '0.85rem', color: '#64748b' }}>Truy cập Quản Lý Đơn Hàng & Điều Hành Hệ Thống PetCare</p>
               </div>
 
               <div>

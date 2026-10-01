@@ -137,12 +137,12 @@ const ADMIN_PROFILE = {
   name: 'Quản Trị Viên PetCare Center',
   email: 'admin.manager@petcare.vn',
   phone: '0988 777 999',
-  roleTitle: 'Giám Đốc Quản Lý Hệ Thống & CSDL',
-  permissions: 'Full Control (CSDL MySQL, Quản Lý Đơn Hàng, Phân Quyền Nhân Viên)',
+  roleTitle: 'Giám Đốc Điều Hành Hệ Thống PetCare',
+  permissions: 'Toàn quyền Quản Lý Đơn Hàng, Nhân Sự & Thú Cưng',
   systemLogs: [
-    { time: '10:30', action: 'Kết nối CSDL MySQL XAMPP Port 3307 thành công' },
+    { time: '10:30', action: 'Khởi tạo hệ thống quản trị PetCare Center thành công' },
     { time: '09:15', action: 'Duyệt đơn đặt lịch Spa BK-1001 cho khách hàng Nguyễn Văn A' },
-    { time: '08:00', action: 'Thêm chó Corgi VKA vào CSDL sản phẩm bán' }
+    { time: '08:00', action: 'Cập nhật danh mục chó cưng Corgi thuần chủng' }
   ]
 };
 
@@ -435,7 +435,7 @@ export const AppProvider = ({ children }) => {
     const adminOnlyTabs = ['admin', 'management', 'dashboard', 'staff_mgmt', 'schedule_mgmt'];
     if (adminOnlyTabs.includes(tabId) && (!isLoggedIn || userRole !== 'admin')) {
       setActiveTabState('login');
-      showToast('⚠️ Vùng bảo mật! Chỉ Admin mới được truy cập Quản Lý & CSDL. Vui lòng đăng nhập tài khoản Admin.', 'info');
+      showToast('⚠️ Vùng bảo mật! Chỉ Admin mới được truy cập trang Quản Lý. Vui lòng đăng nhập tài khoản Admin.', 'info');
       return;
     }
 
@@ -744,7 +744,7 @@ export const AppProvider = ({ children }) => {
       } catch (err) {}
     }
 
-    showToast(`Admin: Đã thêm thú cưng "${pet.name}" vào CSDL!`);
+    showToast(`Admin: Đã thêm thú cưng "${pet.name}" thành công!`);
   };
 
   const deletePetAdmin = async (id) => {
@@ -756,7 +756,7 @@ export const AppProvider = ({ children }) => {
       } catch (err) {}
     }
 
-    showToast('Admin: Đã xóa thú cưng khỏi CSDL', 'info');
+    showToast('Admin: Đã xóa thú cưng khỏi hệ thống', 'info');
   };
 
   const addProductAdmin = async (prod) => {
@@ -773,7 +773,7 @@ export const AppProvider = ({ children }) => {
       } catch (err) {}
     }
 
-    showToast(`Admin: Đã thêm sản phẩm "${prod.name}" vào CSDL!`);
+    showToast(`Admin: Đã thêm sản phẩm "${prod.name}" thành công!`);
   };
 
   const updateBookingStatusAdmin = async (id, newStatus) => {

@@ -54,10 +54,10 @@ export const AdminView = () => {
         <div>
           <span className="badge-rose" style={{ background: '#ffe4e6', color: '#be123c' }}>HỆ THỐNG QUẢN TRỊ ADMIN</span>
           <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: '#0f172a', marginTop: '4px' }}>
-            Trang Admin - Cơ Sở Dữ Liệu (CSDL)
+            Trang Admin - Quản Lý Thú Cưng & Sản Phẩm
           </h1>
           <p style={{ color: '#64748b' }}>
-            Quản lý và thêm mới chó, mèo, sản phẩm đồ dùng, dịch vụ vào hệ thống CSDL
+            Quản lý và thêm mới chó, mèo, sản phẩm đồ dùng & dịch vụ vào hệ thống PetCare
           </p>
         </div>
 
@@ -68,7 +68,7 @@ export const AdminView = () => {
             style={{ padding: '10px 18px', fontSize: '0.9rem' }}
           >
             <Plus size={18} />
-            <span>Thêm Chó/Mèo Mới Vào CSDL</span>
+            <span>Thêm Chó/Mèo Mới</span>
           </button>
           
           <button 
@@ -94,7 +94,7 @@ export const AdminView = () => {
           }}
         >
           <Dog size={18} />
-          <span>CSDL Thú Cưng ({pets.length} bé)</span>
+          <span>Danh Sách Thú Cưng ({pets.length} bé)</span>
         </button>
 
         <button
@@ -107,7 +107,7 @@ export const AdminView = () => {
           }}
         >
           <ShoppingBag size={18} />
-          <span>CSDL Sản Phẩm & Đồ Dùng ({products.length} món)</span>
+          <span>Sản Phẩm & Đồ Dùng ({products.length} món)</span>
         </button>
       </div>
 
@@ -154,7 +154,7 @@ export const AdminView = () => {
                         onClick={() => deletePetAdmin(p.id)}
                         style={{ background: '#ffe4e6', color: '#ef4444', padding: '6px 10px', borderRadius: '8px', fontWeight: 600, fontSize: '0.8rem' }}
                       >
-                        Xóa CSDL
+                        Xóa Thú Cưng
                       </button>
                     </td>
                   </tr>
@@ -165,12 +165,12 @@ export const AdminView = () => {
         </div>
       )}
 
-      {/* Modal 1: Thêm Chó Mèo Vô CSDL (Requirement 1) */}
+      {/* Modal 1: Thêm Chó Mèo */}
       {showAddPetModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15,23,42,0.7)', backdropFilter: 'blur(4px)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
           <div className="animate-fade-in" style={{ background: 'white', borderRadius: '24px', width: '100%', maxWidth: '640px', maxHeight: '90vh', overflowY: 'auto', padding: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0284c7' }}>Thêm Chó/Mèo Mới Vào CSDL</h3>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0284c7' }}>Thêm Chó/Mèo Mới Vào Hệ Thống</h3>
               <button onClick={() => setShowAddPetModal(false)} style={{ background: 'transparent', fontSize: '1.2rem' }}>✕</button>
             </div>
 
@@ -249,7 +249,7 @@ export const AdminView = () => {
               </div>
 
               <button type="submit" className="btn-primary" style={{ justifyContent: 'center', padding: '12px', marginTop: '10px' }}>
-                Xác Nhận Thêm Vào CSDL
+                Xác Nhận Thêm Thú Cưng Mới
               </button>
             </form>
           </div>

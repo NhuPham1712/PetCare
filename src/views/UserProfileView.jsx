@@ -88,7 +88,7 @@ export const UserProfileView = () => {
             👋 Xin chào, {currentProfile?.name || user?.name || 'Nguyễn Văn A'}
           </h1>
           <p style={{ color: '#64748b' }}>
-            {isAdmin ? 'Quản trị hệ thống CSDL XAMPP & Nhật ký phụ trợ Admin' : isStaff ? 'Xem lịch làm việc ca trực & Danh sách chó mèo đang theo dõi y tế' : 'Lưu trữ thông tin địa chỉ, SĐT, chó mèo cá nhân & Lịch sử dịch vụ đã đặt'}
+            {isAdmin ? 'Quản trị hệ thống, điều hành đơn hàng & phân quyền nhân viên' : isStaff ? 'Xem lịch làm việc ca trực & Danh sách chó mèo đang theo dõi y tế' : 'Lưu trữ thông tin địa chỉ, SĐT, chó mèo cá nhân & Lịch sử dịch vụ đã đặt'}
           </p>
         </div>
 
@@ -247,11 +247,11 @@ export const UserProfileView = () => {
 
                   <button onClick={() => setActiveTab('admin')} className="btn-secondary" style={{ padding: '16px', justifyContent: 'center', borderColor: '#0284c7', color: '#0284c7' }}>
                     <Briefcase size={20} />
-                    <span>Đến Trang Admin (CSDL MySQL)</span>
+                    <span>Đến Trang Quản Lý Thú Cưng</span>
                   </button>
                 </div>
 
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#334155', marginBottom: '10px' }}>Nhật Ký Hoạt Động CSDL XAMPP System Logs:</h4>
+                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#334155', marginBottom: '10px' }}>Nhật Ký Hoạt Động Hệ Thống (System Logs):</h4>
                 <div style={{ background: '#0f172a', color: '#38bdf8', padding: '16px', borderRadius: '14px', fontFamily: 'monospace', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {currentProfile.systemLogs?.map((log, idx) => (
                     <div key={idx}>[{log.time}] SYS_OK: {log.action}</div>

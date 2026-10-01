@@ -90,7 +90,7 @@ export const AuthModal = () => {
                 {authMode === 'admin' ? '🔑 Đăng Nhập Quản Trị Viên' : '👤 Tài Khoản Khách Hàng'}
               </h3>
               <p style={{ fontSize: '0.82rem', opacity: 0.9, marginTop: '2px', margin: 0 }}>
-                {authMode === 'admin' ? 'Quyền truy cập Quản Lý Đơn Hàng & CSDL Admin' : 'Lưu trữ địa chỉ, SĐT & lịch sử đặt hàng'}
+                {authMode === 'admin' ? 'Quyền truy cập Quản Lý Đơn Hàng & Hệ Thống Quản Trị' : 'Lưu trữ địa chỉ, SĐT & lịch sử đặt hàng'}
               </p>
             </div>
             <button 
