@@ -225,62 +225,150 @@ button {
 }
 
 /* ==========================================
-   MOBILE & TABLET RESPONSIVE DESIGN SYSTEM
+   ADVANCED MOBILE & TABLET RESPONSIVE SYSTEM
    ========================================== */
+
+/* Universal mobile-ready reset & smooth touch scrolling */
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
 @media (max-width: 768px) {
   body {
     font-size: 0.88rem;
   }
 
-  h1 { font-size: 1.6rem !important; }
-  h2 { font-size: 1.35rem !important; }
-  h3 { font-size: 1.15rem !important; }
+  /* Responsive Headings */
+  h1 { font-size: 1.45rem !important; line-height: 1.3 !important; }
+  h2 { font-size: 1.25rem !important; line-height: 1.3 !important; }
+  h3 { font-size: 1.1rem !important; }
+  p { font-size: 0.88rem !important; }
 
-  /* Smooth Touch Navigation Scrolling */
-  nav {
+  /* Navbar Responsive Layout */
+  header {
+    width: 100% !important;
+  }
+
+  header > div {
+    flex-wrap: wrap !important;
+    padding: 8px 12px !important;
+    gap: 8px !important;
+  }
+
+  /* Top thin notification bar on mobile */
+  header > div:first-child {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+    font-size: 0.7rem !important;
+    padding: 6px 12px !important;
+  }
+
+  /* Navigation Bar links - Horizontal Touch Swipe */
+  nav, .category-tabs, .filter-bar {
+    display: flex !important;
     overflow-x: auto !important;
     flex-wrap: nowrap !important;
     justify-content: flex-start !important;
-    padding-bottom: 4px !important;
+    padding: 4px 2px !important;
+    width: 100% !important;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
 
-  /* Grid Layouts collapse to 1 column */
-  .grid, [style*="gridTemplateColumns"] {
+  nav::-webkit-scrollbar, .category-tabs::-webkit-scrollbar, .filter-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  nav button, .category-tabs button, .filter-bar button {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    font-size: 0.8rem !important;
+    padding: 6px 12px !important;
+  }
+
+  /* Grid Layouts: Force 1 column on phones */
+  div[style*="gridTemplateColumns"],
+  .grid,
+  .products-grid,
+  .pets-grid {
     grid-template-columns: 1fr !important;
+    gap: 16px !important;
   }
 
-  /* Flex containers stack vertically */
-  .flex-responsive {
-    flex-direction: column !important;
-    align-items: stretch !important;
+  /* Flex containers stack vertically on phone screens */
+  div[style*="display: flex"][style*="justify-content: space-between"],
+  div[style*="display: flex"][style*="align-items: center"] {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
   }
 
-  /* Responsive Tables */
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
+  /* Full-width responsive buttons on mobile */
+  .btn-primary, .btn-secondary, .btn-danger {
+    padding: 10px 16px !important;
+    font-size: 0.85rem !important;
   }
 
-  /* Padding adjustments */
+  /* Hero Banners & Section Cards */
   div[style*="padding: 36px 24px"],
   div[style*="padding: 40px 24px"],
-  div[style*="padding: 32px"] {
-    padding: 18px 12px !important;
+  div[style*="padding: 32px"],
+  div[style*="padding: 28px"],
+  div[style*="padding: 24px"] {
+    padding: 16px 14px !important;
+    border-radius: 16px !important;
   }
 
-  /* Modal responsive sizing */
-  div[style*="maxWidth: 540px"],
-  div[style*="maxWidth: 480px"],
-  div[style*="maxWidth: 600px"],
-  div[style*="maxWidth: 1040px"] {
-    width: 95vw !important;
+  /* Tables: Horizontal Touch Scroll Container */
+  .table-responsive, table {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table th, table td {
+    padding: 10px 12px !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* Cart Drawer Fullscreen on Mobile */
+  div[style*="width: 420px"],
+  div[style*="maxWidth: 420px"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+
+  /* Modals: Responsive Overlay Fit */
+  div[style*="position: fixed"] > div[style*="background: white"],
+  div[style*="position: fixed"] > div[style*="background: #ffffff"] {
+    width: 94vw !important;
+    max-width: 94vw !important;
     max-height: 90vh !important;
     overflow-y: auto !important;
-    padding: 20px 16px !important;
+    padding: 20px 14px !important;
     border-radius: 20px !important;
+    margin: auto !important;
   }
 }
+
+/* Extra Small Mobile Devices (< 480px) */
+@media (max-width: 480px) {
+  body {
+    font-size: 0.84rem;
+  }
+
+  h1 { font-size: 1.35rem !important; }
+  h2 { font-size: 1.18rem !important; }
+
+  .btn-primary, .btn-secondary {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
 
