@@ -179,6 +179,56 @@ export const INITIAL_PRODUCTS = [
     soldDisplay: '191k+',
     stock: 1694,
     description: 'Pate Nekko Jelly dạng thạch cho mèo, gói 70g.'
+  },
+  {
+    id: 'prod-08',
+    name: 'Thức Ăn Hạt Cho Chó Mọi Lứa Tuổi Pedigree 3kg',
+    category: 'Thức Ăn',
+    price: 345000,
+    image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 760,
+    description: 'Hạt dinh dưỡng cho chó mọi lứa tuổi, hỗ trợ tiêu hóa tốt và duy trì vóc dáng khỏe mạnh.'
+  },
+  {
+    id: 'prod-09',
+    name: 'Pate Cho Mèo Tươi Gà & Cá Ciao 40g',
+    category: 'Thức Ăn',
+    price: 22000,
+    image: 'https://images.unsplash.com/photo-1511044568932-338cba0ad803?auto=format&fit=crop&w=800&q=80',
+    rating: 4.9,
+    sold: 1830,
+    description: 'Pate mèo vị gà và cá, thơm ngon, dễ ăn và bổ sung độ ẩm cho cơ thể mèo đang phát triển.'
+  },
+  {
+    id: 'prod-10',
+    name: 'Bát Ăn Inox Mặt Đính Bánh Xe Dành Cho Mèo Chó',
+    category: 'Đồ Dùng',
+    price: 119000,
+    image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=800&q=80',
+    rating: 4.7,
+    sold: 540,
+    description: 'Bát ăn inox chống trầy, dễ vệ sinh, khả năng đứng vững ổn định khi thú cưng ăn.'
+  },
+  {
+    id: 'prod-11',
+    name: 'Bộ Dây Dắt Chó & Balo Di Động 2 Trong 1',
+    category: 'Đồ Dùng',
+    price: 390000,
+    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 425,
+    description: 'Dây dắt chắc chắn, thiết kế vừa vặn, kèm balo tiện lợi cho những chuyến đi dạo cùng thú cưng.'
+  },
+  {
+    id: 'prod-12',
+    name: 'Lồng Chăm Sóc Gàu Ve Rận PetBio 2 Lớp',
+    category: 'Đồ Dùng',
+    price: 185000,
+    image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80',
+    rating: 4.6,
+    sold: 280,
+    description: 'Sản phẩm hỗ trợ chăm sóc da lông, giảm gàu và ve rận hiệu quả, an toàn với thú cưng.'
   }
 ];
 
