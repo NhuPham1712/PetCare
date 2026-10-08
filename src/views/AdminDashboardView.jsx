@@ -23,7 +23,8 @@ export const AdminDashboardView = () => {
     allBookings, 
     allOrders, 
     setActiveTab, 
-    dbConnected 
+    dbConnected,
+    dbSourceLabel 
   } = useApp();
 
   // Financial & Stat Computations
@@ -292,33 +293,35 @@ export const AdminDashboardView = () => {
             </div>
 
             <div style={{
-              background: '#f0fdf4',
-              border: '1px solid #bbf7d0',
+              background: dbConnected ? '#f0fdf4' : '#fef2f2',
+              border: `1px solid ${dbConnected ? '#bbf7d0' : '#fecaca'}`,
               borderRadius: '14px',
               padding: '16px',
               marginBottom: '16px'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: '#166534', fontSize: '0.9rem' }}>
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#22c55e' }}></span>
-                Hệ Thống Trực Tuyến & Hoạt Động Bình Thường
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: dbConnected ? '#166534' : '#991b1b', fontSize: '0.9rem' }}>
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: dbConnected ? '#22c55e' : '#ef4444' }}></span>
+                {dbConnected ? `${dbSourceLabel} : Đã Kết Nối` : `${dbSourceLabel} : Mất Kết Nối`}
               </div>
               <p style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '6px', lineHeight: 1.5 }}>
-                Tất cả dữ liệu sản phẩm, đơn hàng và lịch hẹn được đồng bộ thời gian thực 24/7.
+                {dbConnected
+                  ? `${dbSourceLabel} MySQL đang kết nối thành công. Dữ liệu sản phẩm, đơn hàng và lịch hẹn đang đồng bộ bình thường.`
+                  : `${dbSourceLabel} hiện chưa kết nối. Hệ thống đang chạy ở chế độ local / dữ liệu cục bộ chưa đồng bộ với database.`}
               </p>
             </div>
 
             <div style={{ fontSize: '0.82rem', color: '#475569', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Tổng số bảng:</span>
-                <strong>6 Tables</strong>
+                <span>Trạng thái:</span>
+                <strong style={{ color: dbConnected ? '#16a34a' : '#dc2626' }}>{dbConnected ? 'Đã kết nối' : 'Chưa kết nối'}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Bảo mật SSL Cloud:</span>
-                <strong style={{ color: '#16a34a' }}>Đã bật (Active)</strong>
+                <span>Đường dẫn DB:</span>
+                <strong>{dbSourceLabel}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Lần đồng bộ cuối:</span>
-                <strong>Vừa xong</strong>
+                <span>Loại DB:</span>
+                <strong>{dbConnected ? 'MySQL Active' : 'MySQL Offline'}</strong>
               </div>
             </div>
           </div>

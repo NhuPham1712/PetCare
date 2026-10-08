@@ -165,6 +165,20 @@ export const INITIAL_PRODUCTS = [
     rating: 4.7,
     sold: 320,
     description: 'Chuồng chó mèo khung thép chắc chắn, sơn tĩnh điện chống rỉ, thiết kế xếp gọn tiện mang đi xa.'
+  },
+  {
+    id: 'prod-07',
+    name: 'Pate Mèo Dạng Thạch Nekko Jelly 70g',
+    category: 'Thức Ăn',
+    price: 17000,
+    originalPrice: 20000,
+    image: 'https://paddy.vn/_next/image?url=https%3A%2F%2Ffexafkqzpbzjcupvbfhe.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fproduct-images%2Fcollection-1779179801537-7-g63s0r.jpg&w=828&q=75',
+    rating: 5.0,
+    reviewCount: 2200,
+    sold: 191000,
+    soldDisplay: '191k+',
+    stock: 1694,
+    description: 'Pate Nekko Jelly dạng thạch cho mèo, gói 70g.'
   }
 ];
 

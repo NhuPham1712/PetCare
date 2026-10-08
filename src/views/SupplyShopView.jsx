@@ -111,7 +111,12 @@ export const SupplyShopView = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: '#f59e0b', marginBottom: '6px' }}>
                   <Star size={14} fill="#f59e0b" />
                   <span style={{ fontWeight: 700 }}>{prod.rating}</span>
-                  <span style={{ color: '#94a3b8' }}>• Đã bán {prod.sold}</span>
+                  {prod.reviewCount && (
+                    <span style={{ color: '#94a3b8' }}>
+                      ({prod.reviewCount >= 1000 ? `${(prod.reviewCount / 1000).toFixed(1)}k` : prod.reviewCount} đánh giá)
+                    </span>
+                  )}
+                  <span style={{ color: '#94a3b8' }}>• Đã bán {prod.soldDisplay || prod.sold}</span>
                 </div>
 
                 <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.4, marginBottom: '8px' }}>
@@ -125,8 +130,19 @@ export const SupplyShopView = () => {
             </div>
 
             <div style={{ padding: '0 20px 20px', borderTop: '1px solid #f1f5f9', paddingTop: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0284c7' }}>
-                {prod.price.toLocaleString('vi-VN')} đ
+              <div>
+                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0284c7' }}>
+                  {prod.price.toLocaleString('vi-VN')} đ
+                </div>
+                {prod.originalPrice && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#64748b' }}>
+                    <span style={{ textDecoration: 'line-through' }}>{prod.originalPrice.toLocaleString('vi-VN')} đ</span>
+                    <span style={{ color: '#dc2626', fontWeight: 700 }}>-{Math.round((1 - prod.price / prod.originalPrice) * 100)}%</span>
+                  </div>
+                )}
+                {prod.stock !== undefined && (
+                  <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px' }}>Còn hàng ({prod.stock})</div>
+                )}
               </div>
               <button 
                 onClick={() => addToCart(prod, 'product')}

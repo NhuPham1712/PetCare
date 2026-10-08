@@ -25,6 +25,7 @@ export const Navbar = () => {
     activeTab, 
     setActiveTab, 
     dbConnected,
+    dbSourceLabel,
     isLoggedIn,
     isAdmin,
     isStaff,
@@ -549,11 +550,11 @@ export const Navbar = () => {
               </span>
             )}
             <span style={{ 
-              background: 'rgba(16, 185, 129, 0.25)', 
-              color: '#6ee7b7',
+              background: dbConnected ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.18)', 
+              color: dbConnected ? '#6ee7b7' : '#fca5a5',
               padding: '2px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700 
             }}>
-              🟢 Hệ Thống Trực Tuyến 24/7
+              {dbConnected ? `🟢 ${dbSourceLabel} : Đã Kết Nối` : `🔴 ${dbSourceLabel} : Mất Kết Nối`}
             </span>
             <span>📍 123 Nguyễn Thị Minh Khai, Q.3, TP.HCM</span>
           </div>

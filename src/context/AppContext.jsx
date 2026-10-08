@@ -152,6 +152,7 @@ export const AppProvider = ({ children }) => {
 
   // Database Connection Indicator
   const [dbConnected, setDbConnected] = useState(false);
+  const [dbSourceLabel, setDbSourceLabel] = useState('Đang kiểm tra...');
 
   // Authentication & Role State: 'customer', 'staff', 'admin'
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -183,7 +184,10 @@ export const AppProvider = ({ children }) => {
 
   const [products, setProducts] = useState(() => {
     const saved = localStorage.getItem('petcare_products');
-    return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+    const savedProducts = saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+    return savedProducts.some(product => product.id === 'prod-07')
+      ? savedProducts
+      : [...savedProducts, INITIAL_PRODUCTS.find(product => product.id === 'prod-07')];
   });
 
   // Cart State
@@ -535,6 +539,7 @@ export const AppProvider = ({ children }) => {
         const data = await res.json();
         if (data.connected) {
           setDbConnected(true);
+          setDbSourceLabel(data.source || 'Aiven');
           
           const petsRes = await fetch(`${API_BASE}/pets`);
           if (petsRes.ok) {
@@ -545,7 +550,11 @@ export const AppProvider = ({ children }) => {
           const prodsRes = await fetch(`${API_BASE}/products`);
           if (prodsRes.ok) {
             const dbProds = await prodsRes.json();
-            if (dbProds.length > 0) setProducts(dbProds);
+            if (dbProds.length > 0) {
+              setProducts(dbProds.some(product => product.id === 'prod-07')
+                ? dbProds
+                : [...dbProds, INITIAL_PRODUCTS.find(product => product.id === 'prod-07')]);
+            }
           }
 
           const bookingsRes = await fetch(`${API_BASE}/bookings`);
@@ -561,9 +570,11 @@ export const AppProvider = ({ children }) => {
           }
         } else {
           setDbConnected(false);
+          setDbSourceLabel(data.source || 'Offline');
         }
       } catch (err) {
         setDbConnected(false);
+        setDbSourceLabel('Offline');
       }
     };
 
@@ -813,7 +824,7 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider value={{
       activeTab, setActiveTab,
-      dbConnected,
+      dbConnected, dbSourceLabel,
       userRole, setUserRole, isAdmin, isStaff, isCustomer,
       isLoggedIn, setIsLoggedIn,
       loginAsAdmin, loginAsStaff, loginAsCustomer, logoutRole,

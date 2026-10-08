@@ -7,6 +7,14 @@ import path from 'path';
 const app = express();
 const PORT = 5000;
 
+const getDbSourceLabel = (config) => {
+  if (!config || !config.host) return 'Unknown DB';
+  const host = config.host.toLowerCase();
+  if (host.includes('aiven') || host.includes('aivencloud')) return 'Aiven';
+  if (host.includes('localhost') || host.includes('127.0.0.1')) return 'Local XAMPP';
+  return 'Cloud MySQL';
+};
+
 app.use(cors());
 app.use(express.json());
 
@@ -82,6 +90,7 @@ app.get('/', (req, res) => {
     message: 'PetCare Center Express API đang hoạt động!', 
     dbHost: dbConfig.host,
     dbPort: dbConfig.port,
+    dbSource: getDbSourceLabel(dbConfig),
     endpoints: ['/api/health', '/api/pets', '/api/products', '/api/bookings', '/api/orders'] 
   });
 });
@@ -89,11 +98,15 @@ app.get('/', (req, res) => {
 // 1. Health check endpoint
 app.get('/api/health', async (req, res) => {
   try {
-    if (!pool) return res.json({ connected: false, message: 'MySQL Pool not initialized' });
+    if (!pool) return res.json({ connected: false, message: 'MySQL Pool not initialized', source: getDbSourceLabel(dbConfig) });
     const [rows] = await pool.query('SELECT 1');
-    res.json({ connected: true, message: `MySQL Server ${dbConfig.host}:${dbConfig.port} is active` });
+    res.json({
+      connected: true,
+      source: getDbSourceLabel(dbConfig),
+      message: `MySQL Server ${dbConfig.host}:${dbConfig.port} is active`
+    });
   } catch (err) {
-    res.json({ connected: false, error: err.message });
+    res.json({ connected: false, error: err.message, source: getDbSourceLabel(dbConfig) });
   }
 });
 
