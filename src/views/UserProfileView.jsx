@@ -63,6 +63,19 @@ export const UserProfileView = () => {
   });
   const [showAddPet, setShowAddPet] = useState(false);
 
+  const normalizePhone = (phone) => String(phone || '').replace(/\D/g, '');
+  const accountPhone = normalizePhone(user.phone);
+  const accountEmail = String(user.email || '').trim().toLowerCase();
+  const belongsToCurrentCustomer = (record) => {
+    const recordEmail = String(record.email || record.customerEmail || '').trim().toLowerCase();
+    if (accountEmail && recordEmail) return accountEmail === recordEmail;
+
+    const recordPhone = normalizePhone(record.phone || record.customerPhone);
+    return Boolean(accountPhone && recordPhone && accountPhone === recordPhone);
+  };
+  const customerMedicalRecords = (medicalRecords || []).filter(belongsToCurrentCustomer);
+  const customerInvoicesForProfile = (customerInvoices || []).filter(belongsToCurrentCustomer);
+
   const handleSaveProfile = (e) => {
     e.preventDefault();
     updateUserProfile(profileForm);
@@ -315,7 +328,7 @@ export const UserProfileView = () => {
                   }}
                 >
                   <FileText size={16} />
-                  <span>🩺 Bệnh Án Thú Cưng ({medicalRecords?.length || 0})</span>
+                  <span>🩺 Bệnh Án Thú Cưng ({customerMedicalRecords.length})</span>
                 </button>
 
                 <button
@@ -328,7 +341,7 @@ export const UserProfileView = () => {
                   }}
                 >
                   <FileText size={16} />
-                  <span>📜 Hóa Đơn Thanh Toán ({customerInvoices?.length || 0})</span>
+                  <span>📜 Hóa Đơn Thanh Toán ({customerInvoicesForProfile.length})</span>
                 </button>
 
                 <button
@@ -475,7 +488,11 @@ export const UserProfileView = () => {
                   <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#047857', marginBottom: '8px' }}>
                     🩺 Hồ Sơ Bệnh Án Khám Bệnh Của Bác Sĩ
                   </h3>
-                  {(medicalRecords || []).map(rec => (
+                  {customerMedicalRecords.length === 0 ? (
+                    <p style={{ background: 'white', borderRadius: '16px', padding: '20px', color: '#64748b', border: '1px solid #e2e8f0' }}>
+                      Tài khoản của bạn chưa có hồ sơ bệnh án.
+                    </p>
+                  ) : customerMedicalRecords.map(rec => (
                     <div key={rec.id} style={{ background: 'white', borderRadius: '20px', padding: '20px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px' }}>
                         <div>
@@ -514,7 +531,11 @@ export const UserProfileView = () => {
                   <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#047857', marginBottom: '8px' }}>
                     📜 Hóa Đơn Thanh Toán Phòng Khám
                   </h3>
-                  {(customerInvoices || []).map(inv => (
+                  {customerInvoicesForProfile.length === 0 ? (
+                    <p style={{ background: 'white', borderRadius: '16px', padding: '20px', color: '#64748b', border: '1px solid #e2e8f0' }}>
+                      Tài khoản của bạn chưa có hóa đơn thanh toán.
+                    </p>
+                  ) : customerInvoicesForProfile.map(inv => (
                     <div key={inv.id} style={{ background: 'white', borderRadius: '20px', padding: '20px', border: '1px solid #e2e8f0' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px' }}>
                         <div>
