@@ -40,15 +40,15 @@ const verifyPassword = (password, storedPassword) => {
   return timingSafeEqual(actual, expected);
 };
 
-const getCustomerByIdentifier = async (identifier) => {
+const getUserByIdentifier = async (identifier, role = 'customer') => {
   const normalizedPhone = String(identifier).replace(/\D/g, '');
   const [rows] = await pool.query(
     `SELECT * FROM users
      WHERE (username = ? OR email = ? OR phone = ?
        OR REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '+', '') = ?)
-       AND role = 'customer'
+       AND role = ?
      LIMIT 1`,
-    [identifier, identifier, identifier, normalizedPhone]
+    [identifier, identifier, identifier, normalizedPhone, role]
   );
   return rows[0];
 };
@@ -214,9 +214,12 @@ app.post('/api/users/register', async (req, res) => {
 
 app.post('/api/users/change-password', async (req, res) => {
   try {
-    const { identifier, currentPassword, newPassword } = req.body;
+    const { identifier, currentPassword, newPassword, role = 'customer' } = req.body;
     if (typeof identifier !== 'string' || typeof currentPassword !== 'string' || typeof newPassword !== 'string') {
       return res.status(400).json({ success: false, message: 'Thông tin đổi mật khẩu không hợp lệ.' });
+    }
+    if (role !== 'customer' && role !== 'staff') {
+      return res.status(400).json({ success: false, message: 'Chỉ tài khoản khách hàng và nhân viên được đổi mật khẩu tại đây.' });
     }
     if (newPassword.length < 8) {
       return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có ít nhất 8 ký tự.' });
@@ -226,7 +229,7 @@ app.post('/api/users/change-password', async (req, res) => {
     }
     if (!pool) return res.status(503).json({ success: false, message: 'Cơ sở dữ liệu hiện không khả dụng.' });
 
-    const user = await getCustomerByIdentifier(identifier.trim());
+    const user = await getUserByIdentifier(identifier.trim(), role);
     if (!user || !verifyPassword(currentPassword, user.password)) {
       return res.status(401).json({ success: false, message: 'Mật khẩu hiện tại không chính xác.' });
     }

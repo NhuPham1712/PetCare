@@ -43,6 +43,7 @@ export const UserProfileView = () => {
     notifications,
     markAllNotificationsAsRead,
     changeCustomerPassword,
+    changeStaffPassword,
     showToast
   } = useApp();
 
@@ -104,7 +105,11 @@ export const UserProfileView = () => {
 
     setIsChangingPassword(true);
     try {
-      await changeCustomerPassword(passwordForm);
+      if (isStaff) {
+        await changeStaffPassword(passwordForm);
+      } else {
+        await changeCustomerPassword(passwordForm);
+      }
       setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (error) {
       showToast(error.message, 'error');
@@ -227,6 +232,17 @@ export const UserProfileView = () => {
                   <div style={{ fontWeight: 700, color: '#be123c' }}>{currentProfile.permissions}</div>
                 </div>
               )}
+              {isStaff && (
+                <button
+                  type="button"
+                  onClick={() => setActiveTabTab(activeTab === 'password' ? 'schedule' : 'password')}
+                  className="btn-secondary"
+                  style={{ width: '100%', justifyContent: 'center', padding: '10px' }}
+                >
+                  <KeyRound size={16} />
+                  <span>{activeTab === 'password' ? 'Ẩn Đổi Mật Khẩu' : 'Đổi Mật Khẩu'}</span>
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -273,6 +289,48 @@ export const UserProfileView = () => {
                   ))}
                 </div>
               </div>
+              {activeTab === 'password' && (
+                <form
+                  onSubmit={handleChangePassword}
+                  style={{
+                    maxWidth: '560px', background: 'white', borderRadius: '16px', padding: '24px',
+                    border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '16px'
+                  }}
+                >
+                  <div>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>Đổi mật khẩu</h3>
+                    <p style={{ color: '#64748b', fontSize: '0.88rem' }}>Nhập mật khẩu hiện tại để xác nhận thay đổi.</p>
+                  </div>
+                  <label style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>
+                    Mật khẩu hiện tại
+                    <input
+                      type="password" required autoComplete="current-password" className="input-field"
+                      value={passwordForm.currentPassword}
+                      onChange={e => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                    />
+                  </label>
+                  <label style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>
+                    Mật khẩu mới
+                    <input
+                      type="password" required minLength={8} autoComplete="new-password" className="input-field"
+                      value={passwordForm.newPassword}
+                      onChange={e => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                    />
+                  </label>
+                  <label style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>
+                    Xác nhận mật khẩu mới
+                    <input
+                      type="password" required minLength={8} autoComplete="new-password" className="input-field"
+                      value={passwordForm.confirmPassword}
+                      onChange={e => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                    />
+                  </label>
+                  <button type="submit" disabled={isChangingPassword} className="btn-primary" style={{ justifyContent: 'center', padding: '12px' }}>
+                    <KeyRound size={16} />
+                    <span>{isChangingPassword ? 'Đang cập nhật...' : 'Cập Nhật Mật Khẩu'}</span>
+                  </button>
+                </form>
+              )}
             </div>
           )}
 
