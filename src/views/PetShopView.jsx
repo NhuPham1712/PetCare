@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Filter, Search, RotateCcw, ShoppingCart, Info, Award, ShieldCheck, Sparkles, UserPlus, LogIn, HeartHandshake, ChevronDown, ChevronUp, X, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { formatVnd } from '../utils/formatVnd';
 
 export const PetShopView = () => {
   const { 
@@ -533,7 +534,7 @@ export const PetShopView = () => {
 
                     <div>
                       <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0284c7', marginBottom: '12px' }}>
-                        {pet.price.toLocaleString('vi-VN')} đ
+                        {formatVnd(pet.price)}
                       </div>
 
                       <div className="pet-card-actions" style={{ display: 'flex', gap: '8px' }}>

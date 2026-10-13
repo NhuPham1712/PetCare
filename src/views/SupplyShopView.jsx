@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ShoppingBag, Search, Star, Truck, QrCode, CreditCard, ShoppingCart } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { formatVnd } from '../utils/formatVnd';
 
 export const SupplyShopView = () => {
   const { products, addToCart, setIsCartOpen } = useApp();
@@ -132,11 +133,11 @@ export const SupplyShopView = () => {
             <div style={{ padding: '0 20px 20px', borderTop: '1px solid #f1f5f9', paddingTop: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0284c7' }}>
-                  {prod.price.toLocaleString('vi-VN')} đ
+                  {formatVnd(prod.price)}
                 </div>
                 {prod.originalPrice && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#64748b' }}>
-                    <span style={{ textDecoration: 'line-through' }}>{prod.originalPrice.toLocaleString('vi-VN')} đ</span>
+                    <span style={{ textDecoration: 'line-through' }}>{formatVnd(prod.originalPrice)}</span>
                     <span style={{ color: '#dc2626', fontWeight: 700 }}>-{Math.round((1 - prod.price / prod.originalPrice) * 100)}%</span>
                   </div>
                 )}
