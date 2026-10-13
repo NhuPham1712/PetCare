@@ -18,7 +18,6 @@ import {
   Briefcase, 
   FileText, 
   Activity, 
-  Bell,
   CheckCircle2, 
   ShieldAlert, 
   LogOut,
