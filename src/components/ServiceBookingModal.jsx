@@ -6,7 +6,7 @@ export const ServiceBookingModal = () => {
   const { selectedServiceForBooking, setSelectedServiceForBooking, createBooking, user } = useApp();
 
   const [bookingForm, setBookingForm] = useState({
-    petName: user.myPets?.[0]?.name ? `${user.myPets[0].name} (${user.myPets[0].breed || 'Thú cưng'})` : 'Mochi (Poodle)',
+    petName: user.myPets?.[0]?.name ? `${user.myPets[0].name} (${user.myPets[0].breed || 'Thú cưng'})` : '',
     serviceName: '',
     date: new Date().toISOString().split('T')[0],
     time: '09:00',

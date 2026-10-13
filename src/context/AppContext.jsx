@@ -170,11 +170,30 @@ export const AppProvider = ({ children }) => {
   // Current Logged In Profile
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('petcare_user');
-    return saved ? JSON.parse(saved) : INITIAL_USER;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed.myPets)) {
+          parsed.myPets = parsed.myPets.filter(p => p.id !== 'mypet-1' && p.name !== 'Mochi');
+        } else {
+          parsed.myPets = [];
+        }
+        return parsed;
+      } catch {
+        return INITIAL_USER;
+      }
+    }
+    return INITIAL_USER;
+  });
+
+  // Active Staff Profile
+  const [activeStaffProfile, setActiveStaffProfile] = useState(() => {
+    const saved = localStorage.getItem('petcare_active_staff');
+    return saved ? JSON.parse(saved) : STAFF_PROFILE;
   });
 
   // Active Profile matching Role
-  const currentProfile = userRole === 'staff' ? STAFF_PROFILE : userRole === 'admin' ? ADMIN_PROFILE : user;
+  const currentProfile = userRole === 'staff' ? activeStaffProfile : userRole === 'admin' ? ADMIN_PROFILE : user;
 
   // Database States
   const [pets, setPets] = useState(() => {
@@ -488,46 +507,93 @@ export const AppProvider = ({ children }) => {
     showToast('👤 Đăng nhập thành công tài khoản Khách Hàng!');
   };
 
-  const loginAsStaff = async () => {
+  const loginAsStaff = async (credentials) => {
+    const username = credentials?.username?.trim() || credentials?.identifier?.trim() || 'bacsi';
+    const password = credentials?.password || '123456';
+
+    let matchedStaff = null;
+    if (dbConnected) {
+      let response;
+      try {
+        response = await fetch(`${API_BASE}/users/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password, role: 'staff' })
+        });
+      } catch {
+        throw new Error('Không thể kết nối đến máy chủ CSDL. Vui lòng kiểm tra kết nối mạng.');
+      }
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Mã nhân viên / email hoặc mật khẩu Bác Sĩ không đúng.');
+      }
+
+      if (result.user) {
+        const found = staffList?.find(s => 
+          s.email?.toLowerCase() === result.user.email?.toLowerCase() ||
+          s.phone === result.user.phone ||
+          s.name === result.user.name
+        );
+        matchedStaff = {
+          name: result.user.name,
+          email: result.user.email,
+          phone: result.user.phone,
+          roleTitle: found?.role || 'Bác Sĩ Thú Y / Chuyên Khoa',
+          department: found?.department || 'Khoa Y Tế & Chăm Sóc Thú Y',
+          workShift: found?.schedule?.['Thứ 2'] ? `Ca làm việc: ${found.schedule['Thứ 2']}` : 'Ca Sáng (07:30 - 15:30) & Trực Cấp Cứu',
+          assignedPets: STAFF_PROFILE.assignedPets,
+          schedule: STAFF_PROFILE.schedule
+        };
+      }
+    }
+
+    if (!matchedStaff) {
+      matchedStaff = STAFF_PROFILE;
+    }
+
+    setActiveStaffProfile(matchedStaff);
+    localStorage.setItem('petcare_active_staff', JSON.stringify(matchedStaff));
     setIsLoggedIn(true);
     setUserRole('staff');
     setActiveTabState('staff_dashboard');
-
-    if (dbConnected) {
-      try {
-        await fetch(`${API_BASE}/users/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: 'bacsi', password: '123456', role: 'staff' })
-        });
-      } catch (err) {}
-    }
-
-    showToast('👨‍⚕️ Đăng nhập thành công với quyền Nhân Viên / Bác Sĩ Thú Y!');
+    showToast(`👨‍⚕️ Xin chào ${matchedStaff.name} - Đăng nhập Bác Sĩ / NV thành công!`);
+    return matchedStaff;
   };
 
-  const loginAsAdmin = async () => {
+  const loginAsAdmin = async (credentials) => {
+    const username = credentials?.username?.trim() || 'admin';
+    const password = credentials?.password || 'admin123';
+
+    if (dbConnected) {
+      let response;
+      try {
+        response = await fetch(`${API_BASE}/users/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password, role: 'admin' })
+        });
+      } catch {
+        throw new Error('Không thể kết nối đến máy chủ CSDL.');
+      }
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Tên đăng nhập hoặc mật khẩu Admin không đúng.');
+      }
+    }
+
     setIsLoggedIn(true);
     setUserRole('admin');
     setActiveTabState('dashboard');
-
-    if (dbConnected) {
-      try {
-        await fetch(`${API_BASE}/users/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: 'admin', password: 'admin123', role: 'admin' })
-        });
-      } catch (err) {}
-    }
-
     showToast('👑 Đăng nhập thành công với quyền Admin / Quản Trị Viên!');
   };
 
   const logoutRole = () => {
     setIsLoggedIn(false);
     setUserRole('customer');
-    setActiveTabState('home');
+    localStorage.removeItem('petcare_customer_authenticated');
+    localStorage.removeItem('petcare_active_staff');
     showToast('Đã đăng xuất tài khoản thành công', 'info');
   };
 

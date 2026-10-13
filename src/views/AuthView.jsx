@@ -29,6 +29,18 @@ export const AuthView = () => {
     password: ''
   });
 
+  // Staff & Admin Form States
+  const [staffLoginForm, setStaffLoginForm] = useState({
+    identifier: 'bs.minh@petcare.vn',
+    password: '123456'
+  });
+  const [adminLoginForm, setAdminLoginForm] = useState({
+    username: 'admin',
+    password: 'admin123'
+  });
+  const [isSubmittingStaff, setIsSubmittingStaff] = useState(false);
+  const [isSubmittingAdmin, setIsSubmittingAdmin] = useState(false);
+
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
     loginAsCustomer({
@@ -52,16 +64,28 @@ export const AuthView = () => {
     setActiveTab('home');
   };
 
-  const handleStaffLoginSubmit = (e) => {
+  const handleStaffLoginSubmit = async (e) => {
     e.preventDefault();
-    loginAsStaff();
-    setActiveTab('staff_dashboard');
+    setIsSubmittingStaff(true);
+    try {
+      await loginAsStaff({ username: staffLoginForm.identifier, password: staffLoginForm.password });
+    } catch (error) {
+      showToast(error.message, 'error');
+    } finally {
+      setIsSubmittingStaff(false);
+    }
   };
 
-  const handleAdminLoginSubmit = (e) => {
+  const handleAdminLoginSubmit = async (e) => {
     e.preventDefault();
-    loginAsAdmin();
-    setActiveTab('dashboard');
+    setIsSubmittingAdmin(true);
+    try {
+      await loginAsAdmin({ username: adminLoginForm.username, password: adminLoginForm.password });
+    } catch (error) {
+      showToast(error.message, 'error');
+    } finally {
+      setIsSubmittingAdmin(false);
+    }
   };
 
   return (
@@ -259,18 +283,64 @@ export const AuthView = () => {
               </div>
 
               <div>
-                <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155' }}>Mã Nhân Viên / Email Công Vụ</label>
-                <input type="text" required className="input-field" defaultValue="bs.minh@petcare.vn" />
+                <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: '4px' }}>Mã Nhân Viên / Email Công Vụ / Username</label>
+                <input 
+                  type="text" 
+                  required 
+                  className="input-field" 
+                  placeholder="bs.minh@petcare.vn hoặc bacsi" 
+                  value={staffLoginForm.identifier} 
+                  onChange={e => setStaffLoginForm({ ...staffLoginForm, identifier: e.target.value })} 
+                />
               </div>
 
               <div>
-                <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155' }}>Mật Khẩu</label>
-                <input type="password" required className="input-field" defaultValue="123456" />
+                <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: '4px' }}>Mật Khẩu</label>
+                <input 
+                  type="password" 
+                  required 
+                  className="input-field" 
+                  placeholder="Mật khẩu (mặc định: 123456)" 
+                  value={staffLoginForm.password} 
+                  onChange={e => setStaffLoginForm({ ...staffLoginForm, password: e.target.value })} 
+                />
               </div>
 
-              <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1rem', background: '#d97706' }}>
+              <div style={{ background: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: '10px', padding: '10px 12px', fontSize: '0.78rem', color: '#475569' }}>
+                <strong style={{ color: '#0f172a', display: 'block', marginBottom: '4px' }}>📋 Danh sách tài khoản Bác sĩ & Nhân viên (Mật khẩu: 123456):</strong>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
+                  {[
+                    { label: 'ThS. BS. Minh', val: 'bs.minh@petcare.vn' },
+                    { label: 'BS. Hoàng', val: 'hoang.nguyen@petcare.com' },
+                    { label: 'BS. Mai', val: 'mai.tran@petcare.com' },
+                    { label: 'KTV. Cường', val: 'cuong.le@petcare.com' },
+                    { label: 'Lễ tân Hương', val: 'huong.pham@petcare.com' },
+                    { label: 'Vận chuyển Tú', val: 'tu.ngo@petcare.com' }
+                  ].map(doc => (
+                    <button
+                      key={doc.val}
+                      type="button"
+                      onClick={() => setStaffLoginForm({ identifier: doc.val, password: '123456' })}
+                      style={{
+                        padding: '3px 8px',
+                        background: staffLoginForm.identifier === doc.val ? '#d97706' : '#e2e8f0',
+                        color: staffLoginForm.identifier === doc.val ? 'white' : '#334155',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontSize: '0.75rem',
+                        fontWeight: 600
+                      }}
+                    >
+                      {doc.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button type="submit" disabled={isSubmittingStaff} className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1rem', background: '#d97706', opacity: isSubmittingStaff ? 0.65 : 1 }}>
                 <Stethoscope size={18} />
-                <span>Đăng Nhập Quyền Bác Sĩ / NV</span>
+                <span>{isSubmittingStaff ? 'Đang xác thực...' : 'Đăng Nhập Quyền Bác Sĩ / NV'}</span>
               </button>
             </form>
           )}
@@ -289,18 +359,30 @@ export const AuthView = () => {
               </div>
 
               <div>
-                <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155' }}>Tên Đăng Nhập Admin</label>
-                <input type="text" required className="input-field" defaultValue="admin" />
+                <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: '4px' }}>Tên Đăng Nhập Admin</label>
+                <input 
+                  type="text" 
+                  required 
+                  className="input-field" 
+                  value={adminLoginForm.username} 
+                  onChange={e => setAdminLoginForm({ ...adminLoginForm, username: e.target.value })} 
+                />
               </div>
 
               <div>
-                <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155' }}>Mật Khẩu Admin</label>
-                <input type="password" required className="input-field" defaultValue="admin123" />
+                <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: '4px' }}>Mật Khẩu Admin</label>
+                <input 
+                  type="password" 
+                  required 
+                  className="input-field" 
+                  value={adminLoginForm.password} 
+                  onChange={e => setAdminLoginForm({ ...adminLoginForm, password: e.target.value })} 
+                />
               </div>
 
-              <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1rem', background: 'linear-gradient(135deg, #0284c7 0%, #1e40af 100%)' }}>
+              <button type="submit" disabled={isSubmittingAdmin} className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1rem', background: 'linear-gradient(135deg, #0284c7 0%, #1e40af 100%)', opacity: isSubmittingAdmin ? 0.65 : 1 }}>
                 <Crown size={18} />
-                <span>Xác Nhận Đăng Nhập Admin</span>
+                <span>{isSubmittingAdmin ? 'Đang xác thực...' : 'Xác Nhận Đăng Nhập Admin'}</span>
               </button>
             </form>
           )}

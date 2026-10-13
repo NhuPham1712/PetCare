@@ -361,53 +361,12 @@ export const STORE_HISTORY = [
 ];
 
 export const INITIAL_USER = {
-  name: 'Nguyễn Văn A',
+  name: 'Khách Hàng PetCare',
   email: 'khachhang@gmail.com',
   phone: '0988 777 888',
   address: '123 Đường Nguyễn Thị Minh Khai, Phường 6, Quận 3, TP. Hồ Chí Minh',
-  myPets: [
-    {
-      id: 'mypet-1',
-      name: 'Mochi',
-      species: 'Chó',
-      breed: 'Poodle',
-      age: '2 tuổi',
-      weight: '3.2 kg',
-      gender: 'Cái',
-      notes: 'Dị ứng hạt gà, thích ăn pate cá hồi.'
-    }
-  ],
-  ordersHistory: [
-    {
-      id: 'ORD-88291',
-      date: '22/09/2026',
-      total: 450000,
-      paymentMethod: 'QR Code (MBBank)',
-      status: 'Đã hoàn thành',
-      items: ['Thức Ăn Hạt Royal Canin Mini Adult (2kg)']
-    }
-  ],
-  servicesHistory: [
-    {
-      id: 'SER-1092',
-      serviceType: 'Spa & Grooming',
-      detail: 'Tắm dưỡng sinh + Cắt tỉa lông mông trái tim',
-      petName: 'Mochi',
-      date: '15/09/2026',
-      transport: 'Trực tiếp đưa đến cửa hàng',
-      status: 'Hoàn thành'
-    }
-  ],
-  boardingHistory: [
-    {
-      id: 'BRD-4012',
-      roomType: 'Phòng VIP Penthouse',
-      petName: 'Mochi',
-      days: 3,
-      startDate: '01/09/2026',
-      endDate: '04/09/2026',
-      transport: 'Vận chuyển đưa đón tận nhà',
-      status: 'Hoàn thành'
-    }
-  ]
+  myPets: [],
+  ordersHistory: [],
+  servicesHistory: [],
+  boardingHistory: []
 };
