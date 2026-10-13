@@ -15,6 +15,7 @@ import {
   Eye
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { formatVnd } from '../utils/formatVnd';
 
 export const AdminDashboardView = () => {
   const { 
@@ -125,7 +126,7 @@ export const AdminDashboardView = () => {
             </div>
           </div>
           <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a' }}>
-            {totalRevenue.toLocaleString('vi-VN')} đ
+            {formatVnd(totalRevenue)}
           </div>
           <div style={{ fontSize: '0.8rem', color: '#16a34a', fontWeight: 600, marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
             <ArrowUpRight size={14} /> +18.5% so với tháng trước

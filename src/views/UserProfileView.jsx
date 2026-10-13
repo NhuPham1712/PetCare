@@ -24,6 +24,7 @@ import {
   KeyRound
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { formatVnd } from '../utils/formatVnd';
 
 export const UserProfileView = () => {
   const { 
@@ -539,7 +540,7 @@ export const UserProfileView = () => {
                         Sản phẩm: {ord.items?.join(', ')}
                       </div>
                       <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0284c7', marginTop: '8px' }}>
-                        Tổng tiền: {ord.total?.toLocaleString('vi-VN')} đ
+                        Tổng tiền: {formatVnd(ord.total)}
                       </div>
                     </div>
                   ))}
@@ -615,7 +616,7 @@ export const UserProfileView = () => {
                         <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#047857', marginBottom: '4px' }}>💊 ĐƠN THUỐC BÁC SĨ KÊ:</div>
                         {rec.prescription.map((p, i) => (
                           <div key={i} style={{ fontSize: '0.82rem', color: '#0f172a' }}>
-                            • <strong>{p.medicineName}</strong> - {p.dosage} ({p.price.toLocaleString('vi-VN')} đ)
+                            • <strong>{p.medicineName}</strong> - {p.dosage} ({formatVnd(p.price)})
                           </div>
                         ))}
                       </div>
@@ -657,13 +658,13 @@ export const UserProfileView = () => {
                         {inv.services.map((s, i) => (
                           <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem' }}>
                             <span>• {s.name}</span>
-                            <strong>{s.price.toLocaleString('vi-VN')} đ</strong>
+                            <strong>{formatVnd(s.price)}</strong>
                           </div>
                         ))}
                         {inv.medicines.map((m, i) => (
                           <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem' }}>
                             <span>• {m.name} (x{m.qty})</span>
-                            <strong>{(m.price * m.qty).toLocaleString('vi-VN')} đ</strong>
+                            <strong>{formatVnd(m.price * m.qty)}</strong>
                           </div>
                         ))}
                       </div>

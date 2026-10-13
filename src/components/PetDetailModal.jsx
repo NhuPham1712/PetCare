@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, ShieldCheck, Check, Heart, ShoppingCart, Award, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { formatVnd } from '../utils/formatVnd';
 
 export const PetDetailModal = () => {
   const { selectedPetForDetail, setSelectedPetForDetail, addToCart } = useApp();
@@ -80,7 +81,7 @@ export const PetDetailModal = () => {
               <h2 style={{ fontSize: '1.6rem', color: 'white', fontWeight: 800 }}>{pet.name}</h2>
             </div>
             <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#38bdf8' }}>
-              {pet.price.toLocaleString('vi-VN')} đ
+              {formatVnd(pet.price)}
             </div>
           </div>
         </div>

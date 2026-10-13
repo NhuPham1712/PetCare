@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Truck, CreditCard, QrCode, CheckCircle2, MapPin, Phone, User, ShieldCheck } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { formatVnd } from '../utils/formatVnd';
 
 export const CheckoutModal = () => {
   const { isCheckoutOpen, setIsCheckoutOpen, cart, user, placeOrder } = useApp();
@@ -223,7 +224,7 @@ export const CheckoutModal = () => {
                 <div style={{ fontSize: '0.95rem', color: '#0284c7', fontWeight: 800 }}>Số tài khoản: 888 999 888 999</div>
                 <div style={{ fontSize: '0.85rem', color: '#475569' }}>Chủ tài khoản: CÔNG TY TNHH PETCARE CENTER</div>
                 <div style={{ fontSize: '0.85rem', color: '#dc2626', fontWeight: 700, marginTop: '4px' }}>
-                  Số tiền cần chuyển: {grandTotal.toLocaleString('vi-VN')} đ
+                  Số tiền cần chuyển: {formatVnd(grandTotal)}
                 </div>
               </div>
             )}
@@ -233,15 +234,15 @@ export const CheckoutModal = () => {
           <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '0.9rem' }}>
               <span>Tiền hàng ({cart.length} món):</span>
-              <span>{totalAmount.toLocaleString('vi-VN')} đ</span>
+              <span>{formatVnd(totalAmount)}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontSize: '0.9rem' }}>
               <span>Phí vận chuyển:</span>
-              <span>{shippingFee === 0 ? 'Miễn phí' : `${shippingFee.toLocaleString('vi-VN')} đ`}</span>
+              <span>{shippingFee === 0 ? 'Miễn phí' : formatVnd(shippingFee)}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', fontSize: '1.25rem', fontWeight: 800, color: '#0284c7' }}>
               <span>Tổng Tiền Đơn Hàng:</span>
-              <span>{grandTotal.toLocaleString('vi-VN')} đ</span>
+              <span>{formatVnd(grandTotal)}</span>
             </div>
 
             <button 
