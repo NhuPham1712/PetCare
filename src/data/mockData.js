@@ -249,6 +249,106 @@ export const INITIAL_PRODUCTS = [
     rating: 4.9,
     sold: 1380,
     description: 'Pate tươi The Pet 1kg cho chó mèo biếng ăn, nguyên liệu tự nhiên, không độn rau củ, giúp bổ sung độ ẩm và hỗ trợ hệ tiêu hóa tốt.'
+  },
+  {
+    id: 'prod-15',
+    name: 'Thức Ăn Hạt Cho Mèo Con Vị Gà (1.5kg)',
+    category: 'Thức Ăn',
+    price: 259000,
+    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 0,
+    description: 'Hạt dinh dưỡng dành cho mèo con, bổ sung protein và taurine hỗ trợ phát triển khỏe mạnh.'
+  },
+  {
+    id: 'prod-16',
+    name: 'Thức Ăn Hạt Cho Chó Trưởng Thành (3kg)',
+    category: 'Thức Ăn',
+    price: 329000,
+    image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 0,
+    description: 'Công thức cân bằng cho chó trưởng thành, hỗ trợ tiêu hóa và duy trì thể trạng ổn định.'
+  },
+  {
+    id: 'prod-17',
+    name: 'Pate Gà Bí Đỏ Cho Mèo (Lon 400g)',
+    category: 'Thức Ăn',
+    price: 69000,
+    image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80',
+    rating: 4.9,
+    sold: 0,
+    description: 'Pate mềm từ thịt gà và bí đỏ, thơm ngon, bổ sung độ ẩm cho khẩu phần ăn của mèo.'
+  },
+  {
+    id: 'prod-18',
+    name: 'Bánh Thưởng Que Nhai Sạch Răng Cho Chó (7 Que)',
+    category: 'Thức Ăn',
+    price: 79000,
+    image: 'https://images.unsplash.com/photo-1582798358481-d199fb7347bb?auto=format&fit=crop&w=800&q=80',
+    rating: 4.7,
+    sold: 0,
+    description: 'Que nhai thưởng giúp chó vận động hàm và hỗ trợ làm sạch mảng bám trong lúc nhai.'
+  },
+  {
+    id: 'prod-19',
+    name: 'Sữa Dê Dinh Dưỡng Cho Chó Mèo (200ml)',
+    category: 'Thức Ăn',
+    price: 45000,
+    image: 'https://images.unsplash.com/photo-1511044568932-338cba0ad803?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 0,
+    description: 'Sữa dê dễ uống, dùng bổ sung dinh dưỡng cho chó mèo trong khẩu phần hằng ngày.'
+  },
+  {
+    id: 'prod-20',
+    name: 'Tấm Lót Vệ Sinh Thấm Hút Nhanh (50 Miếng)',
+    category: 'Đồ Dùng',
+    price: 139000,
+    image: 'https://images.unsplash.com/photo-1545249390-6bdfa286032f?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 0,
+    description: 'Tấm lót nhiều lớp thấm hút nhanh, giúp giữ khu vực nghỉ ngơi của thú cưng khô thoáng.'
+  },
+  {
+    id: 'prod-21',
+    name: 'Bát Ăn Chống Trượt Inox Cho Chó Mèo',
+    category: 'Đồ Dùng',
+    price: 89000,
+    image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=800&q=80',
+    rating: 4.7,
+    sold: 0,
+    description: 'Bát inox bền, dễ vệ sinh, đế chống trượt giúp hạn chế xê dịch khi thú cưng ăn.'
+  },
+  {
+    id: 'prod-22',
+    name: 'Lược Chải Lông Thú Cưng Tự Làm Sạch',
+    category: 'Đồ Dùng',
+    price: 119000,
+    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 0,
+    description: 'Lược răng mềm giúp gỡ lông rụng và rối nhẹ, nút bấm tiện làm sạch sau khi chải.'
+  },
+  {
+    id: 'prod-23',
+    name: 'Đồ Chơi Cần Câu Lông Vũ Cho Mèo',
+    category: 'Đồ Dùng',
+    price: 59000,
+    image: 'https://images.unsplash.com/photo-1511044568932-338cba0ad803?auto=format&fit=crop&w=800&q=80',
+    rating: 4.9,
+    sold: 0,
+    description: 'Cần câu lông vũ nhẹ nhàng khuyến khích mèo vận động và vui chơi cùng chủ.'
+  },
+  {
+    id: 'prod-24',
+    name: 'Túi Vận Chuyển Thú Cưng Thoáng Khí',
+    category: 'Đồ Dùng',
+    price: 349000,
+    image: 'https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 0,
+    description: 'Túi vận chuyển có lưới thông thoáng và quai đeo tiện lợi khi đưa thú cưng đi dạo hoặc khám.'
   }
 ];
 
