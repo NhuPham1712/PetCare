@@ -129,11 +129,43 @@ app.post('/api/users/login', async (req, res) => {
 app.post('/api/users/register', async (req, res) => {
   try {
     const { name, email, phone, address, password, role } = req.body;
-    const username = email.split('@')[0] || `user_${Date.now()}`;
     const userRole = role || 'customer';
-    await pool.query('INSERT INTO users (username, name, email, phone, address, role, password) VALUES (?, ?, ?, ?, ?, ?, ?)', [username, name, email, phone, address, userRole, password || '123456']);
-    res.json({ success: true, message: 'Đã lưu tài khoản khách hàng mới vào CSDL MySQL' });
+    
+    // Check if user already exists by phone or email
+    let existing = [];
+    if (phone || email) {
+      const conditions = [];
+      const params = [];
+      if (phone) {
+        conditions.push('phone = ?');
+        params.push(phone);
+      }
+      if (email) {
+        conditions.push('email = ?');
+        params.push(email);
+      }
+      const [rows] = await pool.query(`SELECT id, username FROM users WHERE ${conditions.join(' OR ')}`, params);
+      existing = rows;
+    }
+    if (existing.length > 0) {
+      await pool.query('UPDATE users SET name = ?, email = COALESCE(NULLIF(?, ""), email), address = COALESCE(NULLIF(?, ""), address) WHERE id = ?', [name, email || '', address || '', existing[0].id]);
+      return res.json({ success: true, message: 'Đã cập nhật tài khoản khách hàng', userId: existing[0].id });
+    }
+
+    let baseUsername = (email && email.includes('@')) ? email.split('@')[0] : (phone || `user_${Date.now()}`);
+    let username = baseUsername;
+    const [checkUser] = await pool.query('SELECT id FROM users WHERE username = ?', [username]);
+    if (checkUser.length > 0) {
+      username = `${baseUsername}_${Date.now().toString().slice(-4)}`;
+    }
+
+    await pool.query(
+      'INSERT INTO users (username, name, email, phone, address, role, password) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [username, name, email || '', phone || '', address || '', userRole, password || '123456']
+    );
+    res.json({ success: true, message: 'Đã lưu tài khoản khách hàng mới vào CSDL MySQL', username });
   } catch (err) {
+    console.error('Error in /api/users/register:', err);
     res.status(500).json({ error: err.message });
   }
 });
