@@ -29,7 +29,7 @@ export const AdminDashboardView = () => {
   } = useApp();
 
   // Financial & Stat Computations
-  const totalRevenue = allOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+  const totalRevenue = allOrders.reduce((sum, order) => sum + Number(order.total || 0), 0);
   const pendingOrders = allOrders.filter(o => o.status !== 'Hoàn thành').length;
   const todayBookings = allBookings.filter(b => b.status !== 'Hoàn thành').length;
 
