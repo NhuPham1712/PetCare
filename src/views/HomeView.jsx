@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { SERVICES_CATALOG, REVIEWS } from '../data/mockData';
-import { formatVnd } from '../utils/formatVnd';
 
 export const HomeView = () => {
   const { setActiveTab, pets, products, setSelectedPetForDetail, setSelectedServiceForBooking, addToCart } = useApp();
@@ -250,7 +249,7 @@ export const HomeView = () => {
 
                   <div>
                     <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0284c7', marginBottom: '12px' }}>
-                      {formatVnd(pet.price)}
+                      {pet.price.toLocaleString('vi-VN')} đ
                     </div>
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <button 

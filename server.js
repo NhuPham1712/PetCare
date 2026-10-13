@@ -3,28 +3,9 @@ import cors from 'cors';
 import mysql from 'mysql2/promise';
 import fs from 'fs';
 import path from 'path';
-import { promisify } from 'node:util';
-import { randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
 
 const app = express();
 const PORT = 5000;
-const scryptAsync = promisify(scrypt);
-
-const hashPassword = async (password) => {
-  const salt = randomBytes(16).toString('hex');
-  const hash = await scryptAsync(password, salt, 64);
-  return `scrypt$${salt}$${hash.toString('hex')}`;
-};
-
-const verifyPassword = async (password, storedPassword) => {
-  if (!storedPassword?.startsWith('scrypt$')) return password === storedPassword;
-
-  const [, salt, storedHash] = storedPassword.split('$');
-  if (!salt || !storedHash) return false;
-  const expectedHash = Buffer.from(storedHash, 'hex');
-  const actualHash = await scryptAsync(password, salt, expectedHash.length);
-  return expectedHash.length === actualHash.length && timingSafeEqual(expectedHash, actualHash);
-};
 
 const getDbSourceLabel = (config) => {
   if (!config || !config.host) return 'Unknown DB';
@@ -76,16 +57,6 @@ const initDb = async () => {
 
     pool = mysql.createPool(connectionOptions);
     const connection = await pool.getConnection();
-    await connection.query(`CREATE TABLE IF NOT EXISTS customer_pets (
-      id VARCHAR(50) PRIMARY KEY,
-      user_phone VARCHAR(50) NOT NULL,
-      name VARCHAR(255) NOT NULL,
-      species VARCHAR(50) NOT NULL,
-      breed VARCHAR(100),
-      weight VARCHAR(50),
-      notes TEXT,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`);
     console.log(`✅ Đã kết nối thành công tới CSDL MySQL tại ${dbConfig.host}:${dbConfig.port} (Database: ${dbConfig.database})`);
     connection.release();
   } catch (error) {
@@ -143,95 +114,26 @@ app.get('/api/health', async (req, res) => {
 app.post('/api/users/login', async (req, res) => {
   try {
     const { username, password, role } = req.body;
-    if (!username || !password) {
-      return res.status(400).json({ success: false, message: 'Vui lòng nhập email/số điện thoại và mật khẩu.' });
+    const [rows] = await pool.query('SELECT * FROM users WHERE (username = ? OR email = ? OR phone = ?) AND password = ?', [username, username, username, password]);
+    if (rows.length > 0) {
+      const user = rows[0];
+      res.json({ success: true, user: { name: user.name, email: user.email, phone: user.phone, address: user.address, role: user.role } });
+    } else {
+      res.status(401).json({ success: false, message: 'Sai tên đăng nhập hoặc mật khẩu!' });
     }
-    const [rows] = await pool.query(
-      `SELECT * FROM users
-       WHERE LOWER(username) = LOWER(?)
-          OR LOWER(email) = LOWER(?)
-          OR REPLACE(REPLACE(phone, ' ', ''), '-', '') = REPLACE(REPLACE(?, ' ', ''), '-', '')
-       ORDER BY CASE
-         WHEN REPLACE(REPLACE(phone, ' ', ''), '-', '') = REPLACE(REPLACE(?, ' ', ''), '-', '') THEN 0
-         WHEN LOWER(email) = LOWER(?) THEN 1
-         ELSE 2
-       END
-       LIMIT 1`,
-      [username, username, username, username, username]
-    );
-    const user = rows[0];
-    if (!user || !(await verifyPassword(password, user.password))) {
-      return res.status(401).json({ success: false, message: 'Sai tên đăng nhập hoặc mật khẩu!' });
-    }
-    if (role && user.role !== role) {
-      return res.status(403).json({ success: false, message: 'Tài khoản không có quyền truy cập mục này.' });
-    }
-
-    if (!user.password.startsWith('scrypt$')) {
-      await pool.query('UPDATE users SET password = ? WHERE id = ?', [await hashPassword(password), user.id]);
-    }
-    res.json({ success: true, user: { name: user.name, email: user.email, phone: user.phone, address: user.address, role: user.role } });
   } catch (err) {
     res.status(500).json({ error: err.message });
-  }
-});
-
-app.post('/api/users/change-password', async (req, res) => {
-  const { identifier, currentPassword, newPassword } = req.body;
-  if (!identifier || !currentPassword || !newPassword || newPassword.length < 6) {
-    return res.status(400).json({ message: 'Vui lòng nhập đủ thông tin; mật khẩu mới cần ít nhất 6 ký tự.' });
-  }
-
-  try {
-    const [users] = await pool.query(
-      'SELECT id, password FROM users WHERE (email = ? OR phone = ?) AND role = ? LIMIT 1',
-      [identifier, identifier, 'customer']
-    );
-    if (users.length === 0 || !(await verifyPassword(currentPassword, users[0].password))) {
-      return res.status(401).json({ message: 'Mật khẩu hiện tại không đúng hoặc tài khoản không tồn tại.' });
-    }
-
-    await pool.query('UPDATE users SET password = ? WHERE id = ?', [await hashPassword(newPassword), users[0].id]);
-    res.json({ success: true, message: 'Đổi mật khẩu thành công.' });
-  } catch (err) {
-    console.error('Không thể đổi mật khẩu khách hàng:', err.message);
-    res.status(500).json({ message: 'Không thể đổi mật khẩu lúc này. Vui lòng thử lại sau.' });
   }
 });
 
 app.post('/api/users/register', async (req, res) => {
   try {
     const { name, email, phone, address, password, role } = req.body;
-    if (!name?.trim() || !email?.trim() || !phone?.trim() || !address?.trim() || !password || password.length < 6) {
-      return res.status(400).json({ success: false, message: 'Vui lòng nhập đủ thông tin; mật khẩu cần ít nhất 6 ký tự.' });
-    }
-    if (role && role !== 'customer') {
-      return res.status(400).json({ success: false, message: 'Không thể đăng ký tài khoản với quyền này.' });
-    }
-
-    const normalizedEmail = email.trim().toLowerCase();
-    const normalizedPhone = phone.trim();
-    const [existingUsers] = await pool.query(
-      `SELECT id FROM users
-       WHERE LOWER(email) = ?
-          OR REPLACE(REPLACE(phone, ' ', ''), '-', '') = REPLACE(REPLACE(?, ' ', ''), '-', '')
-       LIMIT 1`,
-      [normalizedEmail, normalizedPhone]
-    );
-    if (existingUsers.length > 0) {
-      return res.status(409).json({ success: false, message: 'Email hoặc số điện thoại đã được đăng ký.' });
-    }
-
-    const username = normalizedEmail;
-    await pool.query(
-      'INSERT INTO users (username, name, email, phone, address, role, password) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [username, name.trim(), normalizedEmail, normalizedPhone, address.trim(), 'customer', await hashPassword(password)]
-    );
-    res.status(201).json({ success: true, message: 'Đã tạo tài khoản khách hàng.' });
+    const username = email.split('@')[0] || `user_${Date.now()}`;
+    const userRole = role || 'customer';
+    await pool.query('INSERT INTO users (username, name, email, phone, address, role, password) VALUES (?, ?, ?, ?, ?, ?, ?)', [username, name, email, phone, address, userRole, password || '123456']);
+    res.json({ success: true, message: 'Đã lưu tài khoản khách hàng mới vào CSDL MySQL' });
   } catch (err) {
-    if (err.code === 'ER_DUP_ENTRY') {
-      return res.status(409).json({ success: false, message: 'Email hoặc số điện thoại đã được đăng ký.' });
-    }
     res.status(500).json({ error: err.message });
   }
 });

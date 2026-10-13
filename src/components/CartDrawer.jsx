@@ -1,7 +1,6 @@
 import React from 'react';
 import { X, Trash2, Plus, Minus, ShoppingBag, Truck, CreditCard } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { formatVnd } from '../utils/formatVnd';
 
 export const CartDrawer = () => {
   const { 
@@ -86,7 +85,7 @@ export const CartDrawer = () => {
                       {item.name}
                     </div>
                     <div style={{ color: '#0284c7', fontWeight: 700, fontSize: '0.95rem' }}>
-                      {formatVnd(item.price)}
+                      {item.price.toLocaleString('vi-VN')} đ
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px' }}>
@@ -130,11 +129,11 @@ export const CartDrawer = () => {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.9rem', color: '#64748b' }}>
               <span>Tạm tính ({cart.length} sản phẩm):</span>
-              <span style={{ fontWeight: 600, color: '#0f172a' }}>{formatVnd(totalAmount)}</span>
+              <span style={{ fontWeight: 600, color: '#0f172a' }}>{totalAmount.toLocaleString('vi-VN')} đ</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', fontSize: '1.1rem', fontWeight: 800, color: '#0284c7' }}>
               <span>Tổng Tiền Thanh Toán:</span>
-              <span>{formatVnd(totalAmount)}</span>
+              <span>{totalAmount.toLocaleString('vi-VN')} đ</span>
             </div>
 
             <button

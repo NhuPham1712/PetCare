@@ -56,10 +56,6 @@ export const Navbar = () => {
     { id: 'about', label: 'Giới Thiệu' }
   ];
 
-  const customerNavLinks = isLoggedIn
-    ? [...publicNavLinks, { id: 'user', label: 'Hồ Sơ Của Tôi', icon: User }]
-    : publicNavLinks;
-
   const adminNavLinks = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'staff_mgmt', label: 'Quản Lý Bác Sĩ/Nhân Viên', icon: Users },
@@ -129,7 +125,7 @@ export const Navbar = () => {
 
             {/* Navigation Links */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {(isAdmin ? adminNavLinks : isStaff ? staffNavLinks : customerNavLinks).map(link => {
+              {(isAdmin ? adminNavLinks : isStaff ? staffNavLinks : publicNavLinks).map(link => {
                 const Icon = link.icon || Dog;
                 const isActive = activeTab === link.id;
                 return (
@@ -585,30 +581,30 @@ export const Navbar = () => {
               cursor: 'pointer',
               userSelect: 'none',
               flexShrink: 0
-            }}
-          >
-            <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '12px',
-              background: 'linear-gradient(135deg, #0284c7 0%, #1e40af 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justify: 'center',
-              color: 'white',
-              boxShadow: '0 4px 12px rgba(2, 132, 199, 0.35)'
             }}>
-              <Dog size={22} />
-            </div>
-            <div>
-              <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0284c7', lineHeight: 1, fontFamily: 'Inter' }}>
-                PetCare<span style={{ color: '#0f172a' }}>Center</span>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #0284c7 0%, #1e40af 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                boxShadow: '0 4px 12px rgba(2, 132, 199, 0.35)',
+                flexShrink: 0
+              }}>
+                <Dog size={22} />
               </div>
-              <div style={{ fontSize: '0.65rem', color: '#64748b', fontWeight: 600, letterSpacing: '0.5px' }}>
-                CHĂM SÓC & DỊCH VỤ THÚ CƯNG
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0284c7', lineHeight: 1, fontFamily: 'Inter' }}>
+                  PetCare<span style={{ color: '#0f172a' }}>Center</span>
+                </div>
+                <div style={{ fontSize: '0.65rem', color: '#64748b', fontWeight: 600, letterSpacing: '0.5px' }}>
+                  CHĂM SÓC & DỊCH VỤ THÚ CƯNG
+                </div>
               </div>
             </div>
-          </div>
 
           {/* Navigation Links */}
           <nav 

@@ -12,7 +12,6 @@ import {
   Trash2
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { formatVnd } from '../utils/formatVnd';
 
 export const StaffMedicalView = () => {
   const { medicalRecords, createMedicalRecord, showToast } = useApp();
@@ -223,7 +222,7 @@ export const StaffMedicalView = () => {
                       <td style={{ padding: '8px 12px', fontWeight: 700, color: '#0f172a' }}>{m.medicineName}</td>
                       <td style={{ padding: '8px 12px' }}>{m.dosage}</td>
                       <td style={{ padding: '8px 12px', textAlign: 'right', fontWeight: 700, color: '#0284c7' }}>
-                        {formatVnd(m.price)}
+                        {m.price.toLocaleString('vi-VN')} đ
                       </td>
                       <td style={{ padding: '8px 12px', textAlign: 'center' }}>
                         <button onClick={() => handleRemoveMedicine(idx)} style={{ background: 'transparent', color: '#ef4444', cursor: 'pointer' }}>

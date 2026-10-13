@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { LayoutDashboard, Calendar, ShoppingBag, Clock, CheckCircle, Truck, PhoneCall, Filter } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { formatVnd } from '../utils/formatVnd';
 
 export const ManagementView = () => {
   const { allBookings, allOrders, updateBookingStatusAdmin, updateOrderStatusAdmin } = useApp();
@@ -192,7 +191,7 @@ export const ManagementView = () => {
                       <span className="badge-blue">{ord.paymentMethod}</span>
                     </td>
                     <td style={{ padding: '14px 16px', fontWeight: 800, color: '#0284c7' }}>
-                      {ord.total == null ? '—' : formatVnd(ord.total)}
+                      {ord.total?.toLocaleString('vi-VN')} đ
                     </td>
                     <td style={{ padding: '14px 16px' }}>
                       <select 
