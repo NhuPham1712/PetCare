@@ -167,6 +167,16 @@ export const INITIAL_PRODUCTS = [
     description: 'Chuồng chó mèo khung thép chắc chắn, sơn tĩnh điện chống rỉ, thiết kế xếp gọn tiện mang đi xa.'
   },
   {
+    id: 'prod-08',
+    name: 'Pate Mousse Cá Hồi Cho Mèo (Lon 85g)',
+    category: 'Thức Ăn',
+    price: 39000,
+    image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80',
+    rating: 5.0,
+    sold: 0,
+    description: 'Pate mousse cá hồi mềm mịn, thơm ngon, tiện dùng làm bữa ăn chính hoặc món thưởng cho mèo.'
+  },
+  {
     id: 'prod-07',
     name: 'Pate Mèo Dạng Thạch Nekko Jelly 70g',
     category: 'Thức Ăn',
