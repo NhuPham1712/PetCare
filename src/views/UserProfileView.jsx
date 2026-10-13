@@ -19,7 +19,8 @@ import {
   Activity, 
   CheckCircle2, 
   ShieldAlert, 
-  LogOut 
+  LogOut,
+  Bell
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
