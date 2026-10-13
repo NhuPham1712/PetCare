@@ -80,7 +80,7 @@ async function run() {
   ];
 
   const defaultPassword = '123456';
-  const hashedPassword = await hashPassword(defaultPassword);
+  const hashedPassword = defaultPassword;
 
   for (const doc of doctors) {
     const [existing] = await conn.query(
