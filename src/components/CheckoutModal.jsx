@@ -132,7 +132,7 @@ export const CheckoutModal = () => {
                 }}
               >
                 <div style={{ fontWeight: 700, fontSize: '0.92rem', color: '#0f172a' }}>🏠 Giao Hàng Tận Nhà</div>
-                <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>Xe đưa đón thú cưng & vận chuyển hàng tận nơi (+30.000đ)</div>
+                <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>Xe đưa đón thú cưng & vận chuyển hàng tận nơi (+30.000 VNĐ)</div>
               </div>
 
               <div 
