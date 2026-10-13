@@ -636,19 +636,55 @@ export const AppProvider = ({ children }) => {
   const clearCart = () => setCart([]);
 
   // User Functions
-  const updateUserProfile = (updatedProfile) => {
+  const updateUserProfile = async (updatedProfile) => {
     setUser(prev => ({ ...prev, ...updatedProfile }));
+    if (dbConnected && (user.phone || updatedProfile.phone)) {
+      try {
+        await fetch(`${API_BASE}/users/profile`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: user.phone || updatedProfile.phone,
+            name: updatedProfile.name,
+            email: updatedProfile.email,
+            address: updatedProfile.address
+          })
+        });
+      } catch (err) {}
+    }
     showToast('Đã cập nhật thông tin cá nhân & địa chỉ giao hàng!');
   };
 
-  const addCustomerPet = (petData) => {
+  const addCustomerPet = async (petData) => {
     const newPet = { ...petData, id: `mypet-${Date.now()}` };
     setUser(prev => ({ ...prev, myPets: [...prev.myPets, newPet] }));
+    if (dbConnected) {
+      try {
+        await fetch(`${API_BASE}/customer-pets`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: newPet.id,
+            user_phone: user.phone || '0988 777 888',
+            name: newPet.name,
+            species: newPet.species,
+            breed: newPet.breed,
+            weight: newPet.weight,
+            notes: newPet.notes
+          })
+        });
+      } catch (err) {}
+    }
     showToast(`Đã lưu chó/mèo "${petData.name}" vào danh sách thú cưng của bạn!`);
   };
 
-  const deleteCustomerPet = (petId) => {
+  const deleteCustomerPet = async (petId) => {
     setUser(prev => ({ ...prev, myPets: prev.myPets.filter(p => p.id !== petId) }));
+    if (dbConnected) {
+      try {
+        await fetch(`${API_BASE}/customer-pets/${petId}`, { method: 'DELETE' });
+      } catch (err) {}
+    }
     showToast('Đã xóa thú cưng khỏi tài khoản', 'info');
   };
 

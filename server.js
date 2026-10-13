@@ -138,6 +138,46 @@ app.post('/api/users/register', async (req, res) => {
   }
 });
 
+// 1.6 Cập Nhật Hồ Sơ Khách Hàng
+app.put('/api/users/profile', async (req, res) => {
+  try {
+    const { phone, name, email, address } = req.body;
+    await pool.query('UPDATE users SET name = ?, email = ?, address = ? WHERE phone = ?', [name, email, address, phone]);
+    res.json({ success: true, message: 'Đã cập nhật thông tin hồ sơ' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 1.7 Thú Cưng Khách Hàng (Customer Pets)
+app.get('/api/customer-pets/:phone', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM customer_pets WHERE user_phone = ? ORDER BY created_at DESC', [req.params.phone]);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/customer-pets', async (req, res) => {
+  try {
+    const { id, user_phone, name, species, breed, weight, notes } = req.body;
+    await pool.query('INSERT INTO customer_pets (id, user_phone, name, species, breed, weight, notes) VALUES (?, ?, ?, ?, ?, ?, ?)', [id, user_phone, name, species, breed, weight, notes]);
+    res.json({ success: true, message: 'Đã lưu thú cưng của khách hàng' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/customer-pets/:id', async (req, res) => {
+  try {
+    await pool.query('DELETE FROM customer_pets WHERE id = ?', [req.params.id]);
+    res.json({ success: true, message: 'Đã xóa thú cưng của khách hàng' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 2. GET & POST Pets (CSDL Thú Cưng)
 app.get('/api/pets', async (req, res) => {
   try {
