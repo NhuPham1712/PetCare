@@ -102,7 +102,7 @@ export const Footer = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.9rem' }}>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <MapPin size={20} color="#38bdf8" />
-                <span>123 Đường Nguyễn Thị Minh Khai, Phường 6, Quận 3, TP. Hồ Chí Minh</span>
+                <span>68 Nguyễn Chí Thanh, Phường Đống đa, TP Hà Nội</span>
               </div>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <Clock size={20} color="#38bdf8" />

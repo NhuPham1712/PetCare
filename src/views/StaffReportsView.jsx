@@ -10,7 +10,6 @@ import {
   Award
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { formatVnd } from '../utils/formatVnd';
 
 export const StaffReportsView = () => {
   const { allBookings, allOrders, customerInvoices, medicalRecords } = useApp();
@@ -81,7 +80,7 @@ export const StaffReportsView = () => {
             </div>
           </div>
           <div style={{ fontSize: '2rem', fontWeight: 800, color: '#0284c7' }}>
-            {formatVnd(totalRevenue)}
+            {totalRevenue.toLocaleString('vi-VN')} đ
           </div>
           <div style={{ fontSize: '0.8rem', color: '#0369a1', fontWeight: 600, marginTop: '4px' }}>
             +24.5% tăng trưởng so với kỳ trước

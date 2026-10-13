@@ -11,7 +11,6 @@ import {
   DollarSign
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { formatVnd } from '../utils/formatVnd';
 
 export const StaffBillingView = () => {
   const { customerInvoices, createInvoice, showToast } = useApp();
@@ -178,7 +177,7 @@ export const StaffBillingView = () => {
                     <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '8px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                       <span style={{ fontSize: '0.84rem', fontWeight: 600 }}>{srv.name}</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <strong style={{ color: '#047857', fontSize: '0.84rem' }}>{formatVnd(srv.price)}</strong>
+                        <strong style={{ color: '#047857', fontSize: '0.84rem' }}>{srv.price.toLocaleString('vi-VN')} đ</strong>
                         <button type="button" onClick={() => handleAddService(srv)} style={{ background: '#e0f2fe', color: '#0284c7', border: 'none', padding: '4px 10px', borderRadius: '6px', fontWeight: 700, fontSize: '0.78rem', cursor: 'pointer' }}>+ Thêm</button>
                       </div>
                     </div>
@@ -196,7 +195,7 @@ export const StaffBillingView = () => {
                     <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '8px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                       <span style={{ fontSize: '0.84rem', fontWeight: 600 }}>{med.name}</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <strong style={{ color: '#047857', fontSize: '0.84rem' }}>{formatVnd(med.price)}</strong>
+                        <strong style={{ color: '#047857', fontSize: '0.84rem' }}>{med.price.toLocaleString('vi-VN')} đ</strong>
                         <button type="button" onClick={() => handleAddMedicine(med)} style={{ background: '#d1fae5', color: '#047857', border: 'none', padding: '4px 10px', borderRadius: '6px', fontWeight: 700, fontSize: '0.78rem', cursor: 'pointer' }}>+ Thêm</button>
                       </div>
                     </div>
@@ -249,7 +248,7 @@ export const StaffBillingView = () => {
                 {selectedServices.map((s, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #e2e8f0', fontSize: '0.84rem' }}>
                     <span>{s.name}</span>
-                    <strong style={{ color: '#0f172a' }}>{formatVnd(s.price)}</strong>
+                    <strong style={{ color: '#0f172a' }}>{s.price.toLocaleString('vi-VN')} đ</strong>
                   </div>
                 ))}
               </div>
@@ -260,7 +259,7 @@ export const StaffBillingView = () => {
                 {selectedMedicines.map((m, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #e2e8f0', fontSize: '0.84rem' }}>
                     <span>{m.name} (x{m.qty})</span>
-                    <strong style={{ color: '#0f172a' }}>{formatVnd(m.price * m.qty)}</strong>
+                    <strong style={{ color: '#0f172a' }}>{(m.price * m.qty).toLocaleString('vi-VN')} đ</strong>
                   </div>
                 ))}
               </div>
@@ -271,7 +270,7 @@ export const StaffBillingView = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '1rem', fontWeight: 800, color: '#0369a1' }}>TỔNG CỘNG THANH TOÁN:</span>
                 <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0284c7' }}>
-                  {formatVnd(grandTotal)}
+                  {grandTotal.toLocaleString('vi-VN')} đ
                 </span>
               </div>
             </div>
@@ -308,7 +307,7 @@ export const StaffBillingView = () => {
                     <td style={{ padding: '14px 16px' }}>{inv.date}</td>
                     <td style={{ padding: '14px 16px' }}><span className="badge-blue">{inv.paymentMethod}</span></td>
                     <td style={{ padding: '14px 16px', fontWeight: 900, color: '#047857', fontSize: '1.05rem' }}>
-                      {inv.totalAmount == null ? '—' : formatVnd(inv.totalAmount)}
+                      {inv.totalAmount?.toLocaleString('vi-VN')} đ
                     </td>
                     <td style={{ padding: '14px 16px' }}>
                       <button onClick={() => handlePrint(inv.id)} style={{ background: '#e0f2fe', color: '#0284c7', border: 'none', padding: '6px 12px', borderRadius: '8px', fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
