@@ -524,8 +524,7 @@ export const AppProvider = ({ children }) => {
     await loginAsCustomer({ identifier: profileData.email, password: profileData.password });
   };
 
-  const changeCustomerPassword = async ({ currentPassword, newPassword }) => {
-    const identifier = user.email || user.phone;
+  const submitPasswordChange = async ({ identifier, role, currentPassword, newPassword }) => {
     if (!identifier) throw new Error('Không tìm thấy email hoặc số điện thoại của tài khoản.');
 
     let response;
@@ -533,7 +532,7 @@ export const AppProvider = ({ children }) => {
       response = await fetch(`${API_BASE}/users/change-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier, currentPassword, newPassword })
+        body: JSON.stringify({ identifier, role, currentPassword, newPassword })
       });
     } catch {
       throw new Error('Không thể kết nối máy chủ. Mật khẩu chưa được thay đổi.');
@@ -545,6 +544,20 @@ export const AppProvider = ({ children }) => {
     }
     showToast('Đổi mật khẩu thành công.');
   };
+
+  const changeCustomerPassword = ({ currentPassword, newPassword }) => submitPasswordChange({
+    identifier: user.email || user.phone,
+    role: 'customer',
+    currentPassword,
+    newPassword
+  });
+
+  const changeStaffPassword = ({ currentPassword, newPassword }) => submitPasswordChange({
+    identifier: activeStaffProfile.email || activeStaffProfile.phone,
+    role: 'staff',
+    currentPassword,
+    newPassword
+  });
 
   const loginAsStaff = async (credentials) => {
     const username = credentials?.username?.trim() || credentials?.identifier?.trim() || 'bacsi';
@@ -932,7 +945,7 @@ export const AppProvider = ({ children }) => {
       dbConnected, dbSourceLabel,
       userRole, setUserRole, isAdmin, isStaff, isCustomer,
       isLoggedIn, setIsLoggedIn,
-      loginAsAdmin, loginAsStaff, loginAsCustomer, registerCustomer, changeCustomerPassword, logoutRole,
+      loginAsAdmin, loginAsStaff, loginAsCustomer, registerCustomer, changeCustomerPassword, changeStaffPassword, logoutRole,
       currentProfile, STAFF_PROFILE, ADMIN_PROFILE,
       authMode, setAuthMode,
       pets, setPets,
