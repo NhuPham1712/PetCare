@@ -4,6 +4,7 @@ import {
   INITIAL_PRODUCTS, 
   INITIAL_USER 
 } from '../data/mockData';
+import { formatVnd } from '../utils/formatVnd';
 
 const AppContext = createContext();
 
@@ -413,7 +414,7 @@ export const AppProvider = ({ children }) => {
     setCustomerInvoices(prev => [invoiceData, ...prev]);
     addNotification({
       title: '📜 Hóa đơn đã được tạo',
-      message: `Bác sĩ đã lập Hóa đơn thanh toán (${invoiceData.id}) tổng cộng ${invoiceData.totalAmount?.toLocaleString('vi-VN')}đ cho bé ${invoiceData.petName}.`,
+      message: `Bác sĩ đã lập Hóa đơn thanh toán (${invoiceData.id}) tổng cộng ${formatVnd(invoiceData.totalAmount)} cho bé ${invoiceData.petName}.`,
       type: 'invoice'
     });
   };

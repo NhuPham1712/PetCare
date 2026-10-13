@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Database, Plus, Trash2, Edit3, ShieldAlert, Check, Dog, ShoppingBag } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { formatVnd } from '../utils/formatVnd';
 
 export const AdminView = () => {
   const { pets, products, addPetAdmin, deletePetAdmin, addProductAdmin } = useApp();
@@ -147,7 +148,7 @@ export const AdminView = () => {
                     <td style={{ padding: '12px 16px' }}><span className="badge-emerald">{p.vaccination}</span></td>
                     <td style={{ padding: '12px 16px' }}>{p.origin}</td>
                     <td style={{ padding: '12px 16px', fontWeight: 800, color: '#0284c7' }}>
-                      {p.price.toLocaleString('vi-VN')} đ
+                      {formatVnd(p.price)}
                     </td>
                     <td style={{ padding: '12px 16px' }}>
                       <button 
