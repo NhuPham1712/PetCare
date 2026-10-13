@@ -229,6 +229,26 @@ export const INITIAL_PRODUCTS = [
     rating: 4.6,
     sold: 280,
     description: 'Sản phẩm hỗ trợ chăm sóc da lông, giảm gàu và ve rận hiệu quả, an toàn với thú cưng.'
+  },
+  {
+    id: 'prod-13',
+    name: 'Thức Ăn Hạt Cho Mèo Mọi Lứa Tuổi Me-O 1.3kg',
+    category: 'Thức Ăn',
+    price: 195000,
+    image: 'https://images.unsplash.com/photo-1511044568932-338cba0ad803?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 540,
+    description: 'Hạt mèo dinh dưỡng, giàu protein và taurine, hỗ trợ hệ tiêu hóa khỏe mạnh và bộ lông bóng mượt.'
+  },
+  {
+    id: 'prod-14',
+    name: 'Pate Mèo The Pet Cho Chó Mèo 1Kg',
+    category: 'Thức Ăn',
+    price: 105000,
+    image: 'https://fexafkqzpbzjcupvbfhe.supabase.co/storage/v1/object/public/product-images/products/b7eced41-1faa-4259-8f17-07d30f9ebd34/4d04bca4-357d-4370-9315-da60abfd0ee2/pate-t-i-the-pet-cho-ch-m-o-bi-ng-n-1kg-ship-now-g.jpg',
+    rating: 4.9,
+    sold: 1380,
+    description: 'Pate tươi The Pet 1kg cho chó mèo biếng ăn, nguyên liệu tự nhiên, không độn rau củ, giúp bổ sung độ ẩm và hỗ trợ hệ tiêu hóa tốt.'
   }
 ];
 
