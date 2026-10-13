@@ -14,7 +14,7 @@ export const INITIAL_PETS = [
     origin: 'Thuần chủng VKA',
     age: '3 tháng',
     price: 14500000,
-    image: 'https://images.unsplash.com/photo-1612536057832-2ff7ead7819c?auto=format&fit=crop&w=800&q=80',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSAvtCohIWDu2t33Zx1tyAqRTk15nudM11Vc_gVxFXVw&s=10',
     description: 'Bé Corgi đực mông trái tim siêu xinh, thần thái vui tươi, ăn uống rất khỏe, đã chích ngừa đầy đủ và kèm phả VKA.',
     status: 'Còn hàng'
   },
@@ -101,6 +101,23 @@ export const INITIAL_PETS = [
     price: 7800000,
     image: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=800&q=80',
     description: 'Bé mèo Mỹ lông ngắn sọc vân hổ cực cá tính, nhanh nhẹn, bắt chuột giỏi và ngoan ngoãn.',
+    status: 'Còn hàng'
+  },
+  {
+    id: 'pet-07',
+    name: 'Mèo Abyssinian Nhập Khẩu Ai Cập MAC003',
+    species: 'Mèo',
+    breed: 'Abyssinian',
+    weight: 'Chưa cập nhật',
+    weightCategory: 'Tất cả',
+    gender: 'Chưa cập nhật',
+    color: 'Vàng',
+    vaccination: '3 Mũi',
+    origin: 'Thuần chủng',
+    age: 'Chưa cập nhật',
+    price: 8000000,
+    image: 'https://mappethouse.vn/wp-content/uploads/2025/09/Meo-Abyssinian-Nhap-Khau-Ai-Cap-MAC003-600x600.jpg',
+    description: 'Mèo Abyssinian mã MAC003, nhập khẩu từ Ai Cập, màu vàng, thuần chủng và đã tiêm 3 mũi.',
     status: 'Còn hàng'
   }
 ];

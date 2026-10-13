@@ -9,6 +9,17 @@ import { formatVnd } from '../utils/formatVnd';
 const AppContext = createContext();
 
 const API_BASE = 'http://localhost:5000/api';
+const includeInitialPets = (petList) => {
+  const updatedCorgi = INITIAL_PETS.find(pet => pet.id === 'pet-01');
+  const petsById = new Map(petList.map(pet => [
+    pet.id,
+    pet.id === 'pet-01' ? { ...pet, image: updatedCorgi.image } : pet
+  ]));
+  INITIAL_PETS.forEach(pet => {
+    if (!petsById.has(pet.id)) petsById.set(pet.id, pet);
+  });
+  return Array.from(petsById.values());
+};
 
 // Predefined profiles for different roles
 const STAFF_PROFILE = {
@@ -199,7 +210,7 @@ export const AppProvider = ({ children }) => {
   // Database States
   const [pets, setPets] = useState(() => {
     const saved = localStorage.getItem('petcare_pets');
-    return saved ? JSON.parse(saved) : INITIAL_PETS;
+    return includeInitialPets(saved ? JSON.parse(saved) : []);
   });
 
   const [products, setProducts] = useState(() => {
@@ -663,7 +674,7 @@ export const AppProvider = ({ children }) => {
           const petsRes = await fetch(`${API_BASE}/pets`);
           if (petsRes.ok) {
             const dbPets = await petsRes.json();
-            if (dbPets.length > 0) setPets(dbPets);
+            setPets(includeInitialPets(dbPets));
           }
 
           const prodsRes = await fetch(`${API_BASE}/products`);
