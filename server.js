@@ -57,6 +57,16 @@ const initDb = async () => {
 
     pool = mysql.createPool(connectionOptions);
     const connection = await pool.getConnection();
+    await connection.query(`CREATE TABLE IF NOT EXISTS customer_pets (
+      id VARCHAR(50) PRIMARY KEY,
+      user_phone VARCHAR(50) NOT NULL,
+      name VARCHAR(255) NOT NULL,
+      species VARCHAR(50) NOT NULL,
+      breed VARCHAR(100),
+      weight VARCHAR(50),
+      notes TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`);
     console.log(`✅ Đã kết nối thành công tới CSDL MySQL tại ${dbConfig.host}:${dbConfig.port} (Database: ${dbConfig.database})`);
     connection.release();
   } catch (error) {
