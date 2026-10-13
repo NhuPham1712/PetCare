@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, User, Phone, MapPin, Mail, Lock, Crown, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { X, User, Lock, Crown } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export const AuthModal = () => {
@@ -9,7 +9,6 @@ export const AuthModal = () => {
     authMode, 
     setAuthMode, 
     user, 
-    updateUserProfile, 
     loginAsAdmin, 
     loginAsCustomer, 
     showToast,
@@ -19,11 +18,9 @@ export const AuthModal = () => {
   const [isRegister, setIsRegister] = useState(false);
 
   // Customer Form State
-  const [customerData, setCustomerData] = useState({
-    name: user.name || '',
-    email: user.email || '',
-    phone: user.phone || '',
-    address: user.address || ''
+  const [customerLogin, setCustomerLogin] = useState({
+    identifier: user.email || user.phone || '',
+    password: ''
   });
 
   // Admin Form State
@@ -34,12 +31,14 @@ export const AuthModal = () => {
 
   if (!isAuthModalOpen) return null;
 
-  const handleCustomerSubmit = (e) => {
+  const handleCustomerSubmit = async (e) => {
     e.preventDefault();
-    loginAsCustomer(customerData);
-    setIsAuthModalOpen(false);
-    setActiveTab('home');
-    showToast('🎉 Đăng nhập thành công!');
+    try {
+      await loginAsCustomer(customerLogin);
+      setIsAuthModalOpen(false);
+    } catch (error) {
+      showToast(error.message, 'error');
+    }
   };
 
   const handleAdminSubmit = (e) => {
@@ -150,45 +149,30 @@ export const AuthModal = () => {
           <form onSubmit={handleCustomerSubmit} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
               <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                Họ và Tên Khách Hàng
+                Số Điện Thoại / Email
               </label>
               <div style={{ position: 'relative' }}>
                 <User size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
                 <input 
                   type="text" required className="input-field" style={{ paddingLeft: '40px' }}
-                  value={customerData.name}
-                  onChange={e => setCustomerData({ ...customerData, name: e.target.value })}
-                  placeholder="Nguyễn Văn A"
+                  value={customerLogin.identifier}
+                  onChange={e => setCustomerLogin({ ...customerLogin, identifier: e.target.value })}
+                  placeholder="Số điện thoại hoặc email"
                 />
               </div>
             </div>
 
             <div>
               <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                Số Điện Thoại (Nhận lịch hẹn & Giao hàng)
+                Mật Khẩu
               </label>
               <div style={{ position: 'relative' }}>
-                <Phone size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
+                <Lock size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
                 <input 
-                  type="tel" required className="input-field" style={{ paddingLeft: '40px' }}
-                  value={customerData.phone}
-                  onChange={e => setCustomerData({ ...customerData, phone: e.target.value })}
-                  placeholder="0988 777 888"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                Địa Chỉ Giao Hàng & Đưa Đón Thú Cưng
-              </label>
-              <div style={{ position: 'relative' }}>
-                <MapPin size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
-                <input 
-                  type="text" required className="input-field" style={{ paddingLeft: '40px' }}
-                  value={customerData.address}
-                  onChange={e => setCustomerData({ ...customerData, address: e.target.value })}
-                  placeholder="123 Đường Nguyễn Thị Minh Khai, P.6, Q.3, TP.HCM"
+                  type="password" required autoComplete="current-password" className="input-field" style={{ paddingLeft: '40px' }}
+                  value={customerLogin.password}
+                  onChange={e => setCustomerLogin({ ...customerLogin, password: e.target.value })}
+                  placeholder="Nhập mật khẩu"
                 />
               </div>
             </div>

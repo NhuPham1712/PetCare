@@ -4,8 +4,8 @@ import { useApp } from '../context/AppContext';
 
 export const AuthView = () => {
   const { 
-    setActiveTab, 
     loginAsCustomer, 
+    registerCustomer,
     loginAsStaff,
     loginAsAdmin, 
     user, 
@@ -20,7 +20,8 @@ export const AuthView = () => {
     phone: '',
     address: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
 
   // Customer Login Form State
@@ -40,28 +41,37 @@ export const AuthView = () => {
   });
   const [isSubmittingStaff, setIsSubmittingStaff] = useState(false);
   const [isSubmittingAdmin, setIsSubmittingAdmin] = useState(false);
+  const [isSubmittingCustomer, setIsSubmittingCustomer] = useState(false);
 
-  const handleRegisterSubmit = (e) => {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
-    loginAsCustomer({
-      name: registerForm.name,
-      phone: registerForm.phone,
-      address: registerForm.address,
-      email: registerForm.email
-    });
-    showToast('🎉 Tạo tài khoản thành công!');
-    setActiveTab('home');
+    if (registerForm.password !== registerForm.confirmPassword) {
+      showToast('Mật khẩu xác nhận không khớp.', 'error');
+      return;
+    }
+    setIsSubmittingCustomer(true);
+    try {
+      await registerCustomer(registerForm);
+    } catch (error) {
+      showToast(error.message, 'error');
+    } finally {
+      setIsSubmittingCustomer(false);
+    }
   };
 
-  const handleCustomerLoginSubmit = (e) => {
+  const handleCustomerLoginSubmit = async (e) => {
     e.preventDefault();
-    loginAsCustomer({
-      name: user.name || 'Nguyễn Văn A',
-      phone: loginForm.phoneOrEmail,
-      address: user.address || ''
-    });
-    showToast('🎉 Đăng nhập thành công!');
-    setActiveTab('home');
+    setIsSubmittingCustomer(true);
+    try {
+      await loginAsCustomer({
+        identifier: loginForm.phoneOrEmail,
+        password: loginForm.password
+      });
+    } catch (error) {
+      showToast(error.message, 'error');
+    } finally {
+      setIsSubmittingCustomer(false);
+    }
   };
 
   const handleStaffLoginSubmit = async (e) => {
@@ -223,11 +233,20 @@ export const AuthView = () => {
                 <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: '6px' }}>Mật Khẩu</label>
                 <div style={{ position: 'relative' }}>
                   <Lock size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
-                  <input type="password" required className="input-field" style={{ paddingLeft: '40px' }} placeholder="••••••••" />
+                  <input
+                    type="password"
+                    required
+                    autoComplete="current-password"
+                    className="input-field"
+                    style={{ paddingLeft: '40px' }}
+                    placeholder="••••••••"
+                    value={loginForm.password}
+                    onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
+                  />
                 </div>
               </div>
 
-              <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1rem', marginTop: '10px' }}>
+              <button type="submit" disabled={isSubmittingCustomer} className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1rem', marginTop: '10px' }}>
                 <LogIn size={18} />
                 <span>Đăng Nhập Khách Hàng & Xem Hồ Sơ</span>
               </button>
@@ -262,7 +281,16 @@ export const AuthView = () => {
                 <input type="email" required className="input-field" placeholder="khachhang@gmail.com" value={registerForm.email} onChange={e => setRegisterForm({ ...registerForm, email: e.target.value })} />
               </div>
 
-              <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1rem', marginTop: '6px' }}>
+              <div>
+                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#334155' }}>Mật khẩu (ít nhất 8 ký tự)</label>
+                <input type="password" required minLength={8} className="input-field" autoComplete="new-password" value={registerForm.password} onChange={e => setRegisterForm({ ...registerForm, password: e.target.value })} />
+              </div>
+              <div>
+                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#334155' }}>Xác nhận mật khẩu</label>
+                <input type="password" required minLength={8} className="input-field" autoComplete="new-password" value={registerForm.confirmPassword} onChange={e => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })} />
+              </div>
+
+              <button type="submit" disabled={isSubmittingCustomer} className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1rem', marginTop: '6px' }}>
                 <UserPlus size={18} />
                 <span>Tạo Tài Khoản & Lưu Thông Tin Hồ Sơ</span>
               </button>

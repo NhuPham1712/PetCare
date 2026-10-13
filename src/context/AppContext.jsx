@@ -480,31 +480,70 @@ export const AppProvider = ({ children }) => {
   }, [userRole, isLoggedIn]);
 
   // Auth Functions
-  const loginAsCustomer = async (profileData) => {
+  const loginAsCustomer = async ({ identifier, password }) => {
+    let response;
+    try {
+      response = await fetch(`${API_BASE}/users/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: identifier.trim(), password, role: 'customer' })
+      });
+    } catch {
+      throw new Error('Không thể kết nối máy chủ. Vui lòng kiểm tra backend rồi thử lại.');
+    }
+
+    const result = await response.json();
+    if (!response.ok || !result.success || !result.user) {
+      throw new Error(result.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+    }
+
+    setUser(prev => ({ ...prev, ...result.user }));
     setIsLoggedIn(true);
     setUserRole('customer');
-    if (profileData) {
-      setUser(prev => ({ ...prev, ...profileData }));
-    }
-
-    if (dbConnected && profileData) {
-      try {
-        await fetch(`${API_BASE}/users/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: profileData.name || 'Khách Hàng',
-            email: profileData.email || 'khachhang@gmail.com',
-            phone: profileData.phone || '0988 777 888',
-            address: profileData.address || '',
-            role: 'customer',
-            password: '123456'
-          })
-        });
-      } catch (err) {}
-    }
-
+    setActiveTabState('user');
     showToast('👤 Đăng nhập thành công tài khoản Khách Hàng!');
+    return result.user;
+  };
+
+  const registerCustomer = async (profileData) => {
+    let response;
+    try {
+      response = await fetch(`${API_BASE}/users/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...profileData, role: 'customer' })
+      });
+    } catch {
+      throw new Error('Không thể kết nối máy chủ. Vui lòng kiểm tra backend rồi thử lại.');
+    }
+
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Không thể tạo tài khoản.');
+    }
+    await loginAsCustomer({ identifier: profileData.email, password: profileData.password });
+  };
+
+  const changeCustomerPassword = async ({ currentPassword, newPassword }) => {
+    const identifier = user.email || user.phone;
+    if (!identifier) throw new Error('Không tìm thấy email hoặc số điện thoại của tài khoản.');
+
+    let response;
+    try {
+      response = await fetch(`${API_BASE}/users/change-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, currentPassword, newPassword })
+      });
+    } catch {
+      throw new Error('Không thể kết nối máy chủ. Mật khẩu chưa được thay đổi.');
+    }
+
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Không thể đổi mật khẩu.');
+    }
+    showToast('Đổi mật khẩu thành công.');
   };
 
   const loginAsStaff = async (credentials) => {
@@ -893,7 +932,7 @@ export const AppProvider = ({ children }) => {
       dbConnected, dbSourceLabel,
       userRole, setUserRole, isAdmin, isStaff, isCustomer,
       isLoggedIn, setIsLoggedIn,
-      loginAsAdmin, loginAsStaff, loginAsCustomer, logoutRole,
+      loginAsAdmin, loginAsStaff, loginAsCustomer, registerCustomer, changeCustomerPassword, logoutRole,
       currentProfile, STAFF_PROFILE, ADMIN_PROFILE,
       authMode, setAuthMode,
       pets, setPets,

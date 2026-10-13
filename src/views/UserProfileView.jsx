@@ -20,7 +20,8 @@ import {
   CheckCircle2, 
   ShieldAlert, 
   LogOut,
-  Bell
+  Bell,
+  KeyRound
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -40,7 +41,9 @@ export const UserProfileView = () => {
     medicalRecords,
     customerInvoices,
     notifications,
-    markAllNotificationsAsRead
+    markAllNotificationsAsRead,
+    changeCustomerPassword,
+    showToast
   } = useApp();
 
   const [activeTab, setActiveTabTab] = useState(userRole === 'staff' ? 'schedule' : userRole === 'admin' ? 'logs' : 'pets');
@@ -63,6 +66,12 @@ export const UserProfileView = () => {
     notes: ''
   });
   const [showAddPet, setShowAddPet] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   const normalizePhone = (phone) => String(phone || '').replace(/\D/g, '');
   const accountPhone = normalizePhone(user.phone);
@@ -80,6 +89,28 @@ export const UserProfileView = () => {
   const handleSaveProfile = (e) => {
     e.preventDefault();
     updateUserProfile(profileForm);
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      showToast('Mật khẩu xác nhận không khớp.', 'error');
+      return;
+    }
+    if (passwordForm.newPassword === passwordForm.currentPassword) {
+      showToast('Mật khẩu mới phải khác mật khẩu hiện tại.', 'error');
+      return;
+    }
+
+    setIsChangingPassword(true);
+    try {
+      await changeCustomerPassword(passwordForm);
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (error) {
+      showToast(error.message, 'error');
+    } finally {
+      setIsChangingPassword(false);
+    }
   };
 
   const handleAddPetSubmit = (e) => {
@@ -357,6 +388,19 @@ export const UserProfileView = () => {
                   <Bell size={16} />
                   <span>🔔 Thông Báo Của Tôi ({(notifications || []).filter(n => n.unread).length})</span>
                 </button>
+
+                <button
+                  onClick={() => setActiveTabTab('password')}
+                  style={{
+                    padding: '10px 18px', borderRadius: '12px', fontWeight: 700, fontSize: '0.9rem',
+                    background: activeTab === 'password' ? '#0284c7' : 'white',
+                    color: activeTab === 'password' ? 'white' : '#475569',
+                    border: '1px solid #cbd5e1', display: 'flex', alignItems: 'center', gap: '6px'
+                  }}
+                >
+                  <KeyRound size={16} />
+                  <span>Đổi Mật Khẩu</span>
+                </button>
               </div>
 
               {/* Customer Tab 1: Pets Manager */}
@@ -607,6 +651,49 @@ export const UserProfileView = () => {
                     ))
                   )}
                 </div>
+              )}
+
+              {activeTab === 'password' && (
+                <form
+                  onSubmit={handleChangePassword}
+                  style={{
+                    maxWidth: '560px', background: 'white', borderRadius: '16px', padding: '24px',
+                    border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '16px'
+                  }}
+                >
+                  <div>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>Đổi mật khẩu</h3>
+                    <p style={{ color: '#64748b', fontSize: '0.88rem' }}>Nhập mật khẩu hiện tại để xác nhận thay đổi.</p>
+                  </div>
+                  <label style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>
+                    Mật khẩu hiện tại
+                    <input
+                      type="password" required autoComplete="current-password" className="input-field"
+                      value={passwordForm.currentPassword}
+                      onChange={e => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                    />
+                  </label>
+                  <label style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>
+                    Mật khẩu mới
+                    <input
+                      type="password" required minLength={8} autoComplete="new-password" className="input-field"
+                      value={passwordForm.newPassword}
+                      onChange={e => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                    />
+                  </label>
+                  <label style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>
+                    Xác nhận mật khẩu mới
+                    <input
+                      type="password" required minLength={8} autoComplete="new-password" className="input-field"
+                      value={passwordForm.confirmPassword}
+                      onChange={e => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                    />
+                  </label>
+                  <button type="submit" disabled={isChangingPassword} className="btn-primary" style={{ justifyContent: 'center', padding: '12px' }}>
+                    <KeyRound size={16} />
+                    <span>{isChangingPassword ? 'Đang cập nhật...' : 'Cập Nhật Mật Khẩu'}</span>
+                  </button>
+                </form>
               )}
 
             </div>
