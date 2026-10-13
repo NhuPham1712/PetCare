@@ -8,23 +8,17 @@ export const AuthModal = () => {
     setIsAuthModalOpen, 
     authMode, 
     setAuthMode, 
-    user, 
-    updateUserProfile, 
     loginAsAdmin, 
-    loginAsCustomer, 
+    authenticateCustomer,
     showToast,
     setActiveTab
   } = useApp();
 
-  const [isRegister, setIsRegister] = useState(false);
-
-  // Customer Form State
-  const [customerData, setCustomerData] = useState({
-    name: user.name || '',
-    email: user.email || '',
-    phone: user.phone || '',
-    address: user.address || ''
+  const [customerCredentials, setCustomerCredentials] = useState({
+    identifier: '',
+    password: ''
   });
+  const [isSubmittingCustomer, setIsSubmittingCustomer] = useState(false);
 
   // Admin Form State
   const [adminData, setAdminData] = useState({
@@ -34,12 +28,17 @@ export const AuthModal = () => {
 
   if (!isAuthModalOpen) return null;
 
-  const handleCustomerSubmit = (e) => {
+  const handleCustomerSubmit = async (e) => {
     e.preventDefault();
-    loginAsCustomer(customerData);
-    setIsAuthModalOpen(false);
-    setActiveTab('home');
-    showToast('🎉 Đăng nhập thành công!');
+    setIsSubmittingCustomer(true);
+    try {
+      await authenticateCustomer(customerCredentials);
+      setIsAuthModalOpen(false);
+    } catch (error) {
+      showToast(error.message, 'error');
+    } finally {
+      setIsSubmittingCustomer(false);
+    }
   };
 
   const handleAdminSubmit = (e) => {
@@ -149,52 +148,35 @@ export const AuthModal = () => {
         {authMode === 'customer' && (
           <form onSubmit={handleCustomerSubmit} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                Họ và Tên Khách Hàng
-              </label>
-              <div style={{ position: 'relative' }}>
-                <User size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
-                <input 
-                  type="text" required className="input-field" style={{ paddingLeft: '40px' }}
-                  value={customerData.name}
-                  onChange={e => setCustomerData({ ...customerData, name: e.target.value })}
-                  placeholder="Nguyễn Văn A"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                Số Điện Thoại (Nhận lịch hẹn & Giao hàng)
-              </label>
+              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>Email hoặc số điện thoại</label>
               <div style={{ position: 'relative' }}>
                 <Phone size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
                 <input 
-                  type="tel" required className="input-field" style={{ paddingLeft: '40px' }}
-                  value={customerData.phone}
-                  onChange={e => setCustomerData({ ...customerData, phone: e.target.value })}
-                  placeholder="0988 777 888"
+                  type="text" required className="input-field" style={{ paddingLeft: '40px' }}
+                  autoComplete="username"
+                  value={customerCredentials.identifier}
+                  onChange={e => setCustomerCredentials({ ...customerCredentials, identifier: e.target.value })}
+                  placeholder="Email hoặc số điện thoại"
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                Địa Chỉ Giao Hàng & Đưa Đón Thú Cưng
-              </label>
+              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>Mật khẩu</label>
               <div style={{ position: 'relative' }}>
-                <MapPin size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
+                <Lock size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
                 <input 
-                  type="text" required className="input-field" style={{ paddingLeft: '40px' }}
-                  value={customerData.address}
-                  onChange={e => setCustomerData({ ...customerData, address: e.target.value })}
-                  placeholder="123 Đường Nguyễn Thị Minh Khai, P.6, Q.3, TP.HCM"
+                  type="password" required className="input-field" style={{ paddingLeft: '40px' }}
+                  autoComplete="current-password"
+                  value={customerCredentials.password}
+                  onChange={e => setCustomerCredentials({ ...customerCredentials, password: e.target.value })}
+                  placeholder="Nhập mật khẩu"
                 />
               </div>
             </div>
 
-            <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '10px', padding: '12px' }}>
-              Đăng Nhập Khách Hàng
+            <button type="submit" disabled={isSubmittingCustomer} className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '10px', padding: '12px', opacity: isSubmittingCustomer ? 0.65 : 1 }}>
+              {isSubmittingCustomer ? 'Đang xác thực...' : 'Đăng Nhập Khách Hàng'}
             </button>
           </form>
         )}

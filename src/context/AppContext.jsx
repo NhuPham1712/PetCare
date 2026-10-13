@@ -9,6 +9,15 @@ const AppContext = createContext();
 
 const API_BASE = 'http://localhost:5000/api';
 
+const mergeProducts = (...productLists) => {
+  const productsById = new Map();
+  productLists.flat().forEach(product => {
+    if (!product?.id) return;
+    productsById.set(product.id, { ...productsById.get(product.id), ...product });
+  });
+  return [...productsById.values()];
+};
+
 // Predefined profiles for different roles
 const STAFF_PROFILE = {
   name: 'ThS. BS. Nguyễn Văn Minh',
@@ -156,7 +165,9 @@ export const AppProvider = ({ children }) => {
 
   // Authentication & Role State: 'customer', 'staff', 'admin'
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem('petcare_logged_in') === 'true';
+    const role = localStorage.getItem('petcare_role') || 'customer';
+    const authenticated = localStorage.getItem('petcare_logged_in') === 'true';
+    return authenticated && (role !== 'customer' || localStorage.getItem('petcare_customer_authenticated') === 'true');
   });
 
   const [userRole, setUserRole] = useState(() => {
@@ -172,6 +183,7 @@ export const AppProvider = ({ children }) => {
     const saved = localStorage.getItem('petcare_user');
     return saved ? JSON.parse(saved) : INITIAL_USER;
   });
+  const [customerStorageKey, setCustomerStorageKey] = useState(() => localStorage.getItem('petcare_customer_key') || '');
 
   // Active Profile matching Role
   const currentProfile = userRole === 'staff' ? STAFF_PROFILE : userRole === 'admin' ? ADMIN_PROFILE : user;
@@ -184,10 +196,8 @@ export const AppProvider = ({ children }) => {
 
   const [products, setProducts] = useState(() => {
     const saved = localStorage.getItem('petcare_products');
-    const savedProducts = saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
-    return savedProducts.some(product => product.id === 'prod-07')
-      ? savedProducts
-      : [...savedProducts, INITIAL_PRODUCTS.find(product => product.id === 'prod-07')];
+    const savedProducts = saved ? JSON.parse(saved) : [];
+    return mergeProducts(INITIAL_PRODUCTS, savedProducts);
   });
 
   // Cart State
@@ -461,31 +471,91 @@ export const AppProvider = ({ children }) => {
   }, [userRole, isLoggedIn]);
 
   // Auth Functions
-  const loginAsCustomer = async (profileData) => {
-    setIsLoggedIn(true);
+  const authenticateCustomer = async ({ identifier, password }) => {
+    let response;
+    try {
+      response = await fetch(`${API_BASE}/users/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: identifier.trim(), password, role: 'customer' })
+      });
+    } catch {
+      throw new Error('Không kết nối được máy chủ đăng nhập. Vui lòng thử lại sau.');
+    }
+
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Số điện thoại/email hoặc mật khẩu không đúng.');
+    }
+    if (result.user.role !== 'customer') {
+      throw new Error('Tài khoản này không phải tài khoản khách hàng.');
+    }
+
+    const storageKey = `petcare_user_${encodeURIComponent(result.user.email || result.user.phone)}`;
+    const savedProfile = localStorage.getItem(storageKey);
+    const accountData = savedProfile ? JSON.parse(savedProfile) : {};
+    const authenticatedUser = {
+      ...accountData,
+      ...result.user,
+      myPets: accountData.myPets || [],
+      ordersHistory: accountData.ordersHistory || [],
+      servicesHistory: accountData.servicesHistory || [],
+      boardingHistory: accountData.boardingHistory || []
+    };
+
+    localStorage.setItem('petcare_customer_authenticated', 'true');
+    localStorage.setItem('petcare_customer_key', storageKey);
+    setCustomerStorageKey(storageKey);
+    setUser(authenticatedUser);
     setUserRole('customer');
-    if (profileData) {
-      setUser(prev => ({ ...prev, ...profileData }));
-    }
-
-    if (dbConnected && profileData) {
-      try {
-        await fetch(`${API_BASE}/users/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: profileData.name || 'Khách Hàng',
-            email: profileData.email || 'khachhang@gmail.com',
-            phone: profileData.phone || '0988 777 888',
-            address: profileData.address || '',
-            role: 'customer',
-            password: '123456'
-          })
-        });
-      } catch (err) {}
-    }
-
+    setIsLoggedIn(true);
+    setActiveTabState('user');
     showToast('👤 Đăng nhập thành công tài khoản Khách Hàng!');
+    return authenticatedUser;
+  };
+
+  const registerCustomer = async (profileData) => {
+    let response;
+    try {
+      response = await fetch(`${API_BASE}/users/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...profileData, role: 'customer' })
+      });
+    } catch {
+      throw new Error('Không kết nối được máy chủ đăng ký. Vui lòng thử lại sau.');
+    }
+
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Không thể tạo tài khoản. Hãy kiểm tra thông tin và thử lại.');
+    }
+
+    return authenticateCustomer({ identifier: profileData.email, password: profileData.password });
+  };
+
+  const changeCustomerPassword = async ({ currentPassword, newPassword }) => {
+    const identifier = user.phone || user.email;
+    if (!identifier) {
+      throw new Error('Không tìm thấy email hoặc số điện thoại của tài khoản.');
+    }
+
+    let response;
+    try {
+      response = await fetch(`${API_BASE}/users/change-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, currentPassword, newPassword })
+      });
+    } catch {
+      throw new Error('Không kết nối được máy chủ. Hãy kiểm tra backend rồi thử lại.');
+    }
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.message || 'Không thể đổi mật khẩu.');
+    }
+    showToast('Đổi mật khẩu thành công.');
   };
 
   const loginAsStaff = async () => {
@@ -528,6 +598,7 @@ export const AppProvider = ({ children }) => {
     setIsLoggedIn(false);
     setUserRole('customer');
     setActiveTabState('home');
+    localStorage.removeItem('petcare_customer_authenticated');
     showToast('Đã đăng xuất tài khoản thành công', 'info');
   };
 
@@ -550,11 +621,7 @@ export const AppProvider = ({ children }) => {
           const prodsRes = await fetch(`${API_BASE}/products`);
           if (prodsRes.ok) {
             const dbProds = await prodsRes.json();
-            if (dbProds.length > 0) {
-              setProducts(dbProds.some(product => product.id === 'prod-07')
-                ? dbProds
-                : [...dbProds, INITIAL_PRODUCTS.find(product => product.id === 'prod-07')]);
-            }
+            if (dbProds.length > 0) setProducts(prev => mergeProducts(prev, dbProds));
           }
 
           const bookingsRes = await fetch(`${API_BASE}/bookings`);
@@ -592,7 +659,10 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem('petcare_user', JSON.stringify(user));
-  }, [user]);
+    if (customerStorageKey) {
+      localStorage.setItem(customerStorageKey, JSON.stringify(user));
+    }
+  }, [user, customerStorageKey]);
 
   useEffect(() => {
     localStorage.setItem('petcare_cart', JSON.stringify(cart));
@@ -863,7 +933,7 @@ export const AppProvider = ({ children }) => {
       dbConnected, dbSourceLabel,
       userRole, setUserRole, isAdmin, isStaff, isCustomer,
       isLoggedIn, setIsLoggedIn,
-      loginAsAdmin, loginAsStaff, loginAsCustomer, logoutRole,
+      loginAsAdmin, loginAsStaff, authenticateCustomer, registerCustomer, changeCustomerPassword, logoutRole,
       currentProfile, STAFF_PROFILE, ADMIN_PROFILE,
       authMode, setAuthMode,
       pets, setPets,

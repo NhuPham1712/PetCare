@@ -335,6 +335,27 @@ html, body {
     justify-content: space-between !important;
   }
 
+  .user-profile-view {
+    padding: 24px 16px !important;
+  }
+
+  .user-profile-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .customer-profile-tabs {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    justify-content: flex-start;
+  }
+
+  .customer-profile-tabs button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
   .navbar-logo {
     order: 1 !important;
   }
@@ -521,6 +542,5 @@ html, body {
     justify-content: center !important;
   }
 }
-
 
 

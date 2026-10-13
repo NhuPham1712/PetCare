@@ -3,9 +3,28 @@ import cors from 'cors';
 import mysql from 'mysql2/promise';
 import fs from 'fs';
 import path from 'path';
+import { promisify } from 'node:util';
+import { randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
 
 const app = express();
 const PORT = 5000;
+const scryptAsync = promisify(scrypt);
+
+const hashPassword = async (password) => {
+  const salt = randomBytes(16).toString('hex');
+  const hash = await scryptAsync(password, salt, 64);
+  return `scrypt$${salt}$${hash.toString('hex')}`;
+};
+
+const verifyPassword = async (password, storedPassword) => {
+  if (!storedPassword?.startsWith('scrypt$')) return password === storedPassword;
+
+  const [, salt, storedHash] = storedPassword.split('$');
+  if (!salt || !storedHash) return false;
+  const expectedHash = Buffer.from(storedHash, 'hex');
+  const actualHash = await scryptAsync(password, salt, expectedHash.length);
+  return expectedHash.length === actualHash.length && timingSafeEqual(expectedHash, actualHash);
+};
 
 const getDbSourceLabel = (config) => {
   if (!config || !config.host) return 'Unknown DB';
@@ -114,98 +133,95 @@ app.get('/api/health', async (req, res) => {
 app.post('/api/users/login', async (req, res) => {
   try {
     const { username, password, role } = req.body;
-    const [rows] = await pool.query('SELECT * FROM users WHERE (username = ? OR email = ? OR phone = ?) AND password = ?', [username, username, username, password]);
-    if (rows.length > 0) {
-      const user = rows[0];
-      res.json({ success: true, user: { name: user.name, email: user.email, phone: user.phone, address: user.address, role: user.role } });
-    } else {
-      res.status(401).json({ success: false, message: 'Sai tên đăng nhập hoặc mật khẩu!' });
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: 'Vui lòng nhập email/số điện thoại và mật khẩu.' });
     }
+    const [rows] = await pool.query(
+      `SELECT * FROM users
+       WHERE LOWER(username) = LOWER(?)
+          OR LOWER(email) = LOWER(?)
+          OR REPLACE(REPLACE(phone, ' ', ''), '-', '') = REPLACE(REPLACE(?, ' ', ''), '-', '')
+       ORDER BY CASE
+         WHEN REPLACE(REPLACE(phone, ' ', ''), '-', '') = REPLACE(REPLACE(?, ' ', ''), '-', '') THEN 0
+         WHEN LOWER(email) = LOWER(?) THEN 1
+         ELSE 2
+       END
+       LIMIT 1`,
+      [username, username, username, username, username]
+    );
+    const user = rows[0];
+    if (!user || !(await verifyPassword(password, user.password))) {
+      return res.status(401).json({ success: false, message: 'Sai tên đăng nhập hoặc mật khẩu!' });
+    }
+    if (role && user.role !== role) {
+      return res.status(403).json({ success: false, message: 'Tài khoản không có quyền truy cập mục này.' });
+    }
+
+    if (!user.password.startsWith('scrypt$')) {
+      await pool.query('UPDATE users SET password = ? WHERE id = ?', [await hashPassword(password), user.id]);
+    }
+    res.json({ success: true, user: { name: user.name, email: user.email, phone: user.phone, address: user.address, role: user.role } });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/users/change-password', async (req, res) => {
+  const { identifier, currentPassword, newPassword } = req.body;
+  if (!identifier || !currentPassword || !newPassword || newPassword.length < 6) {
+    return res.status(400).json({ message: 'Vui lòng nhập đủ thông tin; mật khẩu mới cần ít nhất 6 ký tự.' });
+  }
+
+  try {
+    const [users] = await pool.query(
+      'SELECT id, password FROM users WHERE (email = ? OR phone = ?) AND role = ? LIMIT 1',
+      [identifier, identifier, 'customer']
+    );
+    if (users.length === 0 || !(await verifyPassword(currentPassword, users[0].password))) {
+      return res.status(401).json({ message: 'Mật khẩu hiện tại không đúng hoặc tài khoản không tồn tại.' });
+    }
+
+    await pool.query('UPDATE users SET password = ? WHERE id = ?', [await hashPassword(newPassword), users[0].id]);
+    res.json({ success: true, message: 'Đổi mật khẩu thành công.' });
+  } catch (err) {
+    console.error('Không thể đổi mật khẩu khách hàng:', err.message);
+    res.status(500).json({ message: 'Không thể đổi mật khẩu lúc này. Vui lòng thử lại sau.' });
   }
 });
 
 app.post('/api/users/register', async (req, res) => {
   try {
     const { name, email, phone, address, password, role } = req.body;
-    const userRole = role || 'customer';
-    
-    // Check if user already exists by phone or email
-    let existing = [];
-    if (phone || email) {
-      const conditions = [];
-      const params = [];
-      if (phone) {
-        conditions.push('phone = ?');
-        params.push(phone);
-      }
-      if (email) {
-        conditions.push('email = ?');
-        params.push(email);
-      }
-      const [rows] = await pool.query(`SELECT id, username FROM users WHERE ${conditions.join(' OR ')}`, params);
-      existing = rows;
+    if (!name?.trim() || !email?.trim() || !phone?.trim() || !address?.trim() || !password || password.length < 6) {
+      return res.status(400).json({ success: false, message: 'Vui lòng nhập đủ thông tin; mật khẩu cần ít nhất 6 ký tự.' });
     }
-    if (existing.length > 0) {
-      await pool.query('UPDATE users SET name = ?, email = COALESCE(NULLIF(?, ""), email), address = COALESCE(NULLIF(?, ""), address) WHERE id = ?', [name, email || '', address || '', existing[0].id]);
-      return res.json({ success: true, message: 'Đã cập nhật tài khoản khách hàng', userId: existing[0].id });
+    if (role && role !== 'customer') {
+      return res.status(400).json({ success: false, message: 'Không thể đăng ký tài khoản với quyền này.' });
     }
 
-    let baseUsername = (email && email.includes('@')) ? email.split('@')[0] : (phone || `user_${Date.now()}`);
-    let username = baseUsername;
-    const [checkUser] = await pool.query('SELECT id FROM users WHERE username = ?', [username]);
-    if (checkUser.length > 0) {
-      username = `${baseUsername}_${Date.now().toString().slice(-4)}`;
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedPhone = phone.trim();
+    const [existingUsers] = await pool.query(
+      `SELECT id FROM users
+       WHERE LOWER(email) = ?
+          OR REPLACE(REPLACE(phone, ' ', ''), '-', '') = REPLACE(REPLACE(?, ' ', ''), '-', '')
+       LIMIT 1`,
+      [normalizedEmail, normalizedPhone]
+    );
+    if (existingUsers.length > 0) {
+      return res.status(409).json({ success: false, message: 'Email hoặc số điện thoại đã được đăng ký.' });
     }
 
+    const username = normalizedEmail;
     await pool.query(
       'INSERT INTO users (username, name, email, phone, address, role, password) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [username, name, email || '', phone || '', address || '', userRole, password || '123456']
+      [username, name.trim(), normalizedEmail, normalizedPhone, address.trim(), 'customer', await hashPassword(password)]
     );
-    res.json({ success: true, message: 'Đã lưu tài khoản khách hàng mới vào CSDL MySQL', username });
+    res.status(201).json({ success: true, message: 'Đã tạo tài khoản khách hàng.' });
   } catch (err) {
-    console.error('Error in /api/users/register:', err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// 1.6 Cập Nhật Hồ Sơ Khách Hàng
-app.put('/api/users/profile', async (req, res) => {
-  try {
-    const { phone, name, email, address } = req.body;
-    await pool.query('UPDATE users SET name = ?, email = ?, address = ? WHERE phone = ?', [name, email, address, phone]);
-    res.json({ success: true, message: 'Đã cập nhật thông tin hồ sơ' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// 1.7 Thú Cưng Khách Hàng (Customer Pets)
-app.get('/api/customer-pets/:phone', async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM customer_pets WHERE user_phone = ? ORDER BY created_at DESC', [req.params.phone]);
-    res.json(rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.post('/api/customer-pets', async (req, res) => {
-  try {
-    const { id, user_phone, name, species, breed, weight, notes } = req.body;
-    await pool.query('INSERT INTO customer_pets (id, user_phone, name, species, breed, weight, notes) VALUES (?, ?, ?, ?, ?, ?, ?)', [id, user_phone, name, species, breed, weight, notes]);
-    res.json({ success: true, message: 'Đã lưu thú cưng của khách hàng' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.delete('/api/customer-pets/:id', async (req, res) => {
-  try {
-    await pool.query('DELETE FROM customer_pets WHERE id = ?', [req.params.id]);
-    res.json({ success: true, message: 'Đã xóa thú cưng của khách hàng' });
-  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ success: false, message: 'Email hoặc số điện thoại đã được đăng ký.' });
+    }
     res.status(500).json({ error: err.message });
   }
 });

@@ -8,6 +8,7 @@ import {
   ShoppingBag, 
   Stethoscope, 
   Hotel, 
+  Bell,
   Plus, 
   Trash2, 
   Save, 
@@ -19,7 +20,8 @@ import {
   Activity, 
   CheckCircle2, 
   ShieldAlert, 
-  LogOut 
+  LogOut,
+  Lock
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -27,6 +29,7 @@ export const UserProfileView = () => {
   const { 
     user, 
     updateUserProfile, 
+    changeCustomerPassword,
     addCustomerPet, 
     deleteCustomerPet, 
     userRole, 
@@ -39,7 +42,8 @@ export const UserProfileView = () => {
     medicalRecords,
     customerInvoices,
     notifications,
-    markAllNotificationsAsRead
+    markAllNotificationsAsRead,
+    showToast
   } = useApp();
 
   const [activeTab, setActiveTabTab] = useState(userRole === 'staff' ? 'schedule' : userRole === 'admin' ? 'logs' : 'pets');
@@ -51,6 +55,12 @@ export const UserProfileView = () => {
     address: user.address,
     email: user.email
   });
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   const [newPetForm, setNewPetForm] = useState({
     name: '',
@@ -68,6 +78,28 @@ export const UserProfileView = () => {
     updateUserProfile(profileForm);
   };
 
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      showToast('Mật khẩu mới và mật khẩu xác nhận không khớp.', 'error');
+      return;
+    }
+    if (passwordForm.newPassword.length < 6) {
+      showToast('Mật khẩu mới cần ít nhất 6 ký tự.', 'error');
+      return;
+    }
+
+    setIsChangingPassword(true);
+    try {
+      await changeCustomerPassword(passwordForm);
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (error) {
+      showToast(error.message, 'error');
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
+
   const handleAddPetSubmit = (e) => {
     e.preventDefault();
     addCustomerPet(newPetForm);
@@ -76,7 +108,7 @@ export const UserProfileView = () => {
   };
 
   return (
-    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '40px 24px' }}>
+    <div className="user-profile-view" style={{ maxWidth: '1280px', margin: '0 auto', padding: '40px 24px' }}>
       
       {/* Title & Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
@@ -98,7 +130,7 @@ export const UserProfileView = () => {
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: '30px' }}>
+      <div className="user-profile-layout" style={{ display: 'grid', gridTemplateColumns: '340px minmax(0, 1fr)', gap: '30px' }}>
         
         {/* Left Column: Role Card */}
         <div style={{
@@ -127,39 +159,81 @@ export const UserProfileView = () => {
 
           {/* Editable Customer Info OR Staff/Admin Readonly Info */}
           {userRole === 'customer' ? (
-            <form onSubmit={handleSaveProfile} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div>
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Họ và tên</label>
-                <input 
-                  type="text" className="input-field" required
-                  value={profileForm.name}
-                  onChange={e => setProfileForm({ ...profileForm, name: e.target.value })}
-                />
-              </div>
+            <>
+              <form onSubmit={handleSaveProfile} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div>
+                  <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Họ và tên</label>
+                  <input
+                    type="text" className="input-field" required
+                    value={profileForm.name}
+                    onChange={e => setProfileForm({ ...profileForm, name: e.target.value })}
+                  />
+                </div>
 
-              <div>
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Số điện thoại liên hệ</label>
-                <input 
-                  type="tel" className="input-field" required
-                  value={profileForm.phone}
-                  onChange={e => setProfileForm({ ...profileForm, phone: e.target.value })}
-                />
-              </div>
+                <div>
+                  <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Số điện thoại liên hệ</label>
+                  <input
+                    type="tel" className="input-field" required
+                    value={profileForm.phone}
+                    onChange={e => setProfileForm({ ...profileForm, phone: e.target.value })}
+                  />
+                </div>
 
-              <div>
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Địa chỉ giao hàng & Đưa đón chó mèo</label>
-                <textarea 
-                  rows={3} className="input-field" required
-                  value={profileForm.address}
-                  onChange={e => setProfileForm({ ...profileForm, address: e.target.value })}
-                />
-              </div>
+                <div>
+                  <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Địa chỉ giao hàng & Đưa đón chó mèo</label>
+                  <textarea
+                    rows={3} className="input-field" required
+                    value={profileForm.address}
+                    onChange={e => setProfileForm({ ...profileForm, address: e.target.value })}
+                  />
+                </div>
 
-              <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '10px' }}>
-                <Save size={16} />
-                <span>Cập Nhật Thông Tin</span>
-              </button>
-            </form>
+                <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '10px' }}>
+                  <Save size={16} />
+                  <span>Cập Nhật Thông Tin</span>
+                </button>
+              </form>
+
+              <div style={{ borderTop: '1px solid #e2e8f0', marginTop: '22px', paddingTop: '20px' }}>
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>
+                  <Lock size={17} color="#0284c7" />
+                  Đổi mật khẩu
+                </h4>
+                <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '14px' }}>
+                  Nhập mật khẩu hiện tại để xác nhận thay đổi.
+                </p>
+                <form onSubmit={handleChangePassword} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div>
+                    <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Mật khẩu hiện tại</label>
+                    <input
+                      type="password" className="input-field" required autoComplete="current-password"
+                      value={passwordForm.currentPassword}
+                      onChange={e => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Mật khẩu mới</label>
+                    <input
+                      type="password" className="input-field" required minLength={6} autoComplete="new-password"
+                      value={passwordForm.newPassword}
+                      onChange={e => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>Xác nhận mật khẩu mới</label>
+                    <input
+                      type="password" className="input-field" required minLength={6} autoComplete="new-password"
+                      value={passwordForm.confirmPassword}
+                      onChange={e => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                    />
+                  </div>
+                  <button type="submit" className="btn-secondary" disabled={isChangingPassword} style={{ width: '100%', justifyContent: 'center', padding: '10px', borderColor: '#0284c7', color: '#0284c7', opacity: isChangingPassword ? 0.65 : 1 }}>
+                    <Lock size={16} />
+                    <span>{isChangingPassword ? 'Đang cập nhật...' : 'Cập Nhật Mật Khẩu'}</span>
+                  </button>
+                </form>
+              </div>
+            </>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '0.88rem' }}>
               <div>
@@ -265,7 +339,7 @@ export const UserProfileView = () => {
           {userRole === 'customer' && (
             <div>
               {/* Customer Tabs */}
-              <div className="category-tabs no-scrollbar" style={{ display: 'flex', gap: '10px', marginBottom: '24px', borderBottom: '2px solid #e2e8f0', paddingBottom: '10px' }}>
+              <div className="category-tabs customer-profile-tabs no-scrollbar" style={{ display: 'flex', gap: '10px', marginBottom: '24px', borderBottom: '2px solid #e2e8f0', paddingBottom: '10px' }}>
                 <button
                   onClick={() => setActiveTabTab('pets')}
                   style={{

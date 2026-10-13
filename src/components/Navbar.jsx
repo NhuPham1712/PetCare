@@ -56,6 +56,10 @@ export const Navbar = () => {
     { id: 'about', label: 'Giới Thiệu' }
   ];
 
+  const customerNavLinks = isLoggedIn
+    ? [...publicNavLinks, { id: 'user', label: 'Hồ Sơ Của Tôi', icon: User }]
+    : publicNavLinks;
+
   const adminNavLinks = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'staff_mgmt', label: 'Quản Lý Bác Sĩ/Nhân Viên', icon: Users },
@@ -125,7 +129,7 @@ export const Navbar = () => {
 
             {/* Navigation Links */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {(isAdmin ? adminNavLinks : isStaff ? staffNavLinks : publicNavLinks).map(link => {
+              {(isAdmin ? adminNavLinks : isStaff ? staffNavLinks : customerNavLinks).map(link => {
                 const Icon = link.icon || Dog;
                 const isActive = activeTab === link.id;
                 return (
