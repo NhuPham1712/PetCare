@@ -21,6 +21,14 @@ const includeInitialPets = (petList) => {
   return Array.from(petsById.values());
 };
 
+const includeInitialProducts = (productList) => {
+  const productsById = new Map(productList.map(product => [product.id, product]));
+  INITIAL_PRODUCTS.forEach(product => {
+    if (!productsById.has(product.id)) productsById.set(product.id, product);
+  });
+  return Array.from(productsById.values());
+};
+
 // Predefined profiles for different roles
 const STAFF_PROFILE = {
   name: 'ThS. BS. Nguyễn Văn Minh',
@@ -215,10 +223,7 @@ export const AppProvider = ({ children }) => {
 
   const [products, setProducts] = useState(() => {
     const saved = localStorage.getItem('petcare_products');
-    const savedProducts = saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
-    return savedProducts.some(product => product.id === 'prod-07')
-      ? savedProducts
-      : [...savedProducts, INITIAL_PRODUCTS.find(product => product.id === 'prod-07')];
+    return includeInitialProducts(saved ? JSON.parse(saved) : []);
   });
 
   // Cart State
@@ -677,14 +682,10 @@ export const AppProvider = ({ children }) => {
             setPets(includeInitialPets(dbPets));
           }
 
-          const prodsRes = await fetch(`${API_BASE}/products`);
+          const prodsRes = await fetch(API_BASE + '/products');
           if (prodsRes.ok) {
             const dbProds = await prodsRes.json();
-            if (dbProds.length > 0) {
-              setProducts(dbProds.some(product => product.id === 'prod-07')
-                ? dbProds
-                : [...dbProds, INITIAL_PRODUCTS.find(product => product.id === 'prod-07')]);
-            }
+            setProducts(includeInitialProducts(dbProds));
           }
 
           const bookingsRes = await fetch(`${API_BASE}/bookings`);

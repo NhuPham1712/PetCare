@@ -416,6 +416,156 @@ export const INITIAL_PRODUCTS = [
     rating: 4.6,
     sold: 280,
     description: 'Sản phẩm hỗ trợ chăm sóc da lông, giảm gàu và ve rận hiệu quả, an toàn với thú cưng.'
+  },
+  {
+    id: 'prod-25',
+    name: 'Thức Ăn Hạt Royal Canin Indoor 27 Cho Mèo Nuôi Trong Nhà (2kg)',
+    category: 'Thức Ăn',
+    price: 425000,
+    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=800&q=80',
+    rating: 4.9,
+    sold: 940,
+    description: 'Hạt Royal Canin Indoor 27 chuyên biệt giúp giảm mùi hôi phân, kiểm soát búi lông và duy trì cân nặng lý tưởng cho mèo.'
+  },
+  {
+    id: 'prod-26',
+    name: 'Hạt Mềm Cá Hồi & Thịt Cừu Cho Chó Da Nhạy Cảm Zenith (1.2kg)',
+    category: 'Thức Ăn',
+    price: 265000,
+    image: 'https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 510,
+    description: 'Hạt bán ẩm mềm thơm dễ nhai từ Hàn Quốc, giàu Omega-3 & 6 giúp dưỡng lông bóng mượt và chống dị ứng da.'
+  },
+  {
+    id: 'prod-27',
+    name: 'Pate Tươi Cá Ngừ & Tôm Hùm Cho Mèo Snappy Tom (Lon 400g)',
+    category: 'Thức Ăn',
+    price: 38000,
+    image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80',
+    rating: 4.9,
+    sold: 2150,
+    description: 'Pate thịt cá ngừ nguyên miếng kết hợp tôm tươi, không chất độn ngũ cốc, bổ sung Taurine sáng mắt cho mèo.'
+  },
+  {
+    id: 'prod-28',
+    name: 'Gel Dinh Dưỡng Kích Thích Ăn Ngon Virbac Nutri-Plus (Tuýp 120g)',
+    category: 'Thức Ăn',
+    price: 195000,
+    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=80',
+    rating: 5.0,
+    sold: 830,
+    description: 'Gel năng lượng cao cấp từ Pháp dành cho chó mèo suy nhược, biếng ăn, mới ốm dậy hoặc đang mang thai.'
+  },
+  {
+    id: 'prod-29',
+    name: 'Sữa Bột Bio Milk Thay Thế Sữa Mẹ Cho Chó Mèo Sơ Sinh (100g)',
+    category: 'Thức Ăn',
+    price: 42000,
+    image: 'https://images.unsplash.com/photo-1511044568932-338cba0ad803?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 1420,
+    description: 'Sữa bột giàu đạm, canxi và kháng thể tự nhiên, dễ tiêu hóa và không gây đầy bụng cho chó mèo con.'
+  },
+  {
+    id: 'prod-30',
+    name: 'Xương Gặm Sạch Răng Khử Mùi Hôi Miệng Pedigree Dentastix (112g)',
+    category: 'Thức Ăn',
+    price: 48000,
+    image: 'https://images.unsplash.com/photo-1582798358481-d199fb7347bb?auto=format&fit=crop&w=800&q=80',
+    rating: 4.9,
+    sold: 1680,
+    description: 'Thiết kế hình chữ X độc đáo giúp đánh bay 80% mảng bám cao răng và mang lại hơi thở thơm mát cho cún cưng.'
+  },
+  {
+    id: 'prod-31',
+    name: 'Thịt Ức Gà Sấy Lạnh Nguyên Miếng Freeze-Dried Cho Chó Mèo (150g)',
+    category: 'Thức Ăn',
+    price: 125000,
+    image: 'https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?auto=format&fit=crop&w=800&q=80',
+    rating: 4.9,
+    sold: 670,
+    description: '100% ức gà tươi sấy thăng hoa ở nhiệt độ âm sâu, giữ trọn vẹn dưỡng chất giúp chó mèo tăng cơ không tích mỡ.'
+  },
+  {
+    id: 'prod-32',
+    name: 'Men Vi Sinh Hỗ Trợ Tiêu Hóa & Ngừa Tiêu Chảy Bene-Bac Plus (15g)',
+    category: 'Thức Ăn',
+    price: 180000,
+    image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80',
+    rating: 4.9,
+    sold: 490,
+    description: 'Chứa hàng triệu lợi khuẩn sống giúp cân bằng hệ vi sinh đường ruột khi chó mèo đổi thức ăn hoặc dùng kháng sinh.'
+  },
+  {
+    id: 'prod-33',
+    name: 'Đài Phun Nước Lọc Than Hoạt Tính Tự Động Cho Chó Mèo (2.5L)',
+    category: 'Đồ Dùng',
+    price: 380000,
+    image: 'https://images.unsplash.com/photo-1545249390-6bdfa286032f?auto=format&fit=crop&w=800&q=80',
+    rating: 4.9,
+    sold: 620,
+    description: 'Máy lọc nước tuần hoàn 3 lớp than hoạt tính, dòng chảy êm ái kích thích chó mèo uống nhiều nước ngừa sỏi thận.'
+  },
+  {
+    id: 'prod-34',
+    name: 'Cây Trụ Cào Móng & Nhà Leo Trèo Đa Năng Cho Mèo (Cao 120cm)',
+    category: 'Đồ Dùng',
+    price: 850000,
+    image: 'https://images.unsplash.com/photo-1545249390-6bdfa286032f?auto=format&fit=crop&w=800&q=80',
+    rating: 4.9,
+    sold: 295,
+    description: 'Nhà cây Cat Tree bọc nhung êm ái kèm trụ thừng dây cói tự nhiên, giúp mèo thỏa sức leo trèo và mài móng.'
+  },
+  {
+    id: 'prod-35',
+    name: 'Nệm Ngủ Nhung Lông Cừu Siêu Ấm Áp Cho Chó Mèo (Cỡ L)',
+    category: 'Đồ Dùng',
+    price: 245000,
+    image: 'https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 740,
+    description: 'Ổ đệm bông PP đàn hồi cao bọc vải lông cừu mềm mịn, thành cao nâng đỡ cổ giúp thú cưng ngủ sâu giấc.'
+  },
+  {
+    id: 'prod-36',
+    name: 'Máy Sấy Lông Thú Cưng Công Suất Lớn Giảm Tiếng Ồn Chuyên Dụng',
+    category: 'Đồ Dùng',
+    price: 1250000,
+    image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80',
+    rating: 4.9,
+    sold: 185,
+    description: 'Máy sấy phản lực thổi bay nước nhanh gấp 3 lần máy sấy thường, điều chỉnh nhiệt độ linh hoạt bảo vệ da lông.'
+  },
+  {
+    id: 'prod-37',
+    name: 'Kềm Cắt Móng Có Đèn LED Soi Mạch Máu An Toàn Cho Thú Cưng',
+    category: 'Đồ Dùng',
+    price: 85000,
+    image: 'https://images.unsplash.com/photo-1585842378054-ee2e52f94ba2?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 1120,
+    description: 'Lưỡi thép không gỉ sắc bén tích hợp đèn LED chiếu sáng tủy móng, giúp cắt móng chính xác không gây chảy máu.'
+  },
+  {
+    id: 'prod-38',
+    name: 'Balo Phi Hành Gia Trong Suốt Có Quạt Thông Gió Cho Chó Mèo',
+    category: 'Đồ Dùng',
+    price: 320000,
+    image: 'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=800&q=80',
+    rating: 4.8,
+    sold: 530,
+    description: 'Balo vòm kính toàn cảnh kèm 9 lỗ thoáng khí và đệm lót êm ái, thuận tiện đưa bé đi dạo phố, du lịch hay đi khám.'
+  },
+  {
+    id: 'prod-39',
+    name: 'Vòng Cổ Thảo Dược Chống Ve Rận & Bọ Chét Kéo Dài 8 Tháng',
+    category: 'Đồ Dùng',
+    price: 145000,
+    image: 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=800&q=80',
+    rating: 4.7,
+    sold: 880,
+    description: 'Chiết xuất tinh dầu khuynh diệp và sả chanh tự nhiên, xua đuổi và tiêu diệt ve rận, bọ chét an toàn suốt 8 tháng.'
   }
 ];
 
