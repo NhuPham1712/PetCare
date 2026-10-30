@@ -221,14 +221,14 @@ export const StaffDashboardView = () => {
                 <th style={{ padding: '14px 16px' }}>Tên Thú Cưng</th>
                 <th style={{ padding: '14px 16px' }}>Loại Dịch Vụ Khám</th>
                 <th style={{ padding: '14px 16px' }}>Ngày & Hình Thức Hẹn</th>
-                <th style={{ padding: '14px 16px' }}>Bác Sĩ Phụ Trách</th>
-                <th style={{ padding: '14px 16px' }}>Trạng Thái</th>
+                <th style={{ padding: '14px 16px', whiteSpace: 'nowrap' }}>Bác Sĩ Phụ Trách</th>
+                <th style={{ padding: '14px 16px', whiteSpace: 'nowrap', textAlign: 'center' }}>Trạng Thái</th>
               </tr>
             </thead>
             <tbody>
               {upcomingAppointments.map(app => (
                 <tr key={app.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '14px 16px', fontWeight: 800, color: '#047857' }}>{app.id}</td>
+                  <td style={{ padding: '14px 16px', fontWeight: 800, color: '#047857', whiteSpace: 'nowrap' }}>{app.id}</td>
                   <td style={{ padding: '14px 16px', fontWeight: 700, color: '#0f172a' }}>
                     {app.customerName}
                     <div style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 500 }}>📞 {app.phone}</div>
@@ -236,18 +236,25 @@ export const StaffDashboardView = () => {
                   <td style={{ padding: '14px 16px', fontWeight: 700, color: '#0284c7' }}>{app.petName}</td>
                   <td style={{ padding: '14px 16px' }}>
                     <span className="badge-blue">{app.serviceCategory}</span>
-                    <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: '2px' }}>{app.serviceName}</div>
+                    <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: '4px' }}>{app.serviceName}</div>
                   </td>
                   <td style={{ padding: '14px 16px' }}>
-                    <div style={{ fontWeight: 600 }}>{app.date}</div>
+                    <div style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{app.date}</div>
                     <div style={{ fontSize: '0.78rem', color: '#64748b' }}>{app.transportMode}</div>
                   </td>
-                  <td style={{ padding: '14px 16px', fontWeight: 600, color: '#334155' }}>
+                  <td style={{ padding: '14px 16px', fontWeight: 600, color: '#334155', whiteSpace: 'nowrap' }}>
                     {app.assignedDoctor || 'BS. Nguyễn Văn Hoàng'}
                   </td>
-                  <td style={{ padding: '14px 16px' }}>
+                  <td style={{ padding: '14px 16px', whiteSpace: 'nowrap', textAlign: 'center' }}>
                     <span style={{
-                      padding: '4px 12px', borderRadius: '8px', fontWeight: 700, fontSize: '0.8rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      whiteSpace: 'nowrap',
+                      padding: '6px 14px',
+                      borderRadius: '9999px',
+                      fontWeight: 700,
+                      fontSize: '0.8rem',
                       background: app.status === 'Đang khám' ? '#fef3c7' : app.status === 'Hoàn thành' ? '#d1fae5' : '#e0f2fe',
                       color: app.status === 'Đang khám' ? '#b45309' : app.status === 'Hoàn thành' ? '#047857' : '#0369a1'
                     }}>

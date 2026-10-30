@@ -247,24 +247,24 @@ export const StaffManagementView = () => {
                     {s.days}
                   </td>
 
-                  <td style={{ padding: '14px 16px' }}>
+                  <td style={{ padding: '14px 16px', whiteSpace: 'nowrap' }}>
                     <span style={{
-                      padding: '4px 10px', borderRadius: '8px', fontWeight: 700, fontSize: '0.78rem',
+                      padding: '6px 12px', borderRadius: '9999px', fontWeight: 700, fontSize: '0.78rem',
                       background: s.status === 'Đang Làm Việc' ? '#d1fae5' : '#fef3c7',
                       color: s.status === 'Đang Làm Việc' ? '#047857' : '#b45309',
-                      display: 'inline-flex', alignItems: 'center', gap: '4px'
+                      display: 'inline-flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap'
                     }}>
                       {s.status === 'Đang Làm Việc' ? <CheckCircle2 size={13} /> : <Clock size={13} />}
                       {s.status}
                     </span>
                   </td>
 
-                  <td style={{ padding: '14px 16px' }}>
+                  <td style={{ padding: '14px 16px', whiteSpace: 'nowrap' }}>
                     <button 
                       onClick={() => handleToggleStatus(s.id)}
                       style={{
                         padding: '6px 12px', borderRadius: '8px', fontSize: '0.78rem', fontWeight: 700,
-                        border: '1px solid #cbd5e1', background: 'white', cursor: 'pointer'
+                        border: '1px solid #cbd5e1', background: 'white', cursor: 'pointer', whiteSpace: 'nowrap'
                       }}
                     >
                       Đổi Trạng Thái

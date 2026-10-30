@@ -110,6 +110,8 @@ button {
   padding: 4px 10px;
   border-radius: 9999px;
   font-size: 0.75rem;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .badge-emerald {
@@ -119,6 +121,8 @@ button {
   padding: 4px 10px;
   border-radius: 9999px;
   font-size: 0.75rem;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .badge-amber {
@@ -128,6 +132,8 @@ button {
   padding: 4px 10px;
   border-radius: 9999px;
   font-size: 0.75rem;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .badge-rose {
@@ -137,6 +143,8 @@ button {
   padding: 4px 10px;
   border-radius: 9999px;
   font-size: 0.75rem;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .btn-primary {

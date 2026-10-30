@@ -224,7 +224,7 @@ export const AdminDashboardView = () => {
                       <td style={{ padding: '12px' }}><span className="badge-blue">{bk.serviceCategory}</span></td>
                       <td style={{ padding: '12px' }}>
                         <span style={{ 
-                          padding: '4px 10px', borderRadius: '8px', fontWeight: 700, fontSize: '0.78rem',
+                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center', whiteSpace: 'nowrap', padding: '5px 12px', borderRadius: '9999px', fontWeight: 700, fontSize: '0.78rem',
                           background: bk.status === 'Hoàn thành' ? '#d1fae5' : '#fef3c7',
                           color: bk.status === 'Hoàn thành' ? '#047857' : '#b45309'
                         }}>
