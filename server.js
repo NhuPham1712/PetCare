@@ -77,6 +77,15 @@ try {
 
 let pool;
 let parsedConfig = null;
+let inventoryReady = false;
+
+const ensureInventorySchema = async (connection) => {
+  const [columns] = await connection.query("SHOW COLUMNS FROM products LIKE 'stock'");
+  if (columns.length === 0) {
+    await connection.query('ALTER TABLE products ADD COLUMN stock INT NOT NULL DEFAULT 0');
+    console.log('✅ Đã thêm cột tồn kho cho bảng products (sản phẩm cũ được đặt tồn kho ban đầu là 0).');
+  }
+};
 
 const initDb = async () => {
   try {
@@ -92,6 +101,12 @@ const initDb = async () => {
 
     pool = mysql.createPool(connectionOptions);
     const connection = await pool.getConnection();
+    try {
+      await ensureInventorySchema(connection);
+      inventoryReady = true;
+    } catch (error) {
+      console.error('❌ Không thể khởi tạo cột tồn kho trong bảng products:', error.message);
+    }
     console.log(`✅ Đã kết nối thành công tới CSDL MySQL tại ${dbConfig.host}:${dbConfig.port} (Database: ${dbConfig.database})`);
     connection.release();
   } catch (error) {
@@ -137,8 +152,11 @@ app.get('/api/health', async (req, res) => {
     const [rows] = await pool.query('SELECT 1');
     res.json({
       connected: true,
+      inventoryReady,
       source: getDbSourceLabel(dbConfig),
-      message: `MySQL Server ${dbConfig.host}:${dbConfig.port} is active`
+      message: inventoryReady
+        ? `MySQL Server ${dbConfig.host}:${dbConfig.port} is active`
+        : 'MySQL kết nối được nhưng chưa khởi tạo tồn kho'
     });
   } catch (err) {
     res.json({ connected: false, error: err.message, source: getDbSourceLabel(dbConfig) });
@@ -283,12 +301,40 @@ app.get('/api/products', async (req, res) => {
 
 app.post('/api/products', async (req, res) => {
   try {
+    if (!pool || !inventoryReady) {
+      return res.status(503).json({ success: false, message: 'Cơ sở dữ liệu hoặc chức năng tồn kho hiện chưa sẵn sàng.' });
+    }
     const pr = req.body;
-    const query = `INSERT INTO products (id, name, category, price, rating, sold, image, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    await pool.query(query, [pr.id, pr.name, pr.category, pr.price, pr.rating || 5.0, pr.sold || 0, pr.image, pr.description]);
+    const stock = Number(pr.stock);
+    if (!Number.isSafeInteger(stock) || stock < 0) {
+      return res.status(400).json({ success: false, message: 'Tồn kho phải là số nguyên không âm.' });
+    }
+    const query = `INSERT INTO products (id, name, category, price, rating, sold, stock, image, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    await pool.query(query, [pr.id, pr.name, pr.category, pr.price, pr.rating || 5.0, pr.sold || 0, stock, pr.image, pr.description]);
     res.json({ success: true, message: 'Đã thêm sản phẩm vào CSDL MySQL' });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/products/:id/stock', async (req, res) => {
+  if (!pool || !inventoryReady) {
+    return res.status(503).json({ success: false, message: 'Cơ sở dữ liệu hoặc chức năng tồn kho hiện chưa sẵn sàng.' });
+  }
+
+  const stock = Number(req.body.stock);
+  if (!Number.isSafeInteger(stock) || stock < 0) {
+    return res.status(400).json({ success: false, message: 'Tồn kho phải là số nguyên không âm.' });
+  }
+
+  try {
+    const [result] = await pool.query('UPDATE products SET stock = ? WHERE id = ?', [stock, req.params.id]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy sản phẩm cần cập nhật.' });
+    }
+    res.json({ success: true, stock });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
@@ -333,13 +379,75 @@ app.get('/api/orders', async (req, res) => {
 });
 
 app.post('/api/orders', async (req, res) => {
+  if (!pool || !inventoryReady) {
+    return res.status(503).json({ success: false, message: 'Cơ sở dữ liệu hoặc chức năng tồn kho hiện chưa sẵn sàng.' });
+  }
+
+  const order = req.body;
+  if (!Array.isArray(order.items) || order.items.length === 0) {
+    return res.status(400).json({ success: false, message: 'Đơn hàng chưa có sản phẩm.' });
+  }
+
+  const productQuantities = new Map();
+  for (const item of order.items) {
+    if (item.type !== 'product') continue;
+    if (typeof item.id !== 'string' || !Number.isSafeInteger(item.quantity) || item.quantity <= 0) {
+      return res.status(400).json({ success: false, message: 'Thông tin sản phẩm hoặc số lượng không hợp lệ.' });
+    }
+    productQuantities.set(item.id, (productQuantities.get(item.id) || 0) + item.quantity);
+  }
+
+  let connection;
   try {
-    const o = req.body;
+    connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    const updatedStocks = [];
+    for (const [productId, quantity] of productQuantities) {
+      const [products] = await connection.query(
+        'SELECT name, stock FROM products WHERE id = ? FOR UPDATE',
+        [productId]
+      );
+      if (products.length === 0) {
+        const error = new Error('Không tìm thấy sản phẩm trong kho. Hãy tải lại trang và thử lại.');
+        error.status = 409;
+        throw error;
+      }
+      if (products[0].stock < quantity) {
+        const error = new Error(`"${products[0].name}" chỉ còn ${products[0].stock} sản phẩm, không đủ số lượng đặt.`);
+        error.status = 409;
+        throw error;
+      }
+
+      await connection.query('UPDATE products SET stock = stock - ? WHERE id = ?', [quantity, productId]);
+      updatedStocks.push({ id: productId, stock: products[0].stock - quantity });
+    }
+
     const query = `INSERT INTO orders (id, customerName, phone, address, items_json, total, paymentMethod, status, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    await pool.query(query, [o.id, o.customerName, o.phone, o.address, JSON.stringify(o.items), o.total, o.paymentMethod, o.status || 'Đã nhận đơn', o.createdAt]);
-    res.json({ success: true, message: 'Đã lưu đơn hàng vào CSDL MySQL' });
+    await connection.query(query, [
+      order.id,
+      order.customerName,
+      order.phone,
+      order.address,
+      JSON.stringify(order.items),
+      order.total,
+      order.paymentMethod,
+      order.status || 'Đã nhận đơn',
+      order.createdAt
+    ]);
+    await connection.commit();
+    res.status(201).json({ success: true, message: 'Đã lưu đơn hàng và cập nhật tồn kho.', updatedStocks });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (connection) {
+      try {
+        await connection.rollback();
+      } catch (rollbackError) {
+        console.error('Không thể rollback đơn hàng:', rollbackError.message);
+      }
+    }
+    res.status(err.status || 500).json({ success: false, message: err.message });
+  } finally {
+    if (connection) connection.release();
   }
 });
 

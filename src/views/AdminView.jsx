@@ -3,8 +3,44 @@ import { Database, Plus, Trash2, Edit3, ShieldAlert, Check, Dog, ShoppingBag } f
 import { useApp } from '../context/AppContext';
 import { formatVnd } from '../utils/formatVnd';
 
+const ProductStockEditor = ({ product, onSave, showToast }) => {
+  const [stock, setStock] = useState(Number(product.stock) || 0);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsSaving(true);
+    try {
+      await onSave(product.id, Number(stock));
+    } catch (error) {
+      showToast(error.message, 'error');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <input
+        aria-label={`Tồn kho ${product.name}`}
+        type="number"
+        min="0"
+        step="1"
+        required
+        className="input-field"
+        value={stock}
+        onChange={event => setStock(event.target.value)}
+        style={{ width: '100px', margin: 0 }}
+      />
+      <button type="submit" className="btn-primary" disabled={isSaving} style={{ padding: '8px 12px' }}>
+        {isSaving ? 'Đang lưu...' : 'Cập nhật'}
+      </button>
+    </form>
+  );
+};
+
 export const AdminView = () => {
-  const { pets, products, addPetAdmin, deletePetAdmin, addProductAdmin } = useApp();
+  const { pets, products, addPetAdmin, deletePetAdmin, addProductAdmin, updateProductStockAdmin, showToast } = useApp();
 
   const [activeSubTab, setActiveSubTab] = useState('pets_db'); // 'pets_db', 'products_db'
   const [showAddPetModal, setShowAddPetModal] = useState(false);
@@ -31,7 +67,8 @@ export const AdminView = () => {
     name: '',
     category: 'Thức Ăn',
     price: 150000,
-    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=800&q=80',
+    stock: 0,
+    image: '/images/products/food-default.svg',
     description: 'Thức ăn phụ kiện chính hãng chất lượng cao.'
   });
 
@@ -41,10 +78,14 @@ export const AdminView = () => {
     setShowAddPetModal(false);
   };
 
-  const handleAddProdSubmit = (e) => {
+  const handleAddProdSubmit = async (e) => {
     e.preventDefault();
-    addProductAdmin(newProd);
-    setShowAddProdModal(false);
+    try {
+      await addProductAdmin(newProd);
+      setShowAddProdModal(false);
+    } catch (error) {
+      showToast(error.message, 'error');
+    }
   };
 
   return (
@@ -157,6 +198,44 @@ export const AdminView = () => {
                       >
                         Xóa Thú Cưng
                       </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {activeSubTab === 'products_db' && (
+        <div style={{ background: 'white', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', boxShadow: '0 4px 14px rgba(0,0,0,0.04)' }}>
+          <div style={{ padding: '18px 20px', borderBottom: '1px solid #e2e8f0' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a' }}>Quản lý tồn kho sản phẩm</h2>
+            <p style={{ color: '#64748b', fontSize: '0.85rem', marginTop: '4px' }}>Cập nhật số lượng thực tế. Đơn hàng chỉ được xác nhận khi kho còn đủ hàng.</p>
+          </div>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
+              <thead>
+                <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0', color: '#475569', fontWeight: 700 }}>
+                  <th style={{ padding: '14px 16px' }}>Sản phẩm</th>
+                  <th style={{ padding: '14px 16px' }}>Danh mục</th>
+                  <th style={{ padding: '14px 16px' }}>Giá bán</th>
+                  <th style={{ padding: '14px 16px' }}>Số lượng tồn</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map(product => (
+                  <tr key={product.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                    <td style={{ padding: '12px 16px', fontWeight: 700, color: '#0f172a' }}>{product.name}</td>
+                    <td style={{ padding: '12px 16px' }}>{product.category}</td>
+                    <td style={{ padding: '12px 16px', fontWeight: 700, color: '#0284c7' }}>{formatVnd(product.price)}</td>
+                    <td style={{ padding: '12px 16px' }}>
+                      <ProductStockEditor
+                        key={`${product.id}-${product.stock}`}
+                        product={product}
+                        onSave={updateProductStockAdmin}
+                        showToast={showToast}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -283,6 +362,11 @@ export const AdminView = () => {
               <div>
                 <label style={{ fontSize: '0.82rem', fontWeight: 700 }}>Giá bán (VNĐ)</label>
                 <input type="number" required className="input-field" value={newProd.price} onChange={e => setNewProd({ ...newProd, price: Number(e.target.value) })} />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.82rem', fontWeight: 700 }}>Số lượng tồn kho</label>
+                <input type="number" min="0" step="1" required className="input-field" value={newProd.stock} onChange={e => setNewProd({ ...newProd, stock: Number(e.target.value) })} />
               </div>
 
               <div>

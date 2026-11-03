@@ -22,9 +22,13 @@ const includeInitialPets = (petList) => {
 };
 
 const includeInitialProducts = (productList) => {
-  const productsById = new Map(productList.map(product => [product.id, product]));
+  const withStock = (product) => ({
+    ...product,
+    stock: Number.isSafeInteger(Number(product.stock)) ? Number(product.stock) : 0
+  });
+  const productsById = new Map(productList.map(product => [product.id, withStock(product)]));
   INITIAL_PRODUCTS.forEach(product => {
-    if (!productsById.has(product.id)) productsById.set(product.id, product);
+    if (!productsById.has(product.id)) productsById.set(product.id, withStock(product));
   });
   return Array.from(productsById.values());
 };
@@ -739,10 +743,16 @@ export const AppProvider = ({ children }) => {
 
   // Cart Functions
   const addToCart = (item, type = 'product') => {
+    const existing = cart.find(cartItem => cartItem.id === item.id);
+    if (type === 'product' && (existing?.quantity || 0) >= Number(item.stock || 0)) {
+      showToast(`"${item.name}" chỉ còn ${Number(item.stock || 0)} sản phẩm trong kho.`, 'error');
+      return;
+    }
+
     setCart(prev => {
-      const existing = prev.find(i => i.id === item.id);
-      if (existing) {
-        return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+      const currentItem = prev.find(cartItem => cartItem.id === item.id);
+      if (currentItem) {
+        return prev.map(cartItem => cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem);
       }
       return [...prev, { ...item, type, quantity: 1 }];
     });
@@ -753,6 +763,10 @@ export const AppProvider = ({ children }) => {
     setCart(prev => prev.map(item => {
       if (item.id === id) {
         const newQty = item.quantity + delta;
+        if (item.type === 'product' && delta > 0 && newQty > Number(item.stock || 0)) {
+          showToast(`"${item.name}" chỉ còn ${Number(item.stock || 0)} sản phẩm trong kho.`, 'error');
+          return item;
+        }
         return newQty > 0 ? { ...item, quantity: newQty } : null;
       }
       return item;
@@ -827,6 +841,15 @@ export const AppProvider = ({ children }) => {
 
   // Place Order Function
   const placeOrder = async (orderInfo) => {
+    if (!dbConnected) {
+      const unavailableItem = cart.find(item =>
+        item.type === 'product' && item.quantity > Number(item.stock || 0)
+      );
+      if (unavailableItem) {
+        throw new Error(`"${unavailableItem.name}" chỉ còn ${Number(unavailableItem.stock || 0)} sản phẩm trong kho.`);
+      }
+    }
+
     const newOrder = {
       id: `ORD-${Math.floor(10000 + Math.random() * 90000)}`,
       customerName: orderInfo.name,
@@ -839,17 +862,39 @@ export const AppProvider = ({ children }) => {
       createdAt: new Date().toISOString().split('T')[0]
     };
 
-    setAllOrders(prev => [newOrder, ...prev]);
-
     if (dbConnected) {
+      let response;
       try {
-        await fetch(`${API_BASE}/orders`, {
+        response = await fetch(`${API_BASE}/orders`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newOrder)
         });
-      } catch (err) {}
+      } catch {
+        throw new Error('Không thể kết nối máy chủ để xác nhận đơn và tồn kho. Vui lòng thử lại.');
+      }
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Không thể xác nhận đơn hàng.');
+      }
+
+      const updatedStocks = new Map((result.updatedStocks || []).map(item => [item.id, item.stock]));
+      if (updatedStocks.size > 0) {
+        setProducts(prev => prev.map(product => updatedStocks.has(product.id)
+          ? { ...product, stock: updatedStocks.get(product.id) }
+          : product));
+      }
+    } else {
+      const purchasedProducts = new Map(
+        cart.filter(item => item.type === 'product').map(item => [item.id, item.quantity])
+      );
+      setProducts(prev => prev.map(product => purchasedProducts.has(product.id)
+        ? { ...product, stock: Number(product.stock || 0) - purchasedProducts.get(product.id) }
+        : product));
     }
+
+    setAllOrders(prev => [newOrder, ...prev]);
 
     setUser(prev => ({
       ...prev,
@@ -902,20 +947,55 @@ export const AppProvider = ({ children }) => {
   };
 
   const addProductAdmin = async (prod) => {
-    const newProd = { ...prod, id: `prod-${Date.now()}`, rating: 5.0, sold: 0 };
-    setProducts(prev => [newProd, ...prev]);
+    const newProd = { ...prod, id: `prod-${Date.now()}`, rating: 5.0, sold: 0, stock: Number(prod.stock) };
 
     if (dbConnected) {
+      let response;
       try {
-        await fetch(`${API_BASE}/products`, {
+        response = await fetch(`${API_BASE}/products`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newProd)
         });
-      } catch (err) {}
+      } catch {
+        throw new Error('Không thể kết nối máy chủ để lưu sản phẩm.');
+      }
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Không thể lưu sản phẩm.');
+      }
     }
 
+    setProducts(prev => [newProd, ...prev]);
     showToast(`Admin: Đã thêm sản phẩm "${prod.name}" thành công!`);
+  };
+
+  const updateProductStockAdmin = async (id, stock) => {
+    if (!Number.isSafeInteger(stock) || stock < 0) {
+      throw new Error('Tồn kho phải là số nguyên không âm.');
+    }
+
+    if (dbConnected) {
+      let response;
+      try {
+        response = await fetch(`${API_BASE}/products/${encodeURIComponent(id)}/stock`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stock })
+        });
+      } catch {
+        throw new Error('Không thể kết nối máy chủ để cập nhật tồn kho.');
+      }
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Không thể cập nhật tồn kho.');
+      }
+    }
+
+    setProducts(prev => prev.map(product => product.id === id ? { ...product, stock } : product));
+    showToast('Đã cập nhật số lượng tồn kho.');
   };
 
   const updateBookingStatusAdmin = async (id, newStatus) => {
@@ -977,7 +1057,7 @@ export const AppProvider = ({ children }) => {
       selectedPetForDetail, setSelectedPetForDetail,
       selectedServiceForBooking, setSelectedServiceForBooking,
       staffList, setStaffList, updateStaffSchedule, updateStaffStatus, reassignBooking,
-      addPetAdmin, deletePetAdmin, addProductAdmin,
+      addPetAdmin, deletePetAdmin, addProductAdmin, updateProductStockAdmin,
       toast, showToast
     }}>
       {children}

@@ -4,7 +4,8 @@ import { useApp } from '../context/AppContext';
 import { formatVnd } from '../utils/formatVnd';
 
 export const CheckoutModal = () => {
-  const { isCheckoutOpen, setIsCheckoutOpen, cart, user, placeOrder } = useApp();
+  const { isCheckoutOpen, setIsCheckoutOpen, cart, user, placeOrder, showToast } = useApp();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [shippingInfo, setShippingInfo] = useState({
     name: user.name || '',
@@ -23,15 +24,22 @@ export const CheckoutModal = () => {
   const shippingFee = shippingInfo.transportOption === 'home_delivery' ? 30000 : 0;
   const grandTotal = totalAmount + shippingFee;
 
-  const handleCompleteOrder = (e) => {
+  const handleCompleteOrder = async (e) => {
     e.preventDefault();
-    placeOrder({
-      name: shippingInfo.name,
-      phone: shippingInfo.phone,
-      address: shippingInfo.transportOption === 'home_delivery' ? shippingInfo.address : 'Nhận trực tiếp tại cửa hàng PetCare (123 Nguyễn Thị Minh Khai, Q.3)',
-      paymentMethod: shippingInfo.paymentMethod === 'cod' ? 'Thanh toán COD' : 'QR Code VietQR (MBBank)',
-      total: grandTotal
-    });
+    setIsSubmitting(true);
+    try {
+      await placeOrder({
+        name: shippingInfo.name,
+        phone: shippingInfo.phone,
+        address: shippingInfo.transportOption === 'home_delivery' ? shippingInfo.address : 'Nhận trực tiếp tại cửa hàng PetCare (123 Nguyễn Thị Minh Khai, Q.3)',
+        paymentMethod: shippingInfo.paymentMethod === 'cod' ? 'Thanh toán COD' : 'QR Code VietQR (MBBank)',
+        total: grandTotal
+      });
+    } catch (error) {
+      showToast(error.message, 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -132,7 +140,7 @@ export const CheckoutModal = () => {
                 }}
               >
                 <div style={{ fontWeight: 700, fontSize: '0.92rem', color: '#0f172a' }}>🏠 Giao Hàng Tận Nhà</div>
-                <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>Xe đưa đón thú cưng & vận chuyển hàng tận nơi (+30.000 VNĐ)</div>
+                <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>Xe đưa đón thú cưng & vận chuyển hàng tận nơi (+30.000đ)</div>
               </div>
 
               <div 
@@ -248,10 +256,11 @@ export const CheckoutModal = () => {
             <button 
               type="submit" 
               className="btn-primary" 
+              disabled={isSubmitting}
               style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1.05rem' }}
             >
               <CheckCircle2 size={20} />
-              <span>Xác Nhận Đặt Hàng Ngay</span>
+              <span>{isSubmitting ? 'Đang kiểm tra tồn kho...' : 'Xác Nhận Đặt Hàng Ngay'}</span>
             </button>
           </div>
         </form>
