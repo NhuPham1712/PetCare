@@ -141,17 +141,18 @@ export const SupplyShopView = () => {
                     <span style={{ color: '#dc2626', fontWeight: 700 }}>-{Math.round((1 - prod.price / prod.originalPrice) * 100)}%</span>
                   </div>
                 )}
-                {prod.stock !== undefined && (
-                  <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px' }}>Còn hàng ({prod.stock})</div>
-                )}
+                <div style={{ fontSize: '0.75rem', color: prod.stock > 0 ? '#64748b' : '#dc2626', marginTop: '4px' }}>
+                  {prod.stock > 0 ? `Còn hàng (${prod.stock})` : 'Tạm hết hàng'}
+                </div>
               </div>
               <button 
                 onClick={() => addToCart(prod, 'product')}
                 className="btn-primary"
+                disabled={prod.stock <= 0}
                 style={{ padding: '8px 14px', fontSize: '0.85rem' }}
               >
                 <ShoppingCart size={16} />
-                <span>Thêm Giỏ</span>
+                <span>{prod.stock > 0 ? 'Thêm Giỏ' : 'Hết hàng'}</span>
               </button>
             </div>
           </div>

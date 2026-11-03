@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `price` DECIMAL(12, 2) NOT NULL,
   `rating` DECIMAL(3, 1) DEFAULT 5.0,
   `sold` INT DEFAULT 0,
+  `stock` INT NOT NULL DEFAULT 0,
   `image` TEXT,
   `description` TEXT,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -103,8 +104,8 @@ INSERT INTO `pets` (`id`, `name`, `species`, `breed`, `weight`, `weightCategory`
 ON DUPLICATE KEY UPDATE `id`=`id`;
 
 -- SEED DATA FOR PRODUCTS
-INSERT INTO `products` (`id`, `name`, `category`, `price`, `rating`, `sold`, `image`, `description`) VALUES
-('prod-01', 'Thức Ăn Hạt Royal Canin Mini Adult (2kg)', 'Thức Ăn', 340000, 4.9, 420, 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=800&q=80', 'Hạt cao cấp dành riêng cho chó cỡ nhỏ, giàu dinh dưỡng, bảo vệ tim mạch và nâng cao chất lượng lông.'),
-('prod-02', 'Pate Cấp Nước Chăm Sóc Thận Mèo Ciao Churu (Túi 10 thanh)', 'Thức Ăn', 110000, 5.0, 1250, 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80', 'Thưởng số 1 cho mèo từ Nhật Bản, bổ sung hàm lượng nước giúp hỗ trợ tiết niệu và ngừa sỏi thận.'),
-('prod-03', 'Sữa Tắm Dưỡng Lông Trị Ve Rể SOS (500ml)', 'Đồ Dùng', 165000, 4.8, 890, 'https://images.unsplash.com/photo-1585842378054-ee2e52f94ba2?auto=format&fit=crop&w=800&q=80', 'Sữa tắm chuyên dụng khử mùi hôi, làm mềm lông, phòng chống ve rận hiệu quả đến 14 ngày.')
+INSERT INTO `products` (`id`, `name`, `category`, `price`, `rating`, `sold`, `stock`, `image`, `description`) VALUES
+('prod-01', 'Thức Ăn Hạt Royal Canin Mini Adult (2kg)', 'Thức Ăn', 340000, 4.9, 420, 35, '/images/products/prod-01.svg', 'Hạt cao cấp dành riêng cho chó cỡ nhỏ, giàu dinh dưỡng, bảo vệ tim mạch và nâng cao chất lượng lông.'),
+('prod-02', 'Pate Cấp Nước Chăm Sóc Thận Mèo Ciao Churu (Túi 10 thanh)', 'Thức Ăn', 110000, 5.0, 1250, 40, '/images/products/prod-02.svg', 'Thưởng số 1 cho mèo từ Nhật Bản, bổ sung hàm lượng nước giúp hỗ trợ tiết niệu và ngừa sỏi thận.'),
+('prod-03', 'Sữa Tắm Dưỡng Lông Trị Ve Rể SOS (500ml)', 'Đồ Dùng', 165000, 4.8, 890, 20, 'https://images.unsplash.com/photo-1585842378054-ee2e52f94ba2?auto=format&fit=crop&w=800&q=80', 'Sữa tắm chuyên dụng khử mùi hôi, làm mềm lông, phòng chống ve rận hiệu quả đến 14 ngày.')
 ON DUPLICATE KEY UPDATE `id`=`id`;

@@ -95,7 +95,11 @@ export const CartDrawer = () => {
                           <Minus size={14} />
                         </button>
                         <span style={{ fontWeight: 700, fontSize: '0.85rem' }}>{item.quantity}</span>
-                        <button onClick={() => updateCartQuantity(item.id, 1)} style={{ background: 'transparent' }}>
+                        <button
+                          onClick={() => updateCartQuantity(item.id, 1)}
+                          disabled={item.type === 'product' && item.quantity >= Number(item.stock || 0)}
+                          style={{ background: 'transparent', opacity: item.type === 'product' && item.quantity >= Number(item.stock || 0) ? 0.4 : 1 }}
+                        >
                           <Plus size={14} />
                         </button>
                       </div>

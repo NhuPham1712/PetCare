@@ -298,9 +298,10 @@ export const INITIAL_PRODUCTS = [
     name: 'Thức Ăn Hạt Royal Canin Mini Adult (2kg)',
     category: 'Thức Ăn',
     price: 340000,
-    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/prod-01.svg',
     rating: 4.9,
     sold: 420,
+    stock: 35,
     description: 'Hạt cao cấp dành riêng cho chó cỡ nhỏ, giàu dinh dưỡng, bảo vệ tim mạch và nâng cao chất lượng lông.'
   },
   {
@@ -308,9 +309,10 @@ export const INITIAL_PRODUCTS = [
     name: 'Pate Cấp Nước Chăm Sóc Thận Mèo Ciao Churu (Túi 10 thanh)',
     category: 'Thức Ăn',
     price: 110000,
-    image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/prod-02.svg',
     rating: 5.0,
     sold: 1250,
+    stock: 40,
     description: 'Thưởng số 1 cho mèo từ Nhật Bản, bổ sung hàm lượng nước giúp hỗ trợ tiết niệu và ngừa sỏi thận.'
   },
   {
@@ -359,7 +361,7 @@ export const INITIAL_PRODUCTS = [
     category: 'Thức Ăn',
     price: 17000,
     originalPrice: 20000,
-    image: 'https://paddy.vn/_next/image?url=https%3A%2F%2Ffexafkqzpbzjcupvbfhe.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fproduct-images%2Fcollection-1779179801537-7-g63s0r.jpg&w=828&q=75',
+    image: '/images/products/prod-07.svg',
     rating: 5.0,
     reviewCount: 2200,
     sold: 191000,
@@ -372,9 +374,10 @@ export const INITIAL_PRODUCTS = [
     name: 'Thức Ăn Hạt Cho Chó Mọi Lứa Tuổi Pedigree 3kg',
     category: 'Thức Ăn',
     price: 345000,
-    image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/prod-08.svg',
     rating: 4.8,
     sold: 760,
+    stock: 35,
     description: 'Hạt dinh dưỡng cho chó mọi lứa tuổi, hỗ trợ tiêu hóa tốt và duy trì vóc dáng khỏe mạnh.'
   },
   {
@@ -382,9 +385,10 @@ export const INITIAL_PRODUCTS = [
     name: 'Pate Cho Mèo Tươi Gà & Cá Ciao 40g',
     category: 'Thức Ăn',
     price: 22000,
-    image: 'https://images.unsplash.com/photo-1511044568932-338cba0ad803?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/prod-09.svg',
     rating: 4.9,
     sold: 1830,
+    stock: 30,
     description: 'Pate mèo vị gà và cá, thơm ngon, dễ ăn và bổ sung độ ẩm cho cơ thể mèo đang phát triển.'
   },
   {
@@ -422,9 +426,10 @@ export const INITIAL_PRODUCTS = [
     name: 'Thức Ăn Hạt Royal Canin Indoor 27 Cho Mèo Nuôi Trong Nhà (2kg)',
     category: 'Thức Ăn',
     price: 425000,
-    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/prod-25.svg',
     rating: 4.9,
     sold: 940,
+    stock: 0,
     description: 'Hạt Royal Canin Indoor 27 chuyên biệt giúp giảm mùi hôi phân, kiểm soát búi lông và duy trì cân nặng lý tưởng cho mèo.'
   },
   {
@@ -432,9 +437,10 @@ export const INITIAL_PRODUCTS = [
     name: 'Hạt Mềm Cá Hồi & Thịt Cừu Cho Chó Da Nhạy Cảm Zenith (1.2kg)',
     category: 'Thức Ăn',
     price: 265000,
-    image: 'https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/prod-26.svg',
     rating: 4.8,
     sold: 510,
+    stock: 0,
     description: 'Hạt bán ẩm mềm thơm dễ nhai từ Hàn Quốc, giàu Omega-3 & 6 giúp dưỡng lông bóng mượt và chống dị ứng da.'
   },
   {
@@ -442,9 +448,10 @@ export const INITIAL_PRODUCTS = [
     name: 'Pate Tươi Cá Ngừ & Tôm Hùm Cho Mèo Snappy Tom (Lon 400g)',
     category: 'Thức Ăn',
     price: 38000,
-    image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/prod-27.svg',
     rating: 4.9,
     sold: 2150,
+    stock: 0,
     description: 'Pate thịt cá ngừ nguyên miếng kết hợp tôm tươi, không chất độn ngũ cốc, bổ sung Taurine sáng mắt cho mèo.'
   },
   {
@@ -452,9 +459,10 @@ export const INITIAL_PRODUCTS = [
     name: 'Gel Dinh Dưỡng Kích Thích Ăn Ngon Virbac Nutri-Plus (Tuýp 120g)',
     category: 'Thức Ăn',
     price: 195000,
-    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/prod-28.svg',
     rating: 5.0,
     sold: 830,
+    stock: 0,
     description: 'Gel năng lượng cao cấp từ Pháp dành cho chó mèo suy nhược, biếng ăn, mới ốm dậy hoặc đang mang thai.'
   },
   {
@@ -462,9 +470,10 @@ export const INITIAL_PRODUCTS = [
     name: 'Sữa Bột Bio Milk Thay Thế Sữa Mẹ Cho Chó Mèo Sơ Sinh (100g)',
     category: 'Thức Ăn',
     price: 42000,
-    image: 'https://images.unsplash.com/photo-1511044568932-338cba0ad803?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/prod-29.svg',
     rating: 4.8,
     sold: 1420,
+    stock: 0,
     description: 'Sữa bột giàu đạm, canxi và kháng thể tự nhiên, dễ tiêu hóa và không gây đầy bụng cho chó mèo con.'
   },
   {
@@ -472,9 +481,10 @@ export const INITIAL_PRODUCTS = [
     name: 'Xương Gặm Sạch Răng Khử Mùi Hôi Miệng Pedigree Dentastix (112g)',
     category: 'Thức Ăn',
     price: 48000,
-    image: 'https://images.unsplash.com/photo-1582798358481-d199fb7347bb?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/prod-30.svg',
     rating: 4.9,
     sold: 1680,
+    stock: 0,
     description: 'Thiết kế hình chữ X độc đáo giúp đánh bay 80% mảng bám cao răng và mang lại hơi thở thơm mát cho cún cưng.'
   },
   {
@@ -482,9 +492,10 @@ export const INITIAL_PRODUCTS = [
     name: 'Thịt Ức Gà Sấy Lạnh Nguyên Miếng Freeze-Dried Cho Chó Mèo (150g)',
     category: 'Thức Ăn',
     price: 125000,
-    image: 'https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/prod-31.svg',
     rating: 4.9,
     sold: 670,
+    stock: 0,
     description: '100% ức gà tươi sấy thăng hoa ở nhiệt độ âm sâu, giữ trọn vẹn dưỡng chất giúp chó mèo tăng cơ không tích mỡ.'
   },
   {
@@ -492,9 +503,10 @@ export const INITIAL_PRODUCTS = [
     name: 'Men Vi Sinh Hỗ Trợ Tiêu Hóa & Ngừa Tiêu Chảy Bene-Bac Plus (15g)',
     category: 'Thức Ăn',
     price: 180000,
-    image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/prod-32.svg',
     rating: 4.9,
     sold: 490,
+    stock: 0,
     description: 'Chứa hàng triệu lợi khuẩn sống giúp cân bằng hệ vi sinh đường ruột khi chó mèo đổi thức ăn hoặc dùng kháng sinh.'
   },
   {
